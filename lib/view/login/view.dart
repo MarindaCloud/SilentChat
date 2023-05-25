@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 150.rpx),
+                  margin: EdgeInsets.only(top: 200.rpx),
                   padding: EdgeInsets.only(left: 200.rpx, right: 200.rpx),
                   child: Column(
                     children: [
@@ -230,27 +230,32 @@ class LoginPage extends StatelessWidget {
               ),
               //  登入按钮
                 Center(
-                  child: Container(
-                    width: 400.rpx,
-                    height: 400.rpx,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.fromRGBO(89,192,247,1),
-                            Color.fromRGBO(68,153,235,1),
-                          ]
+                  child: InkWell(
+                    child: Container(
+                      width: 400.rpx,
+                      height: 400.rpx,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color.fromRGBO(89,192,247,1),
+                              Color.fromRGBO(68,153,235,1),
+                            ]
+                        ),
+                        borderRadius: BorderRadius.circular(10000)
                       ),
-                      borderRadius: BorderRadius.circular(10000)
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 100.rpx,
-                        height: 100.rpx,
-                        child: Image.asset("assets/logo.jpg"),
+                      child: Center(
+                        child: SizedBox(
+                          width: 100.rpx,
+                          height: 100.rpx,
+                          child: Image.asset("assets/logo.jpg"),
+                        ),
                       ),
                     ),
+                    onTap: (){
+                      logic.toIndex();
+                    },
                   ),
                 ),
                 Expanded(child: SizedBox()),

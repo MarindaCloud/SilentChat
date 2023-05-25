@@ -3,10 +3,10 @@ import 'package:silentchat/view/message/logic.dart';
 
 import 'logic.dart';
 
-class LoginBinding extends Bindings {
+class IndexBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginLogic());
+    Get.lazyPut(() => IndexLogic());
     Get.lazyPut(() => MessageLogic());
   }
 }
