@@ -6,8 +6,9 @@
 enum GlobalPage {
   login("/login"),
   message("/message"),
-  contact("contact"),
-  main("/index");
+  contact("/contact"),
+  main("/index"),
+  dynamic("/dynamic");
   final String router;
   const GlobalPage(this.router);
 }

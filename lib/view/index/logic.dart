@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/view/contact/view.dart';
+import 'package:silentchat/view/dynamic/view.dart';
 import 'package:silentchat/view/message/view.dart';
 
 import 'state.dart';
@@ -34,7 +35,7 @@ class IndexLogic extends GetxController {
         break;
       //  动态
       case 2:
-        state.contentWidget = Container();
+        state.contentWidget = DynamicPage();
         break;
     }
     update();
