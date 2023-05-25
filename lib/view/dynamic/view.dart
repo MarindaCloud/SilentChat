@@ -27,7 +27,7 @@ class DynamicPage extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: Image
-                          .asset("assets/logo.jpg")
+                          .asset("assets/user/portait.png")
                           .image,
                       fit: BoxFit.fill
                   )
@@ -54,7 +54,7 @@ class DynamicPage extends StatelessWidget {
                                   child: SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/logo.jpg"),
+                                    child: Image.asset("assets/icon/dynamic.png"),
                                   ),
                                 ),
                                 Container(
@@ -82,9 +82,9 @@ class DynamicPage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(1000),
                                             image: DecorationImage(
-                                              image: Image.asset("assets/logo.jpg").image,
+                                              image: Image.asset("assets/user/portait.png").image,
                                               fit: BoxFit.fill
-                                            )
+                                            ),
                                           ),
                                           
                                         ),
@@ -97,7 +97,7 @@ class DynamicPage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(1000),
                                               image: DecorationImage(
-                                                  image: Image.asset("assets/logo.jpg").image,
+                                                  image: Image.asset("assets/user/portait.png").image,
                                                   fit: BoxFit.fill
                                               )
                                           ),
@@ -112,9 +112,9 @@ class DynamicPage extends StatelessWidget {
                                 Container(
                                   margin: EdgeInsets.only(right: 20.rpx),
                                   child: SizedBox(
-                                    width: 60.rpx,
-                                    height: 60.rpx,
-                                    child: Image.asset("assets/logo.jpg"),
+                                    width: 80.rpx,
+                                    height: 80.rpx,
+                                    child: Image.asset("assets/icon/qianwang.png"),
                                   ),
                                 ),
                               ],
@@ -143,7 +143,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/youxi.png"),
                                       ),
                                     ),
                                     Container(
@@ -158,9 +158,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -182,7 +182,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/fujin.png"),
                                       ),
                                     ),
                                     Container(
@@ -197,9 +197,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -230,7 +230,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/yuedu.png"),
                                       ),
                                     ),
                                     Container(
@@ -245,9 +245,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -269,7 +269,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/shujiyuedu.png"),
+
                                       ),
                                     ),
                                     Container(
@@ -284,9 +285,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -308,7 +309,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/gouwuche.png",color: Colors.red,),
                                       ),
                                     ),
                                     Container(
@@ -323,9 +324,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -347,7 +348,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        child: Image.asset("assets/icon/yinle.png"),
                                       ),
                                     ),
                                     Container(
@@ -362,9 +363,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
@@ -386,8 +387,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
-                                      ),
+                                        child: Image.asset("assets/icon/ziyuanxhdpi.png"),                                      ),
                                     ),
                                     Container(
                                       child: Text("更多",
@@ -401,9 +401,9 @@ class DynamicPage extends StatelessWidget {
                                     Container(
                                       margin: EdgeInsets.only(right: 20.rpx),
                                       child: SizedBox(
-                                        width: 60.rpx,
-                                        height: 60.rpx,
-                                        child: Image.asset("assets/logo.jpg"),
+                                        width: 80.rpx,
+                                        height: 80.rpx,
+                                        child: Image.asset("assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],

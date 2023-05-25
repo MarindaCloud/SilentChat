@@ -110,12 +110,12 @@ class LoginPage extends StatelessWidget {
                                   ),
                                 )),
                             Container(
-                              width: 40.rpx,
-                              height: 40.rpx,
+                              width: 70.rpx,
+                              height: 70.rpx,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: Image
-                                          .asset("assets/user/portait.png")
+                                          .asset("assets/icon/zhankai1.png",color: Color.fromRGBO(150, 150, 150, 1))
                                           .image,
                                       fit: BoxFit.fill
                                   )
@@ -247,9 +247,9 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: Center(
                         child: SizedBox(
-                          width: 100.rpx,
-                          height: 100.rpx,
-                          child: Image.asset("assets/logo.jpg"),
+                          width: 150.rpx,
+                          height: 150.rpx,
+                          child: Image.asset("assets/icon/denglu.png",color: Colors.white,),
                         ),
                       ),
                     ),
