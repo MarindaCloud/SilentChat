@@ -113,8 +113,8 @@ class MessagePage extends StatelessWidget {
                   //  搜索框
                     InkWell(
                       child: Container(
-                        margin: EdgeInsets.only(right: 40.rpx, top: 10.rpx,left: 40.rpx),
-                        height: 200.rpx,
+                        margin: EdgeInsets.only(right: 40.rpx, top: 20.rpx,left: 40.rpx),
+                        height: 150.rpx,
                         color: Colors.blueGrey,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -140,11 +140,9 @@ class MessagePage extends StatelessWidget {
                     ),
                     Expanded(
                         child: SingleChildScrollView(
-                        child: Container(
                         child: Column(
                           children: logic.buildRecordList(),
                         ),
-                      ),
                     ))
                   ],
                 ),

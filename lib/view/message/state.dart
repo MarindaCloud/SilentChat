@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 class MessageState {
-  final showTools = true.obs;
+  final showTools = false.obs;
   MessageState() {
     ///Initialize variables
   }

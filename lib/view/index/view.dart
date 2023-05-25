@@ -9,17 +9,22 @@ class IndexPage extends StatelessWidget {
 
   IndexPage({Key? key}) : super(key: key);
   final logic = Get.find<IndexLogic>();
-  final state = Get.find<IndexLogic>().state;
+  final state = Get
+      .find<IndexLogic>()
+      .state;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         child: Column(
           children: [
-          //  头部
-            Expanded(child: state.contentWidget),
+            //  头部
+            GetBuilder<IndexLogic>(builder: (logic) {
+              return Expanded(child: state.contentWidget);
+            }),
             // Expanded(child: SizedBox()),
-            BottomNavWidget(1, (){})
+            BottomNavWidget(logic, state)
           ],
         ),
       ),
