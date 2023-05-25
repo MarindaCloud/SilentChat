@@ -39,7 +39,57 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  #  窗口管理
+  window_manager: ^0.2.3
+  #  数据库
+  drift: ^1.7.1
+  #  日志
+  logger: ^1.0.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.0
+  path: ^1.8.0
+  #  类似于前端的localStorage，存储kv数据
+  get_storage: 2.0.3
+  #  状态管理
+  get: ^4.6.5
+  #  swiper
+  card_swiper: ^2.0.4
+  bot_toast: ^4.0.0
+  #  这个看dart好像就自带了，网上说要添加，还是添加吧
+  web_socket_channel: ^2.2.0
+  #    http
+  dio: ^4.0.6
+  #    获取软件的信息
+  package_info_plus: ^3.0.2
+  jpeg_encode: ^1.0.1
+  uuid: 3.0.6
+  #  调用win32 api
+  #  win32: ^2.7.0
+  flutter:
+    sdk: flutter
+  #    颜色16进制转换,不过没用,暂时保留
+  hexcolor: ^2.0.7
+  #  flukit 组件库
+  flukit: ^3.0.1
+  #  SM2 加密
+  sm2cipher: ^0.0.7
+  #  sm4 加密
+  sm_crypto: ^1.0.0
+  #  文件的解压缩
+  archive: ^3.3.0
+  #  权限申请
+  permission_handler: ^10.0.0
+  #  时间格式化
+  date_format: ^2.0.6
+  #loadding库
+  flutter_smart_dialog: ^4.7.1
+  flutter_svg: ^1.0.0
+  #  flutter_subscreen_plugin: ^1.0.5
+  url_launcher: ^6.1.7
+  #  打开外置文件
+  open_file_plus: ^3.4.0
+  # 图片解码器
+  image: ^4.0.13
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -57,6 +107,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/user/
+    - assets/logo.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
