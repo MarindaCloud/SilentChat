@@ -1,5 +1,7 @@
 import 'package:silentchat/enum/global_page.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/view/chat/binding.dart';
+import 'package:silentchat/view/chat/view.dart';
 import 'package:silentchat/view/contact/binding.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/binding.dart';
@@ -22,6 +24,7 @@ class AppPage{
   static String login = GlobalPage.login.router;
   static String index = GlobalPage.main.router;
   static String dynamic = GlobalPage.dynamic.router;
+  static String chat = GlobalPage.chat.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -29,6 +32,7 @@ class AppPage{
     GetPage(name: index, page: ()=>IndexPage(),binding: IndexBinding()),
     GetPage(name: contact, page: ()=>ContactPage(),binding: ContactBinding()),
     GetPage(name: dynamic, page: ()=>DynamicPage(),binding:DynamicBinding()),
+    GetPage(name: chat, page: ()=>ChatPage(),binding:ChatBinding()),
   ];
 
   AppPage();

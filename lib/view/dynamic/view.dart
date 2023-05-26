@@ -54,7 +54,7 @@ class DynamicPage extends StatelessWidget {
                                   child: SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/icon/dynamic.png"),
+                                    child: Image.asset("assets/icon/dynamic.png",color: Colors.orange,),
                                   ),
                                 ),
                                 Container(
@@ -182,7 +182,7 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/fujin.png"),
+                                        child: Image.asset("assets/icon/fujin.png",color: Colors.green,),
                                       ),
                                     ),
                                     Container(

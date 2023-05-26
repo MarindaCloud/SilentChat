@@ -18,6 +18,8 @@ class MessagePage extends StatelessWidget {
       return Container(
         color: Color.fromRGBO(84,176,247,1),
         child: SafeArea(
+          top: true,
+          bottom: false,
           child: Stack(
             children: [
               //头部基础内容
@@ -102,6 +104,7 @@ class MessagePage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 200.rpx),
                 color: Color.fromRGBO(242, 242, 242, 1),
+                // color: Colors.white,
                 child: Column(
                   children: [
                     //  搜索框
@@ -138,7 +141,8 @@ class MessagePage extends StatelessWidget {
                     Expanded(
                         child: Container(
                           margin: EdgeInsets.only(top: 100.rpx),
-                          color: Color.fromRGBO(242,242,242,1),
+                          // color: Color.fromRGBO(242,242,242,1),
+                          color: Colors.white,
                           child: SingleChildScrollView(
                             child: Column(
                               children: logic.buildRecordList(),

@@ -131,6 +131,7 @@ class MessageLogic extends GetxController {
         ),
         onTap: (){
           print("i: ${i}");
+          toChat(i);
         },
       );
       list.add(child);
@@ -158,5 +159,14 @@ class MessageLogic extends GetxController {
         break;
     }
     return result;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/5/26 10:55
+   * @description 前往Chat页
+   */
+  void toChat(int i){
+    Get.toNamed("/chat");
   }
 }

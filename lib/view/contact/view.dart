@@ -23,6 +23,8 @@ class ContactPage extends StatelessWidget {
       return Container(
         color: Color.fromRGBO(84,176,247,1),
         child: SafeArea(
+          top: true,
+          bottom: false,
           child: Column(
             children: [
               //头部
@@ -82,34 +84,35 @@ class ContactPage extends StatelessWidget {
                   child: Column(
                     children: [
                       //  搜索框
-                      InkWell(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              right: 40.rpx, top: 20.rpx, left: 40.rpx),
-                          height: 150.rpx,
-                          color: Color.fromRGBO(242, 242, 242, 1),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              //搜索
-                              SizedBox(
-                                  width: 80.rpx,
-                                  height: 80.rpx,
-                                  child: Image.asset("assets/icon/sousuo.png")
-                              ),
-                              SizedBox(width: 20.rpx),
-                              //搜索
-                              Container(
-                                child: Text("搜索", style: TextStyle(
-                                    color: Colors.grey, fontSize: 14)),
-                              )
-                            ],
+                      Container(
+                        color: Color.fromRGBO(242,242,242,1),
+                        child: InkWell(
+                          child: Container(
+                            margin: EdgeInsets.only(right: 60.rpx, top: 50.rpx,left: 60.rpx,bottom: 100.rpx),
+                            height: 150.rpx,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                //搜索
+                                SizedBox(
+                                    width: 80.rpx,
+                                    height: 80.rpx,
+                                    child: Image.asset("assets/icon/sousuo.png")
+                                ),
+                                SizedBox(width: 20.rpx),
+                                //搜索
+                                Container(
+                                  child: Text("搜索",style: TextStyle(color: Colors.grey,fontSize: 14)),
+                                )
+                              ],
+                            ),
                           ),
+                          onTap: (){
+                            print('搜索');
+                          },
                         ),
-                        onTap: () {
-                          print('搜索');
-                        },
                       ),
                       //新朋友 & 群通知
                       Container(
