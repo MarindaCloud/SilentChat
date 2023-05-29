@@ -134,11 +134,13 @@ class ChatPage extends StatelessWidget {
                                       color: Colors.blue,
                                       borderRadius: BorderRadius.circular(5)
                                     ),
-
                                     child: Center(
                                       child: Text("发送",style: TextStyle(color: Colors.white,fontSize: 16),),
                                     ),
                                   ),
+                                  onTap: (){
+                                    logic.sendMessage();
+                                  },
                                 ),
                               )
                             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
 
 import 'state.dart';
@@ -7,6 +8,11 @@ import 'state.dart';
 class ChatLogic extends GetxController {
   final ChatState state = ChatState();
 
+
+  @override
+  void onInit() {
+    state.socketHandle = Get.find<SocketHandle>();
+  }
 
   /*
    * @author Marinda
@@ -128,5 +134,10 @@ class ChatLogic extends GetxController {
       list.add(message);
     }
     return list;
+  }
+
+  void sendMessage(){
+    state.socketHandle?.write("这是一条消息");
+    // SocketHandle().write(data)
   }
 }

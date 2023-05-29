@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/socket/socket_handle.dart';
+import 'package:silentchat/socket/socket_handle.dart';
+import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/view.dart';
 import 'package:silentchat/view/message/view.dart';
@@ -12,8 +19,24 @@ class IndexLogic extends GetxController {
   @override
   void onInit() {
     state.contentWidget = Get.arguments;
+    initSocket();
     // TODO: implement onInit
     super.onInit();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/5/29 10:54
+   * @description 连接Socket
+   */
+  void initSocket() async{
+    var socketHandle = Get.find<SocketHandle>();
+    state.webSocketChannel = socketHandle.webSocketChannel;
+    User user = User(uid: 2,userName: "小明");
+    Packet packet = Packet(type: 1, object: user);
+    String packetJSON = json.encode(packet.toJson());
+    Log.i("初始化Socket连接包：${packetJSON}");
+    socketHandle.write(packetJSON);
   }
 
   /*

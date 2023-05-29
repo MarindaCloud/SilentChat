@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/enum/global_page.dart';
+import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -12,7 +13,7 @@ void main() async{
   // 全部去除
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await Log.initLogger();
-
+   initService();
   try {
 
   }catch(e){
@@ -82,5 +83,5 @@ class MainState extends State<MainApp> with WidgetsBindingObserver{
  * @Date 11:12 2022/7/1
  **/
 initService() {
-
+  Get.put(SocketHandle());
 }
