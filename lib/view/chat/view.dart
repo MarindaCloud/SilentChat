@@ -101,22 +101,47 @@ class ChatPage extends StatelessWidget {
                         Container(
                           height: 230.rpx,
                           padding: EdgeInsets.only(top: 50.rpx,left: 50.rpx,right: 50.rpx),
-                          child: SizedBox(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(left: 100.rpx),
-                                fillColor: Colors.white,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide.none
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                    borderSide: BorderSide.none
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  maxLength: null,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(left: 100.rpx,right: 50.rpx),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: BorderSide.none
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: BorderSide.none
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              Container(
+                                width: 50.rpx,
+                              ),
+                              SizedBox(
+                                width: 250.rpx,
+                                height: 200.rpx,
+                                child: InkWell(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(5)
+                                    ),
+
+                                    child: Center(
+                                      child: Text("发送",style: TextStyle(color: Colors.white,fontSize: 16),),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                         Container(
