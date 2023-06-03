@@ -2,16 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'state.dart';
 
-class ChatLogic extends GetxController {
+class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   final ChatState state = ChatState();
-
 
   @override
   void onInit() {
     state.socketHandle = Get.find<SocketHandle>();
+    final ImagePicker picker = ImagePicker();
+    state.picker = picker;
+    state.animatedController = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
+    state.fadeValue = Tween<double>(begin: 0,end: 1).animate(state.animatedController!);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/5/29 18:41
+   * @description 打开图像
+   */
+  void openImagePicker() async{
+    final XFile? image = await state.picker!.pickImage(source: ImageSource.gallery);
+  }
+
+  void sendMessage(){
+    state.socketHandle?.write("这是一条消息");
+    // SocketHandle().write(data)
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/3 11:30
+   * @description 录音处理
+   */
+  void recording(){
+    state.animatedController!.reset();
+    state.animatedController!.forward();
+    state.chooseRecording.value = !state.chooseRecording.value;
   }
 
   /*
@@ -136,8 +164,4 @@ class ChatLogic extends GetxController {
     return list;
   }
 
-  void sendMessage(){
-    state.socketHandle?.write("这是一条消息");
-    // SocketHandle().write(data)
-  }
 }
