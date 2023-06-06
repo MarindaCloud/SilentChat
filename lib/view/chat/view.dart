@@ -90,14 +90,23 @@ class ChatPage extends StatelessWidget {
                       ),
                       //内容信息
                       Container(
-                        margin: EdgeInsets.only(top: 190.rpx),
-                        color: Color.fromRGBO(241, 241, 241, 1),
-                        child: SingleChildScrollView(
-                          child: Container(
-                            child: Column(
-                              children: logic.buildChatMessage(),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(top: 190.rpx),
+                                color: Color.fromRGBO(241, 241, 241, 1),
+                                // color: Colors.red,
+                                child: SingleChildScrollView(
+                                  child: Container(
+                                    child: Column(
+                                      children: logic.buildChatMessage(),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                       //    底部
@@ -121,6 +130,7 @@ class ChatPage extends StatelessWidget {
                                       child: TextField(
                                         maxLength: null,
                                         maxLines: null,
+                                        controller: state.messageController,
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(
                                               left: 100.rpx, right: 50.rpx),
@@ -198,7 +208,6 @@ class ChatPage extends StatelessWidget {
                                             color: Colors.black,),
                                         ),
                                         onTap: () {
-                                          print('打开！');
                                           logic.openImagePicker();
                                         },
                                       ),
@@ -213,7 +222,8 @@ class ChatPage extends StatelessWidget {
                                             color: Colors.black,),
                                         ),
                                         onTap: () {
-                                          print("视频");
+                                          logic.openVideoPicker();
+                                          // print("视频");
                                         },
                                       ),
                                     ),
