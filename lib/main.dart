@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/enum/global_page.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';

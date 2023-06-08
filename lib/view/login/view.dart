@@ -256,6 +256,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       onTap: (){
+                        logic.login();
                         logic.toIndex();
                       },
                     ),
