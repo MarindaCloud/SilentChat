@@ -12,9 +12,6 @@ import '../request.dart';
  */
 class UserAPI {
 
-  static Map<String,dynamic> header = {
-    "Content-Type": "application/x-www-form-urlencoded"
-  };
 
   /*
    * @author Marinda
@@ -27,12 +24,14 @@ class UserAPI {
       "username": username,
       "password": password
     };
-    var response = await Request.sendPost("user/login", data: data, header: header);
+    var response = await Request.sendPost("user/login", data: data, header: Request.header);
+    Log.i("response: ${response}");
     APIResult apiResult = await Request.toAPIResult(response);
-    String token = apiResult.data;
-    Request.token = token;
-
-    Log.i("RequestToken: ${token}");
+    if(apiResult.data != null){
+      String token = apiResult.data;
+      Request.token = token;
+    }
+    Log.i("RequestToken: ${Request.token}");
     return apiResult;
   }
 
@@ -48,7 +47,7 @@ class UserAPI {
       "password": user.password,
       "phone": user.phone
     };
-    return await Request.sendPost("user/login", data: data, header: header);
+    return await Request.sendPost("user/login", data: data, header: Request.header);
   }
 
 }

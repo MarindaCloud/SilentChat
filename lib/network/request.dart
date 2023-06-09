@@ -11,13 +11,16 @@ class Request{
   static final dioOption = BaseOptions(connectTimeout: 5000,receiveTimeout: 3000);
   static final Dio _dio = Dio(dioOption);
   static bool expireToken = false;
+  static Map<String,dynamic> header = {
+    "Content-Type": "application/x-www-form-urlencoded"
+  };
 
   /*
    * @author Marinda
    * @date 2023/6/8 15:53
    * @description 内置请求
    */
-  static Future<T> _request<T>(String path,{String method = "",Map<String,dynamic>? data,Map<String,dynamic>? header}) async{
+  static Future<T> _request<T>(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
     try{
       String url = "http://${host}:${port}/${path}";
       if(_dio.interceptors.isEmpty){
@@ -43,7 +46,7 @@ class Request{
    * @date 2023/6/8 15:25
    * @description 发送Post请求
    */
-  static Future<T> sendPost<T>(String url,{required Map<String,dynamic> data,required Map<String,dynamic> header}) async{
+  static Future<T> sendPost<T>(String url,{required dynamic data,required Map<String,dynamic> header}) async{
     header["token"] = Request.token;
     return await _request(url,method: "post",data: data,header: header);
   }
@@ -53,7 +56,7 @@ class Request{
    * @date 2023/6/8 15:25
    * @description 发送Get请求
    */
-  static Future<T> sendGet<T>(String url,{Map<String,dynamic>? data,Map<String,dynamic>? header}) async{
+  static Future<T> sendGet<T>(String url,{dynamic data,Map<String,dynamic>? header}) async{
     Map<String,dynamic> defaultHeader = {
       "token": token
     };

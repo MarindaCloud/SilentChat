@@ -28,9 +28,15 @@ class APIResult {
   set msg(String? msg) => _msg = msg;
 
   APIResult.fromJson(Map<String, dynamic> json) {
-    _code = json['code'];
-    _data = json['data'];
-    _msg = json['msg'];
+    if(json["code"] != null){
+      _code = json["code"];
+    }
+    if(json["data"] != null){
+      _data = json["data"];
+    }
+    if(json["msg"] != null){
+      _msg = json["msg"];
+    }
   }
 
   Map<String, dynamic> toJson() {

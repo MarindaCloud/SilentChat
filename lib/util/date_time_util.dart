@@ -7,7 +7,7 @@ import 'package:date_format/date_format.dart';
  */
 class DateTimeUtil{
   static String ymd = "yyyy - mm - dd";
-  static String ymdhns = "yyyy - mm - dd HH : nn : ss";
+  static String ymdhns = "yyyy - mm - dd   HH : nn : ss";
   static String ymdhn = "yyyy - mm - dd HH : nn";
   static String hn = "HH : nn";
   /*
@@ -19,6 +19,17 @@ class DateTimeUtil{
     //由于传递list，字符串分割成数组则需要分割条件，于是给提供的静态变量都是携带空格
     List<String> formatArgsList = format.split(" ").toList();
     String formatDateTime = formatDate(dateTime,formatArgsList);
+    return formatDateTime;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/5 14:33
+   * @description 格式化日期条件
+   */
+  static String formatCustomDateTime(DateTime dateTime,List<String> formatList){
+    //由于传递list，字符串分割成数组则需要分割条件，于是给提供的静态变量都是携带空格
+    String formatDateTime = formatDate(dateTime,formatList);
     return formatDateTime;
   }
 

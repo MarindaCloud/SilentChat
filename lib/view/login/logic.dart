@@ -1,10 +1,11 @@
 import 'package:get/get.dart';
+import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/network/request.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/message/view.dart';
-
+import 'package:bot_toast/bot_toast.dart';
 import 'state.dart';
 
 class LoginLogic extends GetxController {
@@ -33,7 +34,12 @@ class LoginLogic extends GetxController {
   void login() async{
     String userName = state.userName.text;
     String passWord = state.passWord.text;
-    var response = UserAPI.login(userName, passWord);
+    APIResult response = await UserAPI.login(userName, passWord);
+    if(response.code == 400){
+      BotToast.showText(text: "登录失败，账号或密码错误！");
+      return;
+    }
+    toIndex();
     Log.i("登录响应结果: ${response}");
   }
 }

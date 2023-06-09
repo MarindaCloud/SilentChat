@@ -4,10 +4,10 @@
  * @description 消息类型
  */
 enum MessageType{
-  TEXT("text"),IMAGE("image"),VOICE("voice");
+  TEXT(1),IMAGE(2),VOICE(3),FILE(4);
 
   const MessageType(this.type);
-  final String type;
+  final int type;
 
   /*
    * @author Marinda
@@ -16,7 +16,7 @@ enum MessageType{
    */
   static MessageType? getMessageType(String type){
     for(MessageType element in MessageType.values){
-      String value = element.type;
+      int value = element.type;
       if(type == value){
         return element;
       }

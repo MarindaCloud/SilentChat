@@ -148,6 +148,7 @@ class LoginPage extends StatelessWidget {
                               ),
                               Expanded(
                                   child: TextField(
+                                    obscureText: true,
                                     controller: state.passWord,
                                     maxLines: 1,
                                     maxLength: null,
@@ -257,7 +258,6 @@ class LoginPage extends StatelessWidget {
                       ),
                       onTap: (){
                         logic.login();
-                        logic.toIndex();
                       },
                     ),
                   ),

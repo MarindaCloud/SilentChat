@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
+import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/enum/message_type.dart';
+import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -131,13 +134,30 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     final XFile? video = await state.picker!.pickVideo(source: ImageSource.camera);
   }
 
+
+  /*
+   * @author Marinda
+   * @date 2023/6/9 16:13
+   * @description 插入消息
+   */
+  insertMessage(MessageType type,{String? expand_address}) async{
+    String message = state.messageController.text;
+    DateTime dateTime = DateTime.now();
+    Message entity = Message(content: message,type: type.type,time: dateTime);
+    if(expand_address != ""){entity.expandAddress = expand_address;}
+    APIResult apiResult = await MessageApi.insertMessage(entity);
+    Log.i("插入结果：${apiResult.toJson()}");
+  }
+
   /*
    * @author Marinda
    * @date 2023/6/3 14:07
    * @description 发送消息
    */
-  void sendMessage(){
+  void sendMessage() async{
+    MessageType type = MessageType.TEXT;
     String message = state.messageController.text;
+    await insertMessage(type);
     ChatMessage chatMessage = ChatMessage(uid: 1,chatMessage: message);
     Packet packet = Packet(type: 2,object: chatMessage);
     String packetJSON = json.encode(packet);
