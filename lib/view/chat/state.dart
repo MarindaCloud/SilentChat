@@ -15,6 +15,8 @@ class ChatState {
   final chatRecordList = <ChatRecordData>[].obs;
   //用来储存记录的map
   RxMap<String,List<ChatRecordData>> recordMap = RxMap();
+
+  final existsContentFlag = false.obs;
   ChatState() {
     ///Initialize variables
   }

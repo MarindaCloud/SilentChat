@@ -2,11 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/entity/api_result.dart';
+import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/friends_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/util/network_util.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/view.dart';
 import 'package:silentchat/view/message/view.dart';
@@ -15,11 +21,15 @@ import 'state.dart';
 
 class IndexLogic extends GetxController {
   final IndexState state = IndexState();
+  final socketHandle = Get.find<SocketHandle>();
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
 
   @override
   void onInit() {
     state.contentWidget = Get.arguments;
     initSocket();
+    initFriendsList();
     // TODO: implement onInit
     super.onInit();
   }
@@ -30,13 +40,22 @@ class IndexLogic extends GetxController {
    * @description 连接Socket
    */
   void initSocket() async{
-    var socketHandle = Get.find<SocketHandle>();
     state.webSocketChannel = socketHandle.webSocketChannel;
-    User user = User(id: 2,userName: "demo",password: "demo",phone: 123123);
+    User user = systemState.user;
     Packet packet = Packet(type: 1, object: user);
     String packetJSON = json.encode(packet.toJson());
     Log.i("初始化Socket连接包：${packetJSON}");
     socketHandle.write(packetJSON);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/9 18:02
+   * @description 初始化朋友列表
+   */
+  initFriendsList() async{
+    List<Friend> friendList = await FriendsAPI.selectByUid();
+    Log.i("朋友详情列表List: ${friendList}");
   }
 
   /*

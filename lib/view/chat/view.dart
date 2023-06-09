@@ -131,6 +131,10 @@ class ChatPage extends StatelessWidget {
                                         maxLength: null,
                                         maxLines: null,
                                         controller: state.messageController,
+                                        onChanged: (val){
+                                          if(val.isEmpty){state.existsContentFlag.value = false;return;}
+                                          state.existsContentFlag.value = true;
+                                        },
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(
                                               left: 100.rpx, right: 50.rpx),
@@ -158,7 +162,7 @@ class ChatPage extends StatelessWidget {
                                       child: InkWell(
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: Colors.blue,
+                                              color: state.existsContentFlag.value ? Colors.blue : Colors.grey,
                                               borderRadius: BorderRadius
                                                   .circular(5)
                                           ),

@@ -7,9 +7,9 @@ class User {
   int? _id;
   String? _userName;
   String? _password;
-  int? _phone;
+  String? _phone;
 
-  User({int? id, String? userName, String? password, int? phone}) {
+  User({int? id, String? userName, String? password, String? phone}) {
     if (id != null) {
       this._id = id;
     }
@@ -30,8 +30,8 @@ class User {
   set userName(String? userName) => _userName = userName;
   String? get password => _password;
   set password(String? password) => _password = password;
-  int? get phone => _phone;
-  set phone(int? phone) => _phone = phone;
+  String? get phone => _phone;
+  set phone(String? phone) => _phone = phone;
 
   User.fromJson(Map<String, dynamic> json) {
     _id = json['id'];

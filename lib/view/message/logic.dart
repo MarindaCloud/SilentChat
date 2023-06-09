@@ -4,9 +4,20 @@ import 'package:silentchat/util/font_rpx.dart';
 
 import 'state.dart';
 
+/**
+ * @author Marinda
+ * @date 2023/6/9 17:30
+ * @description 消息控制器
+ */
 class MessageLogic extends GetxController {
   final MessageState state = MessageState();
-  
+
+
+  @override
+  void onInit() {
+    
+  }
+
   /*
    * @author Marinda
    * @date 2023/5/25 15:24
@@ -168,5 +179,10 @@ class MessageLogic extends GetxController {
    */
   void toChat(int i){
     Get.toNamed("/chat");
+  }
+
+  @override
+  void onClose() {
+
   }
 }

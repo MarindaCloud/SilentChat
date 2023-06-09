@@ -39,7 +39,7 @@ class MessageApi {
       "id": id
     };
     Log.i("查询id: ${id}的消息信息");
-    return BaseProvider.sendRequest("message/add", HttpMethods.POST.value, data);
+    return BaseProvider.sendRequest("user/selectById", HttpMethods.POST.value, data,header: Request.header);
   }
 
 }

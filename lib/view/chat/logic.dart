@@ -147,7 +147,18 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     if(expand_address != ""){entity.expandAddress = expand_address;}
     APIResult apiResult = await MessageApi.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
+    ChatRecordData recordData = new ChatRecordData();
+    recordData.message = message;
+    print('消息：${message}');
+    recordData.targetId = 1;
+    recordData.time = dateTime;
+    recordData.messageType = type;
+    recordData.portrait = "assets/user/portait.png";
+    state.chatRecordList.add(recordData);
+    sortRecordInfo();
   }
+
+
 
   /*
    * @author Marinda
@@ -157,11 +168,13 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   void sendMessage() async{
     MessageType type = MessageType.TEXT;
     String message = state.messageController.text;
+    if(message.isEmpty){ return;}
     await insertMessage(type);
     ChatMessage chatMessage = ChatMessage(uid: 1,chatMessage: message);
     Packet packet = Packet(type: 2,object: chatMessage);
     String packetJSON = json.encode(packet);
     state.socketHandle?.write(packetJSON);
+    state.messageController.text = "";
   }
 
   /*
@@ -344,11 +357,11 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-            maxWidth: 500.rpx,
-            minWidth: 100.rpx
+            maxWidth: 800.rpx,
+            minWidth: 200.rpx
         ),
         child: Text(
-            "这是一条新消息",
+            "${chatRecordData.message}",
             style: TextStyle(color: receiverId == 1 ? Colors.white : Colors.black,fontSize: 14)
         ),
       ),
