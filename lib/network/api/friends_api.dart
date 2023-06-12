@@ -58,7 +58,7 @@ class FriendsAPI {
     var data = {
       "uid": uid
     };
-    Log.i("查询id: ${uid}的消息信息");
+    Log.i("查询id: ${uid}的朋友信息列表");
     APIResult apiResult = await BaseProvider.sendRequest("friends/selectByUid", HttpMethods.POST.value, data,header: Request.header);
     List list = apiResult.data;
     List<Friend> friendList = list.map((e){return Friend.fromJson(e);}).toList();

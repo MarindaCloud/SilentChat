@@ -53,7 +53,7 @@ class IndexLogic extends GetxController {
     List<Friend> friendList = await FriendsAPI.selectByUid();
     List<User> userList = [];
     for(Friend friend in friendList){
-      int friendId = friend?.id ?? -1;
+      int friendId = friend?.fid ?? -1;
       User user  = await UserAPI.selectByUid(friendId);
       userList.add(user);
     }
