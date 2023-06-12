@@ -51,7 +51,7 @@ class MessagePage extends StatelessWidget {
                             Container(
                               alignment: Alignment.topLeft,
                               child: Container(
-                                  child: Text("云", style: TextStyle(
+                                  child: Text("${logic.systemState.user.userName}", style: TextStyle(
                                       color: Colors.white, fontSize: 14),
                                     overflow: TextOverflow.ellipsis,)
                               ),
@@ -144,8 +144,10 @@ class MessagePage extends StatelessWidget {
                           // color: Color.fromRGBO(242,242,242,1),
                           color: Colors.white,
                           child: SingleChildScrollView(
-                            child: Column(
-                              children: logic.buildRecordList(),
+                            child: Center(
+                              child: Column(
+                                children: logic.buildRecordList(),
+                              ),
                             ),
                           ),
                         )),

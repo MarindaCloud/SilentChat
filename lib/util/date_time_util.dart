@@ -48,6 +48,17 @@ class DateTimeUtil{
 
   /*
    * @author Marinda
+   * @date 2023/6/12 14:46
+   * @description 格式化当前时间 用来做message页展示
+   */
+  static String formatToDayDateTime(DateTime dateTime){
+    String peroidString = getHourPeroid(dateTime);
+    String dateString = formatDateTime(dateTime,format: hn);
+    return "${peroidString} ${dateString}";
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/6/5 14:36
    * @description 根据weekDay获取中文的星期几
    */

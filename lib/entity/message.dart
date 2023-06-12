@@ -1,12 +1,13 @@
 import 'package:silentchat/util/date_time_util.dart';
 
 class Message {
+  int? _id;
   String? _content;
   int? _type;
   String? _expandAddress;
   DateTime? _time;
 
-  Message({String? content, int? type, String? expandAddress, DateTime? time}) {
+  Message({int? id,String? content, int? type, String? expandAddress, DateTime? time}) {
     if (content != null) {
       this._content = content;
     }
@@ -19,7 +20,13 @@ class Message {
     if (time != null) {
       this._time = time;
     }
+    if(id != null){
+      this.id = id;
+    }
   }
+
+  int? get id => _id;
+  set id(int? id) => _id = id;
 
   String? get content => _content;
   set content(String? content) => _content = content;
@@ -33,6 +40,7 @@ class Message {
   Message.fromJson(Map<String, dynamic> json) {
     _content = json['content'];
     _type = json['type'];
+    _id = json['id'];
     _expandAddress = json['expand_address'];
     _time = DateTime.parse(json["time"]);
   }
@@ -41,6 +49,7 @@ class Message {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['content'] = this._content;
     data['type'] = this._type;
+    data['id'] = this._id;
     data['expand_address'] = this._expandAddress;
     String time = DateTimeUtil.formatCustomDateTime(this._time!,["yyyy","-","mm","-","dd"," ","hh",":","nn",":","ss"]);
     data["time"] = time;

@@ -1,19 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
-import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/friends_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
-import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
-import 'package:silentchat/util/network_util.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/view.dart';
 import 'package:silentchat/view/message/view.dart';

@@ -145,7 +145,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     DateTime dateTime = DateTime.now();
     Message entity = Message(content: message,type: type.type,time: dateTime);
     if(expand_address != ""){entity.expandAddress = expand_address;}
-    APIResult apiResult = await MessageApi.insertMessage(entity);
+    APIResult apiResult = await MessageAPI.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
     ChatRecordData recordData = new ChatRecordData();
     recordData.message = message;
