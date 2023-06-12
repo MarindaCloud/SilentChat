@@ -20,6 +20,26 @@ class APIResult {
     }
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/12 10:48
+   * @description 构建失败结果
+   */
+  static APIResult fail(String msg){
+    APIResult result = APIResult(code: 400,data: null,msg: msg);
+    return result;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/12 10:48
+   * @description 构建成功结果
+   */
+  static APIResult success(dynamic data){
+    APIResult result = APIResult(code: 200,data: data,msg: "");
+    return result;
+  }
+
   int? get code => _code;
   set code(int? code) => _code = code;
   dynamic get data => _data;

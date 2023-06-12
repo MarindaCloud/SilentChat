@@ -81,6 +81,8 @@ dev_dependencies:
   permission_handler: ^10.0.0
   #  时间格式化
   date_format: ^2.0.6
+  #拼音库
+  lpinyin: ^2.0.3
   #loadding库
   flutter_smart_dialog: ^4.7.1
   flutter_svg: ^1.0.0

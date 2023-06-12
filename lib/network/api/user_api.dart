@@ -54,4 +54,23 @@ class UserAPI {
     return await Request.sendPost("user/register", data: data, header: Request.header);
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/12 10:50
+   * @description 根据id查询用户信息
+   */
+  static selectByUid(int id) async{
+    Log.i("查询id: ${id}的用户信息");
+    Map<String,dynamic> data = {
+      "id": id,
+    };
+    var response = await Request.sendPost("user/selectById", data: data, header: Request.header);
+    APIResult apiResult = await Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return APIResult.fail("失败");
+    }
+    User user = User.fromJson(apiResult.data);
+    return user;
+  }
+
 }

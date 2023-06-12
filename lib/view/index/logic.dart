@@ -9,6 +9,7 @@ import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/friends_api.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
@@ -55,7 +56,14 @@ class IndexLogic extends GetxController {
    */
   initFriendsList() async{
     List<Friend> friendList = await FriendsAPI.selectByUid();
-    Log.i("朋友详情列表List: ${friendList}");
+    List<User> userList = [];
+    for(Friend friend in friendList){
+      int friendId = friend?.id ?? -1;
+      User user  = await UserAPI.selectByUid(friendId);
+      userList.add(user);
+    }
+    systemState.friendUserList.value = userList;
+    Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 
   /*

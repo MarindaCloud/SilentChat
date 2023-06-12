@@ -8,5 +8,5 @@ import 'package:get/get.dart';
  */
 class SystemState{
   User user = User();
-  final friendList = <Friend>[].obs;
+  final friendUserList = <User>[].obs;
 }
