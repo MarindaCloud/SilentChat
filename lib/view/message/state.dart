@@ -4,7 +4,7 @@ class MessageState {
   final showTools = false.obs;
   final messageRecordMessage = [];
   //消息视图Map
-  final messageViewMap = RxMap<String,Message>();
+  final messageViewMap = RxMap<String,Map<int,Message>>();
   MessageState() {
     ///Initialize variables
   }

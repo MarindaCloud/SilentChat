@@ -20,6 +20,10 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   final ChatState state = ChatState();
   @override
   void onInit() {
+    if(Get.arguments == null ) return;
+    Map<String,int> args = Get.arguments;
+    state.args = args;
+    print('参数：${state.args}');
     initChatRecordDataList();
     state.socketHandle = Get.find<SocketHandle>();
     final ImagePicker picker = ImagePicker();
@@ -28,6 +32,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     state.fadeValue = Tween<double>(begin: 0,end: 1).animate(state.animatedController!);
   }
 
+
   /*
    * @author Marinda
    * @date 2023/6/5 14:09
@@ -35,6 +40,9 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    */
   initChatRecordDataList() {
     List<ChatRecordData> list = [];
+    int id = state.args["id"] ?? -1;
+    int type = state.args["type"] ?? -1;
+
     for(int i = 1;i<=5;i++){
       DateTime dt = DateTime.now();
       dt.add(Duration(minutes: 1));

@@ -31,7 +31,7 @@ class BottomNavState extends State<BottomNavWidget> {
     return Obx(() {
       return Container(
         width: double.infinity,
-        color: Color.fromRGBO(211,211,211,1),
+        color: Color.fromRGBO(247,247,247,1),
         padding: EdgeInsets.only(bottom: 30.rpx, top: 30.rpx),
         child: Row(
           children: buildBottomNav(widget.indexState.index.value),
@@ -62,7 +62,7 @@ class BottomNavState extends State<BottomNavWidget> {
                   Container(
                     margin: EdgeInsets.only(top: 5.rpx),
                     child: Text(getNavName(i), style: TextStyle(
-                        color: index == i ? Color.fromRGBO(65,152,241,1) : Colors.white,
+                        color: index == i ? Color.fromRGBO(65,152,241,1) : Colors.black,
                         fontSize: 16)),
                   )
                 ],

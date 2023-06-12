@@ -23,7 +23,7 @@ class ChatPage extends StatelessWidget {
     return Obx(() {
       return Scaffold(
           body: Container(
-            color: Color.fromRGBO(211, 211, 211, 1),
+            color: Color.fromRGBO(247, 247, 247, 1),
             child: SafeArea(
               bottom: false,
               child: Container(
@@ -53,15 +53,14 @@ class ChatPage extends StatelessWidget {
                                             width: 120.rpx,
                                             height: 120.rpx,
                                             decoration: BoxDecoration(
-                                                color: Color.fromRGBO(
-                                                    199, 199, 202, 1),
+                                                color: Color.fromRGBO(76,175,80,1),
                                                 borderRadius: BorderRadius
                                                     .circular(15000)
                                             ),
                                             child: Center(
                                               child: Text("17",
                                                   style: TextStyle(
-                                                      color: Colors.black,
+                                                      color: Colors.white,
                                                       fontSize: 18)),
                                             ),
                                           ),
@@ -116,7 +115,7 @@ class ChatPage extends StatelessWidget {
                         child: Container(
                           width: Get.width,
                           padding: EdgeInsets.only(top: 0.rpx, bottom: 0),
-                          color: Color.fromRGBO(211, 211, 211, 1),
+                          color: Color.fromRGBO(247, 247, 247, 1),
                           child: Column(
                             children: [
                               //输入框
@@ -162,7 +161,7 @@ class ChatPage extends StatelessWidget {
                                       child: InkWell(
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: state.existsContentFlag.value ? Colors.blue : Colors.grey,
+                                              color: state.existsContentFlag.value ? Colors.blue : Color.fromRGBO(182,182,182,1),
                                               borderRadius: BorderRadius
                                                   .circular(5)
                                           ),
@@ -317,7 +316,7 @@ class ChatPage extends StatelessWidget {
                               ),
                               Container(
                                 height: 100.rpx,
-                                color: Color.fromRGBO(211, 211, 211, 1),
+                                color: Color.fromRGBO(247, 247, 247, 1),
                               )
                               // Expanded(child: SizedBox())
                             ],

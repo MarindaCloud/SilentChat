@@ -40,7 +40,7 @@ class MessageLogic extends GetxController {
     //获取用户聊天记录详情
     UserReceiver userReceiver = UserReceiver(systemState.user.id ?? 0);
     List<int> receiverIdList = await userReceiver.getReceiverList();
-    Map<String,Message> messageViewMap = {};
+    Map<String,Map<int,Message>> messageViewMap = {};
     for(int receiverId in  receiverIdList){
       User user = await userReceiver.getEntity(uid: receiverId) as User;
       String userName = user.userName??"";
@@ -48,7 +48,10 @@ class MessageLogic extends GetxController {
       if(message == null){
         continue;
       }
-      messageViewMap[userName] = message!;
+      Map<int,Message> cacheMessageMap = {
+        receiverId: message!
+      };
+      messageViewMap[userName] = cacheMessageMap;
     }
     state.messageViewMap.value = messageViewMap;
     print('涉及到的视图map详情: ${messageViewMap}');
@@ -127,8 +130,10 @@ class MessageLogic extends GetxController {
    buildRecordList(){
     List<Widget> list = [];
     for(String target in state.messageViewMap.keys){
-      Message? message = state.messageViewMap[target];
-      if(message == null){ continue;}
+      Map<int,Message> data = state.messageViewMap[target] ?? {};
+      int key = data.keys.first;
+      Message message = data[key]!;
+      if(data == null){ continue;}
       String time = DateTimeUtil.formatToDayDateTime(message!.time!);
       String content = message.content ?? "";
       Widget child = InkWell(
@@ -199,8 +204,9 @@ class MessageLogic extends GetxController {
           ),
         ),
         onTap: (){
-          print("target: ${target}");
-          toChat(1);
+          int type = message.type ?? -1;
+          print("目标id: ${key}");
+          toChat(key,type);
         },
       );
       list.add(child);
@@ -233,10 +239,14 @@ class MessageLogic extends GetxController {
   /*
    * @author Marinda
    * @date 2023/5/26 10:55
-   * @description 前往Chat页
+   * @description 前往Chat页 携带参数 id & type
    */
-  void toChat(int i){
-    Get.toNamed("/chat");
+  void toChat(int id,int type){
+    Map<String,int> args = {
+      "id": id,
+      "type": type
+    };
+    Get.toNamed("/chat",arguments: args);
   }
 
   @override

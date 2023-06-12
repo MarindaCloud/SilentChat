@@ -17,6 +17,8 @@ class ChatState {
   RxMap<String,List<ChatRecordData>> recordMap = RxMap();
 
   final existsContentFlag = false.obs;
+  final title = "".obs;
+  Map<String,int> args = {};
   ChatState() {
     ///Initialize variables
   }
