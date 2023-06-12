@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/receiver.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -38,15 +40,22 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    * @date 2023/6/5 14:09
    * @description 初始化聊天记录信息列表
    */
-  initChatRecordDataList() {
+  initChatRecordDataList() async{
     List<ChatRecordData> list = [];
     int id = state.args["id"] ?? -1;
     int type = state.args["type"] ?? -1;
-
-    for(int i = 1;i<=5;i++){
-      DateTime dt = DateTime.now();
-      dt.add(Duration(minutes: 1));
-      ChatRecordData chatRecordData = ChatRecordData(targetId: i,message: "这是一条消息",messageType: MessageType.TEXT,portrait: "assets/user/portait.png",time: dt);
+    List<Message> messageList = [];
+    if(type == 1){
+      UserReceiver userReceiver = UserReceiver();
+      messageList = await userReceiver.getTargetMessageList(id);
+    }
+    for(Message message in messageList){
+      DateTime dt = message.time!;
+      int type = message.type!;
+      String portait = "assets/user/portait.png";
+      String content = message.content ?? "";
+      MessageType messageType = MessageType.getMessageType(type)!;
+      ChatRecordData chatRecordData = ChatRecordData(targetId: message.id,messageType: messageType,message: content,portrait: portait,time: dt);
       list.add(chatRecordData);
     }
     state.chatRecordList.value = list;

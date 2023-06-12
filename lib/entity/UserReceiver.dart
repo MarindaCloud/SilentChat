@@ -18,13 +18,12 @@ class UserReceiver implements Receiver{
   final systemLogic = Get.find<SystemLogic>();
   final systemState = Get.find<SystemLogic>().state;
 
-  int _id;
-  UserReceiver(this._id);
+  UserReceiver();
 
 
   @override
   Future<SilentChatEntity> getEntity({int? uid}) async{
-    int targetId = uid ?? this._id;
+    int targetId = uid ?? systemState.user.id ?? 0;
     User user = await UserAPI.selectByUid(targetId);
     return user;
   }
@@ -73,4 +72,24 @@ class UserReceiver implements Receiver{
     list.addAll(sendIdList);
     return list;
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/12 17:19
+   * @description 获取和该接受者的所有聊天记录信息
+   */
+  Future<List<Message>> getTargetMessageList(int receiverId) async{
+    int uid = systemState.user.id ?? 0;
+    List<ChatInfo> chatInfo = await MessageAPI.selectUserChatInfo();
+    List<Message> messageList = [];
+    List<int> midList = chatInfo.where((e) => e.sendId == uid && e.receiverId == receiverId || e.sendId == receiverId && e.receiverId == uid).toList().map((e) => e.mid?? 0).toList();
+    print('消息id列表: ${midList}');
+    for(int mid in midList){
+     Message message = await MessageAPI.selectMessageById(mid);
+     messageList.add(message);
+    }
+    return messageList;
+  }
+
+
 }

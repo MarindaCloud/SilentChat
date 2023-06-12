@@ -38,7 +38,7 @@ class MessageLogic extends GetxController {
   void initRecordMessage() async{
     int uid = systemState.user.id ?? 0;
     //获取用户聊天记录详情
-    UserReceiver userReceiver = UserReceiver(systemState.user.id ?? 0);
+    UserReceiver userReceiver = UserReceiver();
     List<int> receiverIdList = await userReceiver.getReceiverList();
     Map<String,Map<int,Message>> messageViewMap = {};
     for(int receiverId in  receiverIdList){

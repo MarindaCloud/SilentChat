@@ -32,6 +32,10 @@ abstract class Receiver {
    */
   Future<Message?> getNewMessage({int? uid,int? receiverId});
 
-
+  /*
+   * @author Marinda
+   * @date 2023/6/12 17:16
+   * @description 获取接收人id列表
+   */
   Future<List<int>> getReceiverList();
 }

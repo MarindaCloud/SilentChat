@@ -14,7 +14,7 @@ enum MessageType{
    * @date 2023/6/5 11:33
    * @description 根据类型获取MessageType对象
    */
-  static MessageType? getMessageType(String type){
+  static MessageType? getMessageType(int type){
     for(MessageType element in MessageType.values){
       int value = element.type;
       if(type == value){
