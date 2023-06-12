@@ -5,6 +5,7 @@ class IndexState {
   Widget contentWidget = Container();
   final index = 0.obs;
   IOWebSocketChannel? webSocketChannel;
+  final showUserInfo = false.obs;
   IndexState() {
     ///Initialize variables
   }

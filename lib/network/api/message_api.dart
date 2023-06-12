@@ -32,6 +32,7 @@ class MessageAPI {
     return BaseProvider.sendRequest("message/add", HttpMethods.POST.value, data,header: header);
   }
 
+
   /*
    * @author Marinda
    * @date 2023/6/9 15:30
@@ -101,6 +102,29 @@ class MessageAPI {
     List list = result.data;
     List<ChatInfo> chatInfoList = list.map((e) => ChatInfo.fromJson(e)).toList();
     return chatInfoList;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/12 11:35
+   * @description 根据群聊id获取聊天消息详情数据
+   */
+  static insertChatInfo(ChatInfo chatInfo) async{
+    var data = {
+      {
+        "sendId": chatInfo.sendId,
+        "receiverId": chatInfo.receiverId,
+        "type": chatInfo.type,
+        "mid": chatInfo.mid
+      }
+    };
+    Log.i("插入聊天详情数据！");
+    dynamic header = {
+      "Content-Type": HttpContentType.JSON.type
+    };
+    APIResult result = await BaseProvider.sendRequest("chatInfo/add", HttpMethods.POST.value, json.encode(data),header: header);
+    if(result.data == null){return false;}
+    return true;
   }
 
 }

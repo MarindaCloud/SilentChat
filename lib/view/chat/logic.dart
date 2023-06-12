@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
+import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
@@ -175,7 +176,15 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     sortRecordInfo();
   }
 
-
+  /*
+   * @author Marinda
+   * @date 2023/6/12 17:34
+   * @description 插入聊天详情
+   */
+  insertChatInfo({ChatInfo? chatInfo}) async{
+    bool result = await MessageAPI.insertChatInfo(chatInfo!);
+    Log.i("插入聊天详情结果：${result}");
+  }
 
   /*
    * @author Marinda
@@ -187,6 +196,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     String message = state.messageController.text;
     if(message.isEmpty){ return;}
     await insertMessage(type);
+    // ChatInfo chatInfo = ChatInfo(mid: );
     ChatMessage chatMessage = ChatMessage(uid: 1,chatMessage: message);
     Packet packet = Packet(type: 2,object: chatMessage);
     String packetJSON = json.encode(packet);

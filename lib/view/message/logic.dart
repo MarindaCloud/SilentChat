@@ -138,13 +138,13 @@ class MessageLogic extends GetxController {
       String content = message.content ?? "";
       Widget child = InkWell(
         child: Container(
-          padding: EdgeInsets.only(right: 40.rpx, top: 10.rpx,left: 40.rpx),
+          padding: EdgeInsets.only(right: 40.rpx, top: 30.rpx,left: 40.rpx),
           margin: EdgeInsets.only(bottom: 80.rpx),
           child: Row(
             children: [
               //头像
               Container(
-                margin: EdgeInsets.only(right: 20.rpx),
+                margin: EdgeInsets.only(right: 40.rpx),
                 width: 200.rpx,
                 height: 200.rpx,
                 decoration: BoxDecoration(
@@ -169,7 +169,7 @@ class MessageLogic extends GetxController {
                                target,
                                 style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 18,
+                                    fontSize: 14,
                                     overflow: TextOverflow.ellipsis
                                 ),
                               ),

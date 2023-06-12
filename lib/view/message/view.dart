@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/view/index/logic.dart';
 
 import 'logic.dart';
 
@@ -29,18 +30,23 @@ class MessagePage extends StatelessWidget {
                 child: Row(
                   children: [
                     //头像
-                    Container(
-                      width: 150.rpx,
-                      height: 150.rpx,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10000),
-                          image: DecorationImage(
-                              image: Image
-                                  .asset("assets/user/portait.png")
-                                  .image,
-                              fit: BoxFit.fill
-                          )
+                    InkWell(
+                      child: Container(
+                        width: 150.rpx,
+                        height: 150.rpx,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10000),
+                            image: DecorationImage(
+                                image: Image
+                                    .asset("assets/user/portait.png")
+                                    .image,
+                                fit: BoxFit.fill
+                            )
+                        ),
                       ),
+                      onTap: (){
+                        Get.find<IndexLogic>().state.showUserInfo.value = true;
+                      },
                     ),
                     //  昵称 & 登录信息
                     Expanded(
