@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/user.dart';
@@ -37,53 +38,19 @@ class MessageLogic extends GetxController {
   void initRecordMessage() async{
     int uid = systemState.user.id ?? 0;
     //获取用户聊天记录详情
-    List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    //储存用户发送过的目标或者被动接受过的目标的id列表
-    List<int> receiverIdList = [];
-    Map<int,List<int>> cacheMessageMap = {};
+    UserReceiver userReceiver = UserReceiver(systemState.user.id ?? 0);
+    List<int> receiverIdList = await userReceiver.getReceiverList();
     Map<String,Message> messageViewMap = {};
-    for(ChatInfo chatInfo in chatInfoList){
-      int mid = chatInfo.mid ?? 0;
-      int sendId = chatInfo.sendId ?? 0;
-      int receiverId = chatInfo.receiverId ?? 0;
-      //该用户作为发送者
-      if(sendId == uid && receiverId != uid){
-        receiverIdList.add(receiverId);
-        if(cacheMessageMap.containsKey(receiverId)){
-          List<int> midList = cacheMessageMap[receiverId] ?? [];
-          List<int> newList = [];
-          newList.addAll(midList);
-          newList.add(mid);
-          cacheMessageMap[receiverId] = newList;
-        }else{
-          cacheMessageMap[receiverId] = [mid];
-        }
+    for(int receiverId in  receiverIdList){
+      User user = await userReceiver.getEntity(uid: receiverId) as User;
+      String userName = user.userName??"";
+      Message? message = await userReceiver.getNewMessage(uid: uid,receiverId: receiverId);
+      if(message == null){
+        continue;
       }
-      //该用户作为接受者
-      if(receiverId == uid && sendId != uid){
-        receiverIdList.add(sendId);
-        if(cacheMessageMap.containsKey(sendId)){
-          List<int> midList = cacheMessageMap[sendId] ?? [];
-          List<int> newList = [];
-          newList.addAll(midList);
-          newList.add(mid);
-          cacheMessageMap[sendId] = newList;
-        }else{
-          cacheMessageMap[sendId] = [mid];
-        }
-      }
-      // Message message = await MessageAPI.selectMessageById(mid);
-    }
-
-    for(int id in cacheMessageMap.keys){
-      List<int> midList = cacheMessageMap[id] ?? [];
-      Message message = await getNewMessage(midList);
-      User user = await UserAPI.selectByUid(id);
-      messageViewMap[user.userName?? ""] = message;
+      messageViewMap[userName] = message!;
     }
     state.messageViewMap.value = messageViewMap;
-    print('涉及到的相关接收者信息: ${receiverIdList.toSet()}');
-    print('涉及到的相关记录详情: ${cacheMessageMap}');
     print('涉及到的视图map详情: ${messageViewMap}');
   }
 
