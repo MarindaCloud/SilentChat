@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
@@ -9,7 +10,6 @@ import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
-import 'package:silentchat/entity/receiver.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -21,6 +21,9 @@ import 'state.dart';
 
 class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   final ChatState state = ChatState();
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
+
   @override
   void onInit() {
     if(Get.arguments == null ) return;
@@ -45,19 +48,21 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     List<ChatRecordData> list = [];
     int id = state.args["id"] ?? -1;
     int type = state.args["type"] ?? -1;
-    List<Message> messageList = [];
+    List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
+
     if(type == 1){
-      UserReceiver userReceiver = UserReceiver();
-      messageList = await userReceiver.getTargetMessageList(id);
-    }
-    for(Message message in messageList){
-      DateTime dt = message.time!;
-      int type = message.type!;
-      String portait = "assets/user/portait.png";
-      String content = message.content ?? "";
-      MessageType messageType = MessageType.getMessageType(type)!;
-      ChatRecordData chatRecordData = ChatRecordData(targetId: message.id,messageType: messageType,message: content,portrait: portait,time: dt);
-      list.add(chatRecordData);
+      for(ChatInfo chatInfo in chatInfoList){
+        int sendId = chatInfo.sendId ?? 0;
+        int mid = chatInfo.mid ?? 0;
+        Message message = await MessageAPI.selectMessageById(mid);
+        DateTime dt = message.time!;
+        int type = message.type!;
+        String portait = "assets/user/portait.png";
+        String content = message.content ?? "";
+        MessageType messageType = MessageType.getMessageType(type)!;
+        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portait,message: content);
+        list.add(chatRecordData);
+      }
     }
     state.chatRecordList.value = list;
     sortRecordInfo();
@@ -158,20 +163,18 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    * @date 2023/6/9 16:13
    * @description 插入消息
    */
-  insertMessage(MessageType type,{String? expand_address}) async{
+  insertMessage(int sendId,int receiverId,MessageType type,{String? expand_address}) async{
     String message = state.messageController.text;
     DateTime dateTime = DateTime.now();
     Message entity = Message(content: message,type: type.type,time: dateTime);
     if(expand_address != ""){entity.expandAddress = expand_address;}
     APIResult apiResult = await MessageAPI.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
-    ChatRecordData recordData = new ChatRecordData();
-    recordData.message = message;
-    print('消息：${message}');
-    recordData.targetId = 1;
-    recordData.time = dateTime;
-    recordData.messageType = type;
-    recordData.portrait = "assets/user/portait.png";
+    int messageInsertReturningId = apiResult.data;
+    String portrait = "assets/user/portait.png";
+    ChatRecordData recordData = new ChatRecordData(sendId: sendId,targetId: messageInsertReturningId,message: message,time: dateTime,messageType: type,portrait: portrait);
+    ChatInfo chatInfo = ChatInfo(sendId:sendId,receiverId: receiverId,type: type.type,mid: messageInsertReturningId);
+    await insertChatInfo(chatInfo);
     state.chatRecordList.add(recordData);
     sortRecordInfo();
   }
@@ -181,7 +184,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    * @date 2023/6/12 17:34
    * @description 插入聊天详情
    */
-  insertChatInfo({ChatInfo? chatInfo}) async{
+  insertChatInfo(ChatInfo chatInfo) async{
     bool result = await MessageAPI.insertChatInfo(chatInfo!);
     Log.i("插入聊天详情结果：${result}");
   }
@@ -195,8 +198,9 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     MessageType type = MessageType.TEXT;
     String message = state.messageController.text;
     if(message.isEmpty){ return;}
-    await insertMessage(type);
-    // ChatInfo chatInfo = ChatInfo(mid: );
+    int uid = systemState.user.id ?? 0;
+    int receiverId = state.args["id"] ?? -1;
+    await insertMessage(uid,receiverId,type);
     ChatMessage chatMessage = ChatMessage(uid: 1,chatMessage: message);
     Packet packet = Packet(type: 2,object: chatMessage);
     String packetJSON = json.encode(packet);
@@ -257,75 +261,8 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
       );
       list.add(child);
     }
-    // for(int i = 0;i<.length;i++){
-    //   var element = state.chatRecordList[i];
-    //   String formatDateTime = DateTimeUtil.formatWeekDateTime(element.time!);
-    //   Widget child = Container(
-    //     child: Column(
-    //       children: [
-    //       //  时间
-    //         Container(
-    //           height: 200.rpx,
-    //           child: Center(
-    //             // child: Text("星期二 晚上 5:53"),
-    //             child: Text("${formatDateTime}"),
-    //           ),
-    //         ),
-    //         //信息
-    //         Container(
-    //           padding: EdgeInsets.symmetric(horizontal: 30.rpx),
-    //           child: Column(
-    //             children: [
-    //               Container(
-    //                 child: Column(
-    //                   children: [...buildChatInfo(3, 2)],
-    //                 ),
-    //               ),
-    //               // Visibility(
-    //               //   visible: i > 5,
-    //               //     child: Column(
-    //               //       children: [...buildChatInfo(3, 2)],
-    //               //     ),
-    //               // ),
-    //               Visibility(
-    //                 visible: i < 5,
-    //                 child: Column(
-    //                   children: [...buildChatInfo(5, 1)],
-    //                 ),
-    //               )
-    //             ],
-    //           ),
-    //         )
-    //       ],
-    //     ),
-    //   );
-    //   list.add(child);
-    // }
     return list;
   }
-
-  /*
-   * @author Marinda
-   * @date 2023/5/29 10:36
-   * @description 构建聊天信息
-   */
-
-  // List<Widget> buildChatInfo(int num,int type){
-  //   List<Widget> list = [];
-  //   for(int i = 0;i<num;i++){
-  //     Widget widget = Container(
-  //       margin: EdgeInsets.only(bottom: 100.rpx),
-  //       child: Row(
-  //         mainAxisAlignment: type == 2 ? MainAxisAlignment.start : MainAxisAlignment.end,
-  //         children: [
-  //           ...buildChatItem(type)
-  //         ],
-  //       ),
-  //     );
-  //     list.add(widget);
-  //   }
-  //   return list;
-  // }
 
   /*
    * @author Marinda
@@ -336,12 +273,13 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   List<Widget> buildChatRecordInfo(List<ChatRecordData> chatRecordDataList) {
     List<Widget> list = [];
     for (ChatRecordData chatRecordData in chatRecordDataList) {
-      int receiverId = chatRecordData.targetId!;
+      int sendId = chatRecordData.sendId!;
+      int uid = systemState.user.id??0;
       Widget widget = Container(
         margin: EdgeInsets.only(bottom: 100.rpx),
         child: Row(
           //receiverId = 1 自己 2其他
-          mainAxisAlignment: receiverId == 1
+          mainAxisAlignment: sendId == uid
               ? MainAxisAlignment.end
               : MainAxisAlignment.start,
           children: [
@@ -374,13 +312,13 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    */
   List<Widget> buildChatRecordItem(ChatRecordData chatRecordData){
     List<Widget> list = [];
-    int receiverId = chatRecordData.targetId!;
+    int sendId = chatRecordData.sendId!;
     Widget expaned = SizedBox(width: 50.rpx);
     Widget message = Container(
       padding: EdgeInsets.all(40.rpx),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: receiverId == 1 ? Colors.blue : Colors.white
+          color: sendId == 1 ? Colors.blue : Colors.white
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -389,7 +327,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
         ),
         child: Text(
             "${chatRecordData.message}",
-            style: TextStyle(color: receiverId == 1 ? Colors.white : Colors.black,fontSize: 14)
+            style: TextStyle(color: sendId == 1 ? Colors.white : Colors.black,fontSize: 14)
         ),
       ),
     );
@@ -408,7 +346,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
       ),
     );
     //自己
-    if(receiverId == 1){
+    if(sendId == 1){
       list.add(message);
       list.add(expaned);
       list.add(portait);
@@ -420,57 +358,5 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     return list;
   }
 
-  /*
-   * @author Marinda
-   * @date 2023/5/29 10:30
-   * @description 构建聊天项目 type = 1 自己 type = 2其他
-   */
-  // List<Widget> buildChatItem(ChatRecordData chatRecordData){
-  //   List<Widget> list = [];
-  //
-  //   Widget expaned = SizedBox(width: 50.rpx);
-  //   Widget message = Container(
-  //     padding: EdgeInsets.all(40.rpx),
-  //     decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(10),
-  //         color: type == 1 ? Colors.blue : Colors.white
-  //     ),
-  //     child: ConstrainedBox(
-  //       constraints: BoxConstraints(
-  //           maxWidth: 500.rpx,
-  //           minWidth: 100.rpx
-  //       ),
-  //       child: Text(
-  //           "这是一条新消息",
-  //           style: TextStyle(color: type == 1 ? Colors.white : Colors.black,fontSize: 14)
-  //       ),
-  //     ),
-  //   );
-  //   Widget portait = Container(
-  //     margin: EdgeInsets.only(right: 20.rpx),
-  //     width: 150.rpx,
-  //     height: 150.rpx,
-  //     decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(10000),
-  //         image: DecorationImage(
-  //             image: Image
-  //                 .asset("assets/user/portait.png")
-  //                 .image,
-  //             fit: BoxFit.fill
-  //         )
-  //     ),
-  //   );
-  //   //自己
-  //   if(type == 1){
-  //     list.add(message);
-  //     list.add(expaned);
-  //     list.add(portait);
-  //   }else{
-  //     list.add(portait);
-  //     list.add(expaned);
-  //     list.add(message);
-  //   }
-  //   return list;
-  // }
 
 }

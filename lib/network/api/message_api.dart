@@ -29,7 +29,7 @@ class MessageAPI {
     Map<String,dynamic> header = {
       "Content-Type": HttpContentType.JSON.type
     };
-    return BaseProvider.sendRequest("message/add", HttpMethods.POST.value, data,header: header);
+    return BaseProvider.sendRequest("message/insertReturning", HttpMethods.POST.value, data,header: header);
   }
 
 
@@ -110,19 +110,11 @@ class MessageAPI {
    * @description 根据群聊id获取聊天消息详情数据
    */
   static insertChatInfo(ChatInfo chatInfo) async{
-    var data = {
-      {
-        "sendId": chatInfo.sendId,
-        "receiverId": chatInfo.receiverId,
-        "type": chatInfo.type,
-        "mid": chatInfo.mid
-      }
-    };
     Log.i("插入聊天详情数据！");
     dynamic header = {
       "Content-Type": HttpContentType.JSON.type
     };
-    APIResult result = await BaseProvider.sendRequest("chatInfo/add", HttpMethods.POST.value, json.encode(data),header: header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/add", HttpMethods.POST.value, chatInfo.toJson(),header: header);
     if(result.data == null){return false;}
     return true;
   }

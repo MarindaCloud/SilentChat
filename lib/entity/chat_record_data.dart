@@ -12,14 +12,16 @@ class ChatRecordData {
   MessageType? _messageType;
   String? _portrait;
   DateTime? _time;
-
+  //这个字段是为了区分是作为接受者还是发送者
+  int? _sendId;
 
   ChatRecordData(
       {int? targetId,
         String? message,
         MessageType? messageType,
         String? portrait,
-        DateTime? time}) {
+        DateTime? time,
+        int? sendId}) {
     if (targetId != null) {
       this._targetId = targetId;
     }
@@ -35,7 +37,13 @@ class ChatRecordData {
     if (time != null) {
       this._time = time;
     }
+    if (sendId != null) {
+      this._sendId = sendId;
+    }
   }
+
+  int? get sendId => _sendId;
+  set sendId(int? sendId) => _sendId = sendId;
 
   int? get targetId => _targetId;
   set targetId(int? targetId) => _targetId = targetId;
@@ -51,6 +59,9 @@ class ChatRecordData {
   ChatRecordData.fromJson(Map<String, dynamic> json) {
     if(json["target_id"] != null){
       _targetId = json['target_id'];
+    }
+    if(json["receiver_id"] != null){
+      _targetId = json['receiver_id'];
     }
     if(json["message"] != null){
       _message = json["message"];
@@ -70,6 +81,7 @@ class ChatRecordData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['target_id'] = this._targetId;
+    data['receiver_id'] = this._sendId;
     data['message'] = this._message;
     data['message_type'] = this._messageType?.type;
     data['portrait'] = this._portrait;
