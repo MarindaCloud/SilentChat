@@ -6,18 +6,18 @@ import 'package:date_format/date_format.dart';
  * @description 日期时间工具
  */
 class DateTimeUtil{
-  static String ymd = "yyyy - mm - dd";
-  static String ymdhns = "yyyy - mm - dd   HH : nn : ss";
-  static String ymdhn = "yyyy - mm - dd HH : nn";
-  static String hn = "HH : nn";
+  static List<String> ymd = ["yyyy","-","mm","-","dd"];
+  static List<String> ymdhns = ["yyyy","-","mm","-","dd"," ","HH",":","nn",":","ss"];
+  static List<String> ymdhn = ["yyyy","-","mm","-","dd"," ","HH",":","nn"];
+  static List<String> hn = ["HH", ":", "nn"];
   /*
    * @author Marinda
    * @date 2023/6/5 14:33
    * @description 格式化日期条件
    */
-  static String formatDateTime(DateTime dateTime,{String format = ""}){
+  static String formatDateTime(DateTime dateTime,{List<String>? format}){
     //由于传递list，字符串分割成数组则需要分割条件，于是给提供的静态变量都是携带空格
-    List<String> formatArgsList = format.split(" ").toList();
+    List<String> formatArgsList = format ?? [];
     String formatDateTime = formatDate(dateTime,formatArgsList);
     return formatDateTime;
   }

@@ -66,7 +66,7 @@ class ChatPage extends StatelessWidget {
                                           ),
                                         ),
                                         Expanded(
-                                            child: Text("工作群(2)",
+                                            child: Text("${state.title}",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 18))

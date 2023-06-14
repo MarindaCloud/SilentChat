@@ -9,13 +9,16 @@ import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   // 全部去除
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await Log.initLogger();
-   initService();
+  initService();
+  //强制竖屏
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
   try {
 
   }catch(e){

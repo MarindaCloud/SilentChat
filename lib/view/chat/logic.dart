@@ -10,8 +10,10 @@ import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/network/api/message_api.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -30,12 +32,37 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     Map<String,int> args = Get.arguments;
     state.args = args;
     print('参数：${state.args}');
+    int type = args["type"] ?? -1;
+    int id = args["id"] ?? -1;
+    getTitle(id, type);
     initChatRecordDataList();
     state.socketHandle = Get.find<SocketHandle>();
     final ImagePicker picker = ImagePicker();
     state.picker = picker;
     state.animatedController = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
     state.fadeValue = Tween<double>(begin: 0,end: 1).animate(state.animatedController!);
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/6/14 18:33
+   * @description 获取title
+   */
+  getTitle(int id,int type) async{
+    String title = "";
+    switch(type){
+      case 1:
+        //  用户
+        User user =  await UserAPI.selectByUid(id);
+        String userName = user.userName ?? "";
+        title = userName;
+        break;
+      case 2:
+        break;
+    }
+    state.title.value = title;
+
   }
 
 
@@ -49,9 +76,10 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     int id = state.args["id"] ?? -1;
     int type = state.args["type"] ?? -1;
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-
+    int uid = systemState.user.id ?? 0;
+    List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid).toList();
     if(type == 1){
-      for(ChatInfo chatInfo in chatInfoList){
+      for(ChatInfo chatInfo in filterTargetChatInfoList){
         int sendId = chatInfo.sendId ?? 0;
         int mid = chatInfo.mid ?? 0;
         Message message = await MessageAPI.selectMessageById(mid);
@@ -166,6 +194,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   insertMessage(int sendId,int receiverId,MessageType type,{String? expand_address}) async{
     String message = state.messageController.text;
     DateTime dateTime = DateTime.now();
+    Log.i("当前时间：${DateTimeUtil.formatDateTime(dateTime,format: DateTimeUtil.ymdhns)}");
     Message entity = Message(content: message,type: type.type,time: dateTime);
     if(expand_address != ""){entity.expandAddress = expand_address;}
     APIResult apiResult = await MessageAPI.insertMessage(entity);

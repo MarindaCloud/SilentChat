@@ -9,6 +9,7 @@ import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/util/log.dart';
 /**
  * @author Marinda
  * @date 2023/6/12 15:05
@@ -52,12 +53,14 @@ class UserReceiver implements Receiver{
     for(int mid in midList){
       Message message = await MessageAPI.selectMessageById(mid);
       messageList.add(message);
+      Log.i("当前消息：${message.toJson()}");
     }
     messageList.sort((a,b){
       DateTime bTime = b.time!;
       DateTime aTime = a.time!;
       return bTime.compareTo(aTime);
     });
+    Log.i("与: ${receiverId}的聊天最新记录为: ${messageList.first}");
     return messageList.first;
   }
 
@@ -70,7 +73,7 @@ class UserReceiver implements Receiver{
     List<int> list = [];
     list.addAll(receiverIdList);
     list.addAll(sendIdList);
-    return list;
+    return list.toSet().toList();
   }
 
   /*

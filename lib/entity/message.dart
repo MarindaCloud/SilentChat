@@ -51,7 +51,7 @@ class Message {
     data['type'] = this._type;
     data['id'] = this._id;
     data['expand_address'] = this._expandAddress;
-    String time = DateTimeUtil.formatCustomDateTime(this._time!,["yyyy","-","mm","-","dd"," ","hh",":","nn",":","ss"]);
+    String time = DateTimeUtil.formatDateTime(this._time!,format: DateTimeUtil.ymdhns);
     data["time"] = time;
     return data;
   }

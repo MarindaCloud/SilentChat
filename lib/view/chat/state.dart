@@ -8,6 +8,7 @@ class ChatState {
   TextEditingController messageController = TextEditingController(text: "");
   SocketHandle? socketHandle;
   ImagePicker? picker;
+  final title = "".obs;
   //录音
   final chooseRecording = false.obs;
   AnimationController? animatedController;
@@ -17,7 +18,6 @@ class ChatState {
   RxMap<String,List<ChatRecordData>> recordMap = RxMap();
 
   final existsContentFlag = false.obs;
-  final title = "".obs;
   Map<String,int> args = {};
   ChatState() {
     ///Initialize variables

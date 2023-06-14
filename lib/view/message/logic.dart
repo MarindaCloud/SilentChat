@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/db/dao/record_message_dao.dart';
+import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
@@ -10,7 +14,7 @@ import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
-
+import 'package:drift/drift.dart' as drift;
 import 'state.dart';
 
 /**
@@ -40,14 +44,19 @@ class MessageLogic extends GetxController {
     //获取用户聊天记录详情
     UserReceiver userReceiver = UserReceiver();
     List<int> receiverIdList = await userReceiver.getReceiverList();
+    //接受者总长度
+    int receiverLength = receiverIdList.length;
+    Log.i("接受者id长度: ${receiverLength}");
     Map<String,Map<int,Message>> messageViewMap = {};
-    for(int receiverId in  receiverIdList){
+    for(int receiverId in receiverIdList){
       User user = await userReceiver.getEntity(uid: receiverId) as User;
       String userName = user.userName??"";
       Message? message = await userReceiver.getNewMessage(uid: uid,receiverId: receiverId);
+      print('最新的消息：${message?.toJson()}');
       if(message == null){
         continue;
       }
+
       Map<int,Message> cacheMessageMap = {
         receiverId: message!
       };
@@ -55,6 +64,19 @@ class MessageLogic extends GetxController {
     }
     state.messageViewMap.value = messageViewMap;
     print('涉及到的视图map详情: ${messageViewMap}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/14 17:49
+   * @description 插入缓存记录信息
+   */
+  insertCacheRecord(int receiverId,Message message) async{
+    //插入至drift数据库
+    var recordInfo = RecordMessageCompanion(receiverId:drift.Value(receiverId),message: drift.Value(json.encode(message.toJson())));
+    var recordDao =  RecordMessageDao(DBManager());
+    RecordMessageData recordMessageData = await recordDao.insertRecordMessage(recordInfo);
+    Log.i("插入结果: ${recordMessageData.id}");
   }
 
 
