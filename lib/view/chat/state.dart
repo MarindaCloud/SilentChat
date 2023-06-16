@@ -9,6 +9,8 @@ class ChatState {
   SocketHandle? socketHandle;
   ImagePicker? picker;
   final title = "".obs;
+  final receiverId = 0.obs;
+  final type = 0.obs;
   //录音
   final chooseRecording = false.obs;
   AnimationController? animatedController;
@@ -18,7 +20,6 @@ class ChatState {
   RxMap<String,List<ChatRecordData>> recordMap = RxMap();
 
   final existsContentFlag = false.obs;
-  Map<String,int> args = {};
   ChatState() {
     ///Initialize variables
   }

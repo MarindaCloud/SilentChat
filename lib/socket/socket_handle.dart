@@ -3,7 +3,12 @@
  * @date 2023/5/29 10:45
  * @description Socket实现类
  */
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/web_socket_message.dart';
+import 'package:silentchat/enum/webocket_code.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/socket_util.dart';
 import 'dart:io';
@@ -60,8 +65,17 @@ class SocketHandle {
    */
   listener(){
     webSocketChannel!.stream.listen((data) {
-
-      Log.i("Socket监听数据: ${data}");
+      var message = json.decode(data);
+      print('socket接收: ${message}');
+      Packet packet = Packet.fromJson(message);
+      print('packet: ${packet.toJson()}');
+      int code = packet.type!;
+      Map<String,dynamic> result = {
+        "code": code
+      };
+      WebSocketMessage webSocketMessage = WebSocketMessage.fromJson(result);
+      webSocketMessage.code?.cbFn?.call(packet);
+      Log.i("Socket监听数据: ${message}");
     },onDone: (){
       Log.i("完成监听");
     });

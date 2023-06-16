@@ -10,8 +10,10 @@ import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/receiver.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
+import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -28,12 +30,14 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
 
   @override
   void onInit() {
+
     if(Get.arguments == null ) return;
     Map<String,int> args = Get.arguments;
-    state.args = args;
-    print('参数：${state.args}');
+    Log.i('参数：${args}');
     int type = args["type"] ?? -1;
     int id = args["id"] ?? -1;
+    state.receiverId.value = id;
+    state.type.value = type;
     getTitle(id, type);
     initChatRecordDataList();
     state.socketHandle = Get.find<SocketHandle>();
@@ -73,8 +77,8 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    */
   initChatRecordDataList() async{
     List<ChatRecordData> list = [];
-    int id = state.args["id"] ?? -1;
-    int type = state.args["type"] ?? -1;
+    int id = state.receiverId.value;
+    int type = state.type.value;
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
     int uid = systemState.user.id ?? 0;
     List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid).toList();
@@ -224,17 +228,38 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    * @description 发送消息
    */
   void sendMessage() async{
-    MessageType type = MessageType.TEXT;
+    MessageType messageType = MessageType.TEXT;
+    ReceiverType type = ReceiverType.CONTACT;
     String message = state.messageController.text;
     if(message.isEmpty){ return;}
     int uid = systemState.user.id ?? 0;
-    int receiverId = state.args["id"] ?? -1;
-    await insertMessage(uid,receiverId,type);
-    ChatMessage chatMessage = ChatMessage(uid: 1,chatMessage: message);
+    int receiverId = state.receiverId.value;
+    Log.i("当前接受者id: ${receiverId}");
+    await insertMessage(uid,receiverId,messageType);
+    ChatMessage chatMessage = ChatMessage(uid: uid,chatMessage: message,receiverId: receiverId,receiverType: type);
     Packet packet = Packet(type: 2,object: chatMessage);
+    Log.i("发包详情：${packet.toJson()}");
     String packetJSON = json.encode(packet);
+    Log.i("packetJson: ${packetJSON}");
     state.socketHandle?.write(packetJSON);
     state.messageController.text = "";
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/16 17:22
+   * @description 通过异步socket插入Message
+   */
+   syncInsertMessage(ChatMessage chatMessage) async{
+    int targetId = systemState.user.id ?? -1;
+    String message = chatMessage.chatMessage!;
+    DateTime dt = DateTime.now();
+    String portait = "assets/user/portait.png";
+    int sendId = chatMessage.receiverId!;
+    MessageType messageType = MessageType.TEXT;
+    ChatRecordData chatRecordData = ChatRecordData(portrait: portait,targetId: targetId,message: message,messageType: messageType,time: dt,sendId: sendId);
+    state.chatRecordList.add(chatRecordData);
+    initChatRecordDataList();
   }
 
   /*
