@@ -56,7 +56,6 @@ class MessageLogic extends GetxController {
       if(message == null){
         continue;
       }
-
       Map<int,Message> cacheMessageMap = {
         receiverId: message!
       };

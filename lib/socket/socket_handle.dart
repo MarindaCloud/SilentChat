@@ -60,6 +60,7 @@ class SocketHandle {
    */
   listener(){
     webSocketChannel!.stream.listen((data) {
+
       Log.i("Socket监听数据: ${data}");
     },onDone: (){
       Log.i("完成监听");

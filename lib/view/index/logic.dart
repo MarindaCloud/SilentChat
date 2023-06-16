@@ -39,7 +39,7 @@ class IndexLogic extends GetxController {
     state.webSocketChannel = socketHandle.webSocketChannel;
     User user = systemState.user;
     Packet packet = Packet(type: 1, object: user);
-    String packetJSON = json.encode(packet.toJson());
+    String packetJSON = json.encode(packet);
     Log.i("初始化Socket连接包：${packetJSON}");
     socketHandle.write(packetJSON);
   }

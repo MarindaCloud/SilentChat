@@ -341,13 +341,14 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
    */
   List<Widget> buildChatRecordItem(ChatRecordData chatRecordData){
     List<Widget> list = [];
+    int uid = systemState.user.id ?? -1;
     int sendId = chatRecordData.sendId!;
     Widget expaned = SizedBox(width: 50.rpx);
     Widget message = Container(
       padding: EdgeInsets.all(40.rpx),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: sendId == 1 ? Colors.blue : Colors.white
+          color: sendId == uid ? Colors.blue : Colors.white
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -356,7 +357,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
         ),
         child: Text(
             "${chatRecordData.message}",
-            style: TextStyle(color: sendId == 1 ? Colors.white : Colors.black,fontSize: 14)
+            style: TextStyle(color: sendId == uid ? Colors.white : Colors.black,fontSize: 14)
         ),
       ),
     );
@@ -375,7 +376,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
       ),
     );
     //自己
-    if(sendId == 1){
+    if(sendId == uid){
       list.add(message);
       list.add(expaned);
       list.add(portait);
