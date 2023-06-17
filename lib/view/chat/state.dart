@@ -14,6 +14,7 @@ class ChatState {
   final receiverId = 0.obs;
   final type = 0.obs;
   final selectFile = File("").obs;
+  bool sendFlag = false;
   //录音
   final chooseRecording = false.obs;
   AnimationController? animatedController;

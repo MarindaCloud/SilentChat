@@ -44,7 +44,7 @@ class ChatPage extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         //返回按钮
-                                        BackButtonComponent(),
+                                        BackButtonComponent(onClick: logic.back),
                                         //未读消息数
                                         Transform.translate(
                                           offset: Offset(-5, 0),

@@ -18,7 +18,11 @@ class BackButtonComponent extends StatefulWidget{
     }
   }
 
-  BackButtonComponent();
+  BackButtonComponent({Function? onClick}){
+    if(onClick != null){
+      this.onClick = onClick;
+    }
+  }
 
   @override
   State<StatefulWidget> createState() {

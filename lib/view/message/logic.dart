@@ -296,12 +296,16 @@ class MessageLogic extends GetxController {
    * @date 2023/5/26 10:55
    * @description 前往Chat页 携带参数 id & type
    */
-  void toChat(int id,int type){
+  void toChat(int id,int type) async{
     Map<String,int> args = {
       "id": id,
       "type": type
     };
-    Get.toNamed("/chat",arguments: args);
+    //result = true 则视为Chat页发送过消息所以刷新所有数据
+    var result = await Get.toNamed("/chat",arguments: args);
+    if(result){
+      initRecordMessage();
+    }
   }
 
   @override

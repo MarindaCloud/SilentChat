@@ -199,6 +199,15 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     final XFile? video = await state.picker!.pickVideo(source: ImageSource.camera);
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/17 15:34
+   * @description 关闭详情
+   */
+  back(){
+    Get.back(result: state.sendFlag);
+  }
+
 
   /*
    * @author Marinda
@@ -255,6 +264,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     Log.i("packetJson: ${packetJSON}");
     state.socketHandle?.write(packetJSON);
     state.messageController.text = "";
+    state.sendFlag = true;
   }
 
   /*
