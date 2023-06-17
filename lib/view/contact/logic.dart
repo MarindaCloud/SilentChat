@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:silentchat/util/log.dart';
@@ -109,62 +110,81 @@ class ContactLogic extends GetxController {
   List<Widget> buildFriendsInfo(List<User> userList){
     List<Widget> list = [];
     for(User user in userList){
+      int uid = user.id ?? 0;
       //用户信息
-      Widget widget = Container(
-        child: Row(
-          children: [
-            //头像
-            Container(
-              width: 150.rpx,
-              height: 150.rpx,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10000),
-                  image: DecorationImage(
-                      image: Image
-                          .asset("assets/user/portait.png")
-                          .image,
-                      fit: BoxFit.fill
-                  )
-              ),
-            ),
-            //  昵称 & 设备&个签
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(left: 30.rpx),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                          child: Text("${user.userName ?? ""}", style: TextStyle(
-                              color: Colors.black, fontSize: 14),
-                            overflow: TextOverflow.ellipsis,)
-                      ),
-                    ),
-                    //状态 & 登录设备
-                    Container(
-                      margin: EdgeInsets.only(top: 5.rpx),
-                      child: Row(
-                        children: [
-                          Container(
-                            child: Text("[IPhoneXR]在线个性签名",
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14),),
-                          )
-                        ],
-                      ),
+      Widget widget = InkWell(
+        child: Container(
+          child: Row(
+            children: [
+              //头像
+              Container(
+                width: 150.rpx,
+                height: 150.rpx,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10000),
+                    image: DecorationImage(
+                        image: Image
+                            .asset("assets/user/portait.png")
+                            .image,
+                        fit: BoxFit.fill
                     )
-                  ],
                 ),
               ),
-            ),
-          ],
+              //  昵称 & 设备&个签
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 30.rpx),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                            child: Text("${user.userName ?? ""}", style: TextStyle(
+                                color: Colors.black, fontSize: 14),
+                              overflow: TextOverflow.ellipsis,)
+                        ),
+                      ),
+                      //状态 & 登录设备
+                      Container(
+                        margin: EdgeInsets.only(top: 5.rpx),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text("[IPhoneXR]在线个性签名",
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14),),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+        onTap: (){
+          toChat(uid, ReceiverType.CONTACT.type);
+        },
       );
       list.add(widget);
     }
     return list;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/5/26 10:55
+   * @description 前往Chat页 携带参数 id & type
+   */
+  void toChat(int id,int type){
+    Map<String,int> args = {
+      "id": id,
+      "type": type
+    };
+    Get.toNamed("/chat",arguments: args);
   }
 
   @override

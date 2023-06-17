@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -11,6 +13,7 @@ class ChatState {
   final title = "".obs;
   final receiverId = 0.obs;
   final type = 0.obs;
+  final selectFile = File("").obs;
   //录音
   final chooseRecording = false.obs;
   AnimationController? animatedController;

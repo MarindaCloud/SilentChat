@@ -47,22 +47,56 @@ class MessageLogic extends GetxController {
     //接受者总长度
     int receiverLength = receiverIdList.length;
     Log.i("接受者id长度: ${receiverLength}");
-    Map<String,Map<int,Message>> messageViewMap = {};
+    Map<int,Message> cacheReceiverMap = {};
+    List<Message> messageList = [];
     for(int receiverId in receiverIdList){
-      User user = await userReceiver.getEntity(uid: receiverId) as User;
-      String userName = user.userName??"";
       Message? message = await userReceiver.getNewMessage(uid: uid,receiverId: receiverId);
       print('最新的消息：${message?.toJson()}');
       if(message == null){
         continue;
       }
-      Map<int,Message> cacheMessageMap = {
-        receiverId: message!
-      };
-      messageViewMap[userName] = cacheMessageMap;
+      cacheReceiverMap[receiverId] = message;
+      messageList.add(message);
     }
+    var messageViewMap = await sortMessageRank(userReceiver,messageList,cacheReceiverMap);
+    //排序处理，时间最近的优先排序
     state.messageViewMap.value = messageViewMap;
     print('涉及到的视图map详情: ${messageViewMap}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/17 14:19
+   * @description 排序消息排行
+   */
+  Future<Map<String, Map<int, Message>>> sortMessageRank(UserReceiver userReceiver,List<Message> messageList,Map<int,Message> cacheReceiverMap) async{
+    Map<String,Map<int,Message>> messageViewMap = {};
+    messageList.sort((a,b)=>b.time!.compareTo(a.time!));
+    Log.i('消息排序后：${messageList.map((e) => e.toJson()).toList()}');
+    Map<int,Message> sortReceiverMessageMap = {};
+    for(var element in messageList){
+      for(int receiverTarget in cacheReceiverMap.keys){
+        var receiverMessage = cacheReceiverMap[receiverTarget];
+        if(receiverMessage! == element){
+          sortReceiverMessageMap[receiverTarget] = element;
+          continue;
+        }
+        continue;
+      }
+    }
+    sortReceiverMessageMap.forEach((key, value) {
+      Log.i('排序后的结果Map信息：Key: ${key},Value: ${value.toJson()}');
+    });
+    for(var receiverIdElement in sortReceiverMessageMap.keys){
+      Message message = sortReceiverMessageMap[receiverIdElement]!;
+      User user = await userReceiver.getEntity(uid: receiverIdElement) as User;
+      String userName = user.userName ?? "";
+      Map<int,Message> element = {
+        receiverIdElement: message
+      };
+      messageViewMap[userName] = element;
+    }
+    return messageViewMap;
   }
 
   /*

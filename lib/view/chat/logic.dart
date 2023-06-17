@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,14 +25,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:silentchat/util/log.dart';
 import 'state.dart';
 
-class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
+class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   final ChatState state = ChatState();
   final systemLogic = Get.find<SystemLogic>();
   final systemState = Get.find<SystemLogic>().state;
-
+  AnimationController? imageOpacity;
+  Animation<double>? imageOpacityTween;
   @override
   void onInit() {
-
+    imageOpacity = AnimationController(vsync: this,duration: Duration(seconds: 1));
+    imageOpacityTween = Tween<double>(begin: 0,end: 1).animate(imageOpacity!);
     if(Get.arguments == null ) return;
     Map<String,int> args = Get.arguments;
     Log.i('参数：${args}');
@@ -174,10 +178,16 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
   /*
    * @author Marinda
    * @date 2023/5/29 18:41
-   * @description 打开图像
+   * @description 打开图像 选择图像插入至消息数据库中
    */
   void openImagePicker() async{
     final XFile? image = await state.picker!.pickImage(source: ImageSource.gallery);
+    if(image != null){
+      String path = image!.path;
+      File file = File(path);
+      await insertMessage(systemState.uid.value, state.receiverId.value, MessageType.IMAGE,expand_address: path);
+      Log.i("图片文件：${file}");
+    }
   }
 
   /*
@@ -200,7 +210,9 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     DateTime dateTime = DateTime.now();
     Log.i("当前时间：${DateTimeUtil.formatDateTime(dateTime,format: DateTimeUtil.ymdhns)}");
     Message entity = Message(content: message,type: type.type,time: dateTime);
-    if(expand_address != ""){entity.expandAddress = expand_address;}
+    Log.i("当前消息：${message}");
+    if(expand_address != "" && expand_address != null){entity.expandAddress = expand_address;entity.content = expand_address;}
+    Log.i("插入Content: ${entity.content}");
     APIResult apiResult = await MessageAPI.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
     int messageInsertReturningId = apiResult.data;
@@ -369,23 +381,7 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
     int uid = systemState.user.id ?? -1;
     int sendId = chatRecordData.sendId!;
     Widget expaned = SizedBox(width: 50.rpx);
-    Widget message = Container(
-      padding: EdgeInsets.all(40.rpx),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: sendId == uid ? Colors.blue : Colors.white
-      ),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-            maxWidth: 800.rpx,
-            minWidth: 200.rpx
-        ),
-        child: Text(
-            "${chatRecordData.message}",
-            style: TextStyle(color: sendId == uid ? Colors.white : Colors.black,fontSize: 14)
-        ),
-      ),
-    );
+    Widget message = buildMessageTypeComponent(chatRecordData);
     Widget portait = Container(
       margin: EdgeInsets.only(right: 20.rpx),
       width: 150.rpx,
@@ -411,6 +407,68 @@ class ChatLogic extends GetxController with GetSingleTickerProviderStateMixin{
       list.add(message);
     }
     return list;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/17 10:34
+   * @description 根据消息类型构建不同的消息组件
+   */
+
+  Widget buildMessageTypeComponent(ChatRecordData chatRecordData){
+    Widget widget = Container();
+    MessageType messageType = chatRecordData.messageType!;
+    int uid = systemState.user.id ?? -1;
+    String message = chatRecordData.message ?? "";
+    int sendId = chatRecordData.sendId!;
+    switch(messageType){
+      case MessageType.TEXT:
+        widget = Container(
+          padding: EdgeInsets.all(40.rpx),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: sendId == uid ? Colors.blue : Colors.white
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: 800.rpx,
+                minWidth: 200.rpx
+            ),
+            child: Text(
+                "${chatRecordData.message}",
+                style: TextStyle(color: sendId == uid ? Colors.white : Colors.black,fontSize: 14)
+            ),
+          ),
+        );
+        break;
+      case MessageType.IMAGE:
+        Log.i("图片类型");
+        imageOpacity!.forward();
+        widget = Container(
+          padding: EdgeInsets.all(40.rpx),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: sendId == uid ? Colors.blue : Colors.white
+          ),
+          child: SizedBox(
+            width: 500.rpx,
+            height: 500.rpx,
+            child: AnimatedBuilder(
+            animation: state.animatedController!,
+            builder: (BuildContext context, Widget? child) {
+              return Opacity(
+              opacity: imageOpacityTween!.value,
+              child: Image.file(
+                  File(message),
+                  filterQuality: FilterQuality.low,
+                  fit: BoxFit.fill));
+            },
+          ),
+        )
+        );
+        break;
+    }
+    return widget;
   }
 
 

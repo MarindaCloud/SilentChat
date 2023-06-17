@@ -32,6 +32,7 @@ class UserAPI {
       User user = User.fromJson(apiResult.data["user"]);
       String token = apiResult.data["token"];
       systemState.user = user;
+      systemState.uid.value = user.id ?? 0;
       print('全局用户信息：${systemState.user.toJson()}');
       Request.token = token;
     }

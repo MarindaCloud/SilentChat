@@ -25,6 +25,26 @@ class Message {
     }
   }
 
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Message &&
+          runtimeType == other.runtimeType &&
+          _id == other._id &&
+          _content == other._content &&
+          _type == other._type &&
+          _expandAddress == other._expandAddress &&
+          _time == other._time;
+
+  @override
+  int get hashCode =>
+      _id.hashCode ^
+      _content.hashCode ^
+      _type.hashCode ^
+      _expandAddress.hashCode ^
+      _time.hashCode;
+
   int? get id => _id;
   set id(int? id) => _id = id;
 

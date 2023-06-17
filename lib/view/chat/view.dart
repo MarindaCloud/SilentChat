@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
@@ -327,7 +329,8 @@ class ChatPage extends StatelessWidget {
                 ),
               ),
             ),
-          ));
+          )
+      );
     });
   }
 }

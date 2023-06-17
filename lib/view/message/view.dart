@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/index/logic.dart';
 
 import 'logic.dart';
 
 class MessagePage extends StatelessWidget {
-  MessagePage({Key? key}) : super(key: key);
+  MessagePage({Key? key}) : super(key: key){
+    Log.i("初始化Message信息！");
+    logic.initRecordMessage();
+  }
 
   final logic = Get.find<MessageLogic>();
   final state = Get
