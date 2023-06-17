@@ -9,6 +9,7 @@ import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
@@ -191,6 +192,20 @@ class MessageLogic extends GetxController {
       if(data == null){ continue;}
       String time = DateTimeUtil.formatToDayDateTime(message!.time!);
       String content = message.content ?? "";
+      String resultContent = "";
+      if(message.type != 1){
+        switch(message.type){
+          case 2:
+            resultContent = "[图片消息]";
+            break;
+          case 3:
+            resultContent = "[语音消息]";
+            break;
+          case 4:
+            resultContent = "[文件消息]";
+            break;
+        }
+      }
       Widget child = InkWell(
         child: Container(
           padding: EdgeInsets.only(right: 40.rpx, top: 30.rpx,left: 40.rpx),
@@ -243,7 +258,7 @@ class MessageLogic extends GetxController {
                         Container(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "${content}",
+                            message.type != 1 ? resultContent : content,
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 18,
@@ -261,7 +276,7 @@ class MessageLogic extends GetxController {
         onTap: (){
           int type = message.type ?? -1;
           print("目标id: ${key}");
-          toChat(key,type);
+          toChat(key,1);
         },
       );
       list.add(child);

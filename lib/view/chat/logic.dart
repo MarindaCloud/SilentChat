@@ -453,27 +453,20 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         break;
       case MessageType.IMAGE:
         Log.i("图片类型");
-        imageOpacity!.forward();
         widget = Container(
-          padding: EdgeInsets.all(40.rpx),
+          padding: EdgeInsets.all(5.rpx),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: sendId == uid ? Colors.blue : Colors.white
+              border: Border.all(color: Colors.white,width: 2)
+              // color: Colors.white
           ),
           child: SizedBox(
-            width: 500.rpx,
+            width: 600.rpx,
             height: 500.rpx,
-            child: AnimatedBuilder(
-            animation: state.animatedController!,
-            builder: (BuildContext context, Widget? child) {
-              return Opacity(
-              opacity: imageOpacityTween!.value,
-              child: Image.file(
-                  File(message),
-                  filterQuality: FilterQuality.low,
-                  fit: BoxFit.fill));
-            },
-          ),
+            child: Image.file(
+                File(message),
+                filterQuality: FilterQuality.high,
+                fit: BoxFit.fill),
         )
         );
         break;
