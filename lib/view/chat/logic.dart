@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
@@ -70,6 +71,78 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         break;
     }
     state.title.value = title;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/6/19 15:37
+   * @description 用来构建聊天子控件
+   */
+  Widget buildSubWidget(){
+    Widget widget = Container();
+    switch(state.subChildType.value){
+      case "luyin":
+        //录音
+      widget = Center(
+        child: Container(
+          color: Colors.white,
+          margin: EdgeInsets.only(top: 50.rpx),
+          child: Center(
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50.rpx,
+                  ),
+                  Container(
+                    child: Text("按住说话",
+                      style: TextStyle(
+                          color: Colors.grey),),
+                  ),
+                  SizedBox(
+                    height: 100.rpx,
+                  ),
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius
+                              .circular(10000),
+                          color: Colors.blue
+                      ),
+                      width: 300.rpx,
+                      height: 300.rpx,
+                      child: Center(child: Container(
+                        width: 200.rpx,
+                        height: 200.rpx,
+                        child: Image.asset(
+                          "assets/icon/luyin.png",
+                          color: Colors.white,
+                          fit: BoxFit.cover,),
+                      ),)
+                  ),
+                  //
+                  Container(
+                    height: 100.rpx,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+        break;
+      case "emote":
+        //表情
+      widget = Container(
+        height: 200,
+        color: Colors.white,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(top: 50.rpx),
+        child: EmojiCommon.instance().buildEmoji(6,cbFunction: chooseEmoji)
+        );
+        break;
+    }
+    return widget;
   }
 
 
@@ -311,10 +384,24 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @date 2023/6/3 11:30
    * @description 录音处理
    */
-  void recording(){
+  void chooseSubChild(String type){
+    Log.i("当前type: ${type}");
+    if(state.subChildType.value == ""){
+      state.subChildType.value = type;
+      state.chooseSubChild.value = true;
+      state.animatedController!.reset();
+      state.animatedController!.forward();
+      return;
+    }
+    //如果储存过的类型为空的则直接展示
+    //如果是一样的则默认视为取消当前展示状态
+    if(type == state.subChildType.value || state.subChildType.value == ""){
+      state.chooseSubChild.value = !state.chooseSubChild.value;
+      return;
+    }
+    state.subChildType.value = type;
     state.animatedController!.reset();
     state.animatedController!.forward();
-    state.chooseRecording.value = !state.chooseRecording.value;
   }
 
 

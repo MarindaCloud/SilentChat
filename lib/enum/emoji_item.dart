@@ -31,8 +31,8 @@ enum EmojiItem{
   ZANY_FACE_2("😝"),
   //想一想
   THINKING("🤔"),
-  //冷漠
-  NEUTRAL_FACE("🤔"),
+  //可怜
+  PLEADING("🥺"),
   //沉默
   NO_MOUTH("😶"),
   //沉默

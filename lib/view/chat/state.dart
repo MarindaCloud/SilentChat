@@ -15,14 +15,15 @@ class ChatState {
   final type = 0.obs;
   final selectFile = File("").obs;
   bool sendFlag = false;
-  //录音
-  final chooseRecording = false.obs;
+  //选择子项组件
+  final chooseSubChild = false.obs;
   AnimationController? animatedController;
   Animation<double>? fadeValue;
   final chatRecordList = <ChatRecordData>[].obs;
   //用来储存记录的map
   RxMap<String,List<ChatRecordData>> recordMap = RxMap();
-
+  //子控件类型用来拓展
+  final subChildType = "".obs;
   final existsContentFlag = false.obs;
   ChatState() {
     ///Initialize variables

@@ -131,6 +131,9 @@ class ChatPage extends StatelessWidget {
                                       child: TextField(
                                         maxLength: null,
                                         maxLines: null,
+                                        style: TextStyle(
+                                          fontSize: 16
+                                        ),
                                         controller: state.messageController,
                                         onChanged: (val){
                                           if(val.isEmpty){state.existsContentFlag.value = false;return;}
@@ -195,11 +198,12 @@ class ChatPage extends StatelessWidget {
                                           height: 150.rpx,
                                           child: Image.asset(
                                             "assets/icon/luyin.png",
-                                            color: Colors.black,
+                                            color: state.subChildType.value == "luyin" ? Colors.blue :Colors.black,
+                                            // color: Colors.black,
                                             fit: BoxFit.cover,),
                                         ),
                                         onTap: () {
-                                          logic.recording();
+                                          logic.chooseSubChild("luyin");
                                         },
                                       ),
                                     ),
@@ -239,10 +243,10 @@ class ChatPage extends StatelessWidget {
                                           height: 150.rpx,
                                           child: Image.asset(
                                             "assets/icon/biaoqing.png",
-                                            color: Colors.black,),
+                                            color: state.subChildType.value == "emote" ? Colors.blue :Colors.black,),
                                         ),
                                         onTap: () {
-                                          print("表情");
+                                          logic.chooseSubChild("emote");
                                         },
                                       ),
                                     ),
@@ -263,75 +267,15 @@ class ChatPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              //表情
+                              // 子组件
                               FadeTransition(
                                 opacity: state.fadeValue!,
                                 child: Visibility(
-                                  visible: state.chooseRecording.value,
-                                  child: Container(
-                                    height: 200,
-                                    color: Colors.white,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(top: 50.rpx),
-                                    child: EmojiCommon.instance().buildEmoji(6,cbFunction: logic.chooseEmoji)
-                                  ),
+                                  visible: state.chooseSubChild.value,
+                                  child: logic.buildSubWidget(),
                                   // child: logic.buildEmojiWidget(),
                                 ),
                               ),
-                              //录音
-                              // FadeTransition(
-                              //   opacity: state.fadeValue!,
-                              //   child: Visibility(
-                              //     visible: state.chooseRecording.value,
-                              //     child: Center(
-                              //       child: Container(
-                              //         color: Colors.white,
-                              //         margin: EdgeInsets.only(top: 50.rpx),
-                              //         child: Center(
-                              //           child: Container(
-                              //             child: Column(
-                              //               children: [
-                              //                 SizedBox(
-                              //                   height: 50.rpx,
-                              //                 ),
-                              //                 Container(
-                              //                   child: Text("按住说话",
-                              //                     style: TextStyle(
-                              //                         color: Colors.grey),),
-                              //                 ),
-                              //                 SizedBox(
-                              //                   height: 100.rpx,
-                              //                 ),
-                              //                 Container(
-                              //                     decoration: BoxDecoration(
-                              //                         borderRadius: BorderRadius
-                              //                             .circular(10000),
-                              //                         color: Colors.blue
-                              //                     ),
-                              //                     width: 300.rpx,
-                              //                     height: 300.rpx,
-                              //                     child: Center(child: Container(
-                              //                       width: 200.rpx,
-                              //                       height: 200.rpx,
-                              //                       child: Image.asset(
-                              //                         "assets/icon/luyin.png",
-                              //                         color: Colors.white,
-                              //                         fit: BoxFit.cover,),
-                              //                     ),)
-                              //                 ),
-                              //                 //
-                              //                 Container(
-                              //                   height: 100.rpx,
-                              //                 )
-                              //               ],
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     // child: logic.buildEmojiWidget(),
-                              //   ),
-                              // ),
                               Container(
                                 height: 100.rpx,
                                 color: Color.fromRGBO(247, 247, 247, 1),
