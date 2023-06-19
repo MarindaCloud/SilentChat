@@ -9,7 +9,8 @@ enum GlobalPage {
   contact("/contact"),
   main("/index"),
   dynamic("/dynamic"),
-  chat("/chat");
+  chat("/chat"),
+  append("/append");
   final String router;
   const GlobalPage(this.router);
 }

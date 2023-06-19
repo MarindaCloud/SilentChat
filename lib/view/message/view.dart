@@ -172,7 +172,7 @@ class MessagePage extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.only(left: 50.rpx,right: 30.rpx,top: 50.rpx,bottom: 50.rpx),
                     width: 600.rpx,
-                    color: Colors.blue,
+                    color: logic.systemState.bodyColor,
                     child: Column(
                       children: logic.buildToolsList(),
                     ),

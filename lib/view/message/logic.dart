@@ -6,6 +6,7 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/user.dart';
@@ -162,7 +163,7 @@ class MessageLogic extends GetxController {
               Expanded(child: Text(
                 getToolName(i),
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 15
                 ),
               ))
@@ -171,6 +172,9 @@ class MessageLogic extends GetxController {
         ),
         onTap: (){
           print(getToolName(i));
+          if(i == 1){
+            Get.toNamed(AppPage.append);
+          }
         },
       );
       list.add(child);
