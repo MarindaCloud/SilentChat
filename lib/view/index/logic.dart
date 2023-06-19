@@ -30,6 +30,12 @@ class IndexLogic extends GetxController {
     super.onInit();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   /*
    * @author Marinda
    * @date 2023/5/29 10:54

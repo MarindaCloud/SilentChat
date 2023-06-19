@@ -17,122 +17,169 @@ class UserInfoWidget extends StatefulWidget {
 
   UserInfoWidget(this.indexLogic, this.indexState, {super.key});
 
-
   @override
   State<StatefulWidget> createState() {
     return UserInfoState();
   }
 }
 
-class UserInfoState extends State<UserInfoWidget> with SingleTickerProviderStateMixin {
-  AnimationController? animationController;
-  Animation<double>? value;
-
-
+class UserInfoState extends State<UserInfoWidget> {
   @override
   void initState() {
     Log.i("初始化用户信息！");
-    animationController = AnimationController(vsync: this,duration:Duration(seconds: 5));
-    value = Tween<double>(begin: 0,end: 200).animate(animationController!);
-    animationController!.repeat();
   }
 
   UserInfoState();
 
   @override
   Widget build(BuildContext context) {
-      return AnimatedContainer(
-        child: Container(
-        width: value!.value,
-        color: Color.fromRGBO(247,247,247,1),
-        padding: EdgeInsets.only(bottom: 30.rpx, top: 30.rpx),
-        child: Row(
+    return Container(
+      color: Color.fromRGBO(242,242,242,1),
+      child: SafeArea(
+        child: Column(
           children: [
-            Container(child: Text("测试"),)
-          ],
-        ),
-      ), duration: Duration(seconds: 1),
-      );
-  }
-
-  /*
-   * @author Marinda
-   * @date 2023/5/25 14:58
-   * @description 构建底部导航栏
-   */
-  List<Widget> buildBottomNav(int index) {
-    List<Widget> list = [];
-    for (int i = 0; i < 3; i++) {
-      Widget child = Expanded(
-          child: InkWell(
-            child: Container(
-              child: Column(
+            //头部信息
+            Container(
+              height: 100,
+              decoration: BoxDecoration(
+              ),
+              child: Row(
                 children: [
-                  SizedBox(
-                    width: 100.rpx,
-                    height: 100.rpx,
-                    child: index == i ? Image.asset(getNavAssets(i), color: Color.fromRGBO(65,152,241,1)) : Image.asset(
-                        getNavAssets(i)),
-                  ),
                   Container(
-                    margin: EdgeInsets.only(top: 5.rpx),
-                    child: Text(getNavName(i), style: TextStyle(
-                        color: index == i ? Color.fromRGBO(65,152,241,1) : Colors.black,
-                        fontSize: 16)),
+                    width: 100,
+                    height: Get.height,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(1000)),
+                        image: DecorationImage(
+                            image: Image.asset("assets/user/portait.png",).image,
+                            fit: BoxFit.fill
+                        )
+                    ),
+                  ),
+                  //用户信息
+                  Expanded(
+                    child: Container(
+                      width: 200.rpx,
+                      // color: Colors.red,
+                      child: Column(
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Container(
+                            alignment: Alignment.topCenter,
+                            height: 100.rpx,
+                            child: Text(
+                                "用户名：${widget.indexLogic.systemState.user.userName ?? ""}",
+                                style: TextStyle(
+                                  color: Colors.red
+                                ),
+                            ),
+                          ),
+                          Expanded(child: SizedBox()),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: 100.rpx,
+                            child: Text(
+                              "手机号：${widget.indexLogic.systemState.user.phone ?? ""}",
+                              style: TextStyle(
+                                  color: Colors.blue
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   )
                 ],
               ),
             ),
-            onTap: () {
-              widget.indexLogic.changeNavView(i);
-            },
-          ));
-      list.add(child);
+            SizedBox(
+              height: 100.rpx,
+            ),
+            //  内容
+            Expanded(
+                child: Column(
+                  children: buildContentList()
+                )
+            ),
+            footNavWidget()
+          ],
+        ),
+      ),
+    );
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/19 16:46
+   * @description 构建内容List
+   */
+  List<Widget> buildContentList(){
+    List<Widget> list = [];
+    List<String> navList = ["个人信息","我的钱包"];
+    for(int i = 0;i<navList.length;i++){
+      String icon = i == navList.length - 1 ? "assets/icon/qianbao_o.png" : "assets/icon/gerenxinxi.png";
+    //  构建五个选项信息
+      Widget widget = Container(
+        padding: EdgeInsets.symmetric(horizontal: 50.rpx),
+        height: 200.rpx,
+        margin: EdgeInsets.only(bottom: 30.rpx),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey,width: 1)),
+        ),
+        child: Row(
+          children: [
+          //  icon
+            SizedBox(
+              width: 100.rpx,
+              height: 100.rpx,
+              child: Image.asset(icon,fit: BoxFit.cover,),
+            ),
+            SizedBox(width: 50.rpx,),
+            Expanded(
+                child: Text(navList[i],style: TextStyle(color: Colors.black,overflow: TextOverflow.ellipsis))
+            )
+          ],
+        ),
+      );
+      list.add(widget);
     }
     return list;
   }
 
   /*
    * @author Marinda
-   * @date 2023/5/25 15:01
-   * @description 获取导航栏名称
+   * @date 2023/6/19 16:57
+   * @description 底部导航栏控件列表
    */
-  String getNavName(int index) {
-    String result = "";
-    switch (index) {
-      case 0:
-        result = "消息";
-        break;
-      case 1:
-        result = "联系人";
-        break;
-      case 2:
-        result = "动态";
-        break;
-    }
-    return result;
+  Widget footNavWidget(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 50.rpx),
+      alignment: Alignment.center,
+      height: 200.rpx,
+      color: Colors.white,
+      child: Row(
+        children: [
+          //设置
+          InkWell(
+            child: Container(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 100.rpx,
+                    height: 100.rpx,
+                    child: Image.asset("assets/icon/shezhi.png",fit: BoxFit.fill),
+                  ),
+                  SizedBox(width: 10.rpx),
+                  Text("设置",style: TextStyle(fontSize: 16,letterSpacing: 3.rpx))
+                ],
+              ),
+            ),
+            onTap: (){
+              Log.i("设置！");
+            },
+          )
+        ],
+      ),
+    );
   }
-
-  /*
-   * @author Marinda
-   * @date 2023/5/25 18:24
-   * @description 获取导航栏的图片地址
-   */
-  String getNavAssets(int index) {
-    String result = "";
-    String prefix = "assets/icon/";
-    switch (index) {
-      case 0:
-        result = "xiaoxi";
-        break;
-      case 1:
-        result = "lianxiren";
-        break;
-      case 2:
-        result = "dynamic";
-        break;
-    }
-    return "${prefix}${result}.png";
-  }
-
 }

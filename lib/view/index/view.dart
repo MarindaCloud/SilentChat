@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/index/widget/bottom_nav.dart';
 import 'package:silentchat/view/index/widget/user_info.dart';
 
@@ -37,12 +38,17 @@ class IndexPage extends StatelessWidget {
                 visible: state.showUserInfo.value,
                 child: Positioned(
                     left: Get.width / 2,
-                    child: Container(
-                      width: Get.width,
-                      height: Get.height,
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(0, 0, 0, 0.3)
+                    child: InkWell(
+                      child: Container(
+                        width: Get.width,
+                        height: Get.height,
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(0, 0, 0, 0.3)
+                        ),
                       ),
+                      onTap: (){
+                        state.showUserInfo.value = false;
+                      },
                     )
                 ),
               ),
@@ -61,7 +67,6 @@ class IndexPage extends StatelessWidget {
                 ),
               )
               // Expanded(child: SizedBox()),
-
             ],
           ),
         ),
