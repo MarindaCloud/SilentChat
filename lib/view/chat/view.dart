@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
+import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/util/font_rpx.dart';
-
 import 'logic.dart';
 
 /**
@@ -263,59 +263,75 @@ class ChatPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              //录音
+                              //表情
                               FadeTransition(
                                 opacity: state.fadeValue!,
                                 child: Visibility(
                                   visible: state.chooseRecording.value,
-                                  child: Center(
-                                    child: Container(
-                                      color: Colors.white,
-                                      margin: EdgeInsets.only(top: 50.rpx),
-                                      child: Center(
-                                        child: Container(
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                height: 50.rpx,
-                                              ),
-                                              Container(
-                                                child: Text("按住说话",
-                                                  style: TextStyle(
-                                                      color: Colors.grey),),
-                                              ),
-                                              SizedBox(
-                                                height: 100.rpx,
-                                              ),
-                                              Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius
-                                                          .circular(10000),
-                                                      color: Colors.blue
-                                                  ),
-                                                  width: 300.rpx,
-                                                  height: 300.rpx,
-                                                  child: Center(child: Container(
-                                                    width: 200.rpx,
-                                                    height: 200.rpx,
-                                                    child: Image.asset(
-                                                      "assets/icon/luyin.png",
-                                                      color: Colors.white,
-                                                      fit: BoxFit.cover,),
-                                                  ),)
-                                              ),
-                                              //
-                                              Container(
-                                                height: 100.rpx,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                  child: Container(
+                                    height: 200,
+                                    color: Colors.white,
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(top: 50.rpx),
+                                    child: EmojiCommon.instance().buildEmoji(6,cbFunction: logic.chooseEmoji)
                                   ),
+                                  // child: logic.buildEmojiWidget(),
                                 ),
                               ),
+                              //录音
+                              // FadeTransition(
+                              //   opacity: state.fadeValue!,
+                              //   child: Visibility(
+                              //     visible: state.chooseRecording.value,
+                              //     child: Center(
+                              //       child: Container(
+                              //         color: Colors.white,
+                              //         margin: EdgeInsets.only(top: 50.rpx),
+                              //         child: Center(
+                              //           child: Container(
+                              //             child: Column(
+                              //               children: [
+                              //                 SizedBox(
+                              //                   height: 50.rpx,
+                              //                 ),
+                              //                 Container(
+                              //                   child: Text("按住说话",
+                              //                     style: TextStyle(
+                              //                         color: Colors.grey),),
+                              //                 ),
+                              //                 SizedBox(
+                              //                   height: 100.rpx,
+                              //                 ),
+                              //                 Container(
+                              //                     decoration: BoxDecoration(
+                              //                         borderRadius: BorderRadius
+                              //                             .circular(10000),
+                              //                         color: Colors.blue
+                              //                     ),
+                              //                     width: 300.rpx,
+                              //                     height: 300.rpx,
+                              //                     child: Center(child: Container(
+                              //                       width: 200.rpx,
+                              //                       height: 200.rpx,
+                              //                       child: Image.asset(
+                              //                         "assets/icon/luyin.png",
+                              //                         color: Colors.white,
+                              //                         fit: BoxFit.cover,),
+                              //                     ),)
+                              //                 ),
+                              //                 //
+                              //                 Container(
+                              //                   height: 100.rpx,
+                              //                 )
+                              //               ],
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     // child: logic.buildEmojiWidget(),
+                              //   ),
+                              // ),
                               Container(
                                 height: 100.rpx,
                                 color: Color.fromRGBO(247, 247, 247, 1),

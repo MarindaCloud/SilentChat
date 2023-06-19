@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
@@ -70,7 +70,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         break;
     }
     state.title.value = title;
-
   }
 
 
@@ -102,6 +101,29 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     }
     state.chatRecordList.value = list;
     sortRecordInfo();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/19 14:43
+   * @description 选择emoji表情
+   */
+  chooseEmoji(String emote){
+    TextSelection messageSelection = state.messageController.selection;
+    String text = state.messageController.text;
+    //如果为空则直接添加即可！
+    if(text == ""){
+      state.messageController.text +=emote;
+      TextSelection textSelection = TextSelection.collapsed(offset: emote.length);
+      state.messageController.selection = textSelection;
+      return;
+    }
+    String newText = text.replaceRange(messageSelection.start, messageSelection.end, emote);
+    state.messageController.text = newText;
+    int endOffset = messageSelection.start + emote.length;
+    TextSelection textSelection = TextSelection.collapsed(offset: endOffset);
+    state.messageController.selection = textSelection;
+    Log.i("当前光标位置：${endOffset}");
   }
 
   /*
