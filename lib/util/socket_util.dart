@@ -5,6 +5,6 @@
  */
 class SocketUtil {
   static int port = 1234;
-  static String ip = "localhost";
+  static String ip = "175.24.177.189";
   static String url = "ws://${ip}:${port}/ws";
 }

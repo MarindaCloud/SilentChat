@@ -175,6 +175,9 @@ class MessageLogic extends GetxController {
           if(i == 1){
             Get.toNamed(AppPage.append);
           }
+          if(i == 2){
+            Get.toNamed(AppPage.qr);
+          }
         },
       );
       list.add(child);

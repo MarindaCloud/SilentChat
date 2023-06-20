@@ -86,6 +86,8 @@ dev_dependencies:
   date_format: ^2.0.6
   #拼音库
   lpinyin: ^2.0.3
+  #扫码
+  mobile_scanner: ^3.2.0
   #loadding库
   flutter_smart_dialog: ^4.7.1
   flutter_svg: ^1.0.0

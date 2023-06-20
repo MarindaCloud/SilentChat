@@ -4,7 +4,7 @@ class AppendState {
   TextEditingController? accountTextController = TextEditingController(text: "");
   final searchResultList = [].obs;
   //用来区分群聊或者联系人 1 联系人 2群聊
-  int type = 2;
+  int type = 1;
   AppendState() {
     ///Initialize variables
   }
