@@ -113,7 +113,7 @@ class AppendPage extends StatelessWidget {
                     ),
                     SizedBox(height: 100.rpx),
                     //  查询结果
-                    state.searchFlag.value ? buildSearchResult() : Center(child: Text("未找到相关数据！",style: TextStyle(fontSize: 23,color: Colors.red),),)
+                    state.searchFlag.value ? buildSearchResult() : Container()
                   ],
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
@@ -195,21 +196,25 @@ class AppendLogic extends GetxController with GetTickerProviderStateMixin{
     //遍历所有目标
     for (var element in state.searchResultList) {
       var widget = Container(
-        margin: EdgeInsets.only(bottom: 100.rpx),
         child: Row(
             children: [
               //头像信息
-              Container(
-                  height: 200.rpx,
-                  width: 200.rpx,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(1000),
-                      image: DecorationImage(
-                          image: Image.asset(
-                              state.type == 2 ? element.portrait : "assets/user/portait.png").image,
-                          fit: BoxFit.fill
-                      )
-                  )
+              InkWell(
+                child: Container(
+                    height: 200.rpx,
+                    width: 200.rpx,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1000),
+                        image: DecorationImage(
+                            image: Image.asset(
+                                state.type == 2 ? element.portrait : "assets/user/portait.png").image,
+                            fit: BoxFit.fill
+                        )
+                    )
+                ),
+                onTap: (){
+                  Get.toNamed(AppPage.userInfo,arguments: element.id);
+                },
               ),
               SizedBox(width: 60.rpx),
               //用户信息详情

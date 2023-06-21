@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
@@ -24,9 +26,14 @@ class UserInfoWidget extends StatefulWidget {
 }
 
 class UserInfoState extends State<UserInfoWidget> {
+
   @override
   void initState() {
     Log.i("初始化用户信息！");
+  }
+
+  toUserInfo(){
+    Get.toNamed(AppPage.userInfo,arguments: widget.indexLogic.systemState.user.id);
   }
 
   UserInfoState();
@@ -45,16 +52,21 @@ class UserInfoState extends State<UserInfoWidget> {
               ),
               child: Row(
                 children: [
-                  Container(
-                    width: 100,
-                    height: Get.height,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(1000)),
-                        image: DecorationImage(
-                            image: Image.asset("assets/user/portait.png",).image,
-                            fit: BoxFit.fill
-                        )
+                  InkWell(
+                    child: Container(
+                      width: 100,
+                      height: Get.height,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(1000)),
+                          image: DecorationImage(
+                              image: Image.asset("assets/user/portait.png",).image,
+                              fit: BoxFit.fill
+                          )
+                      ),
                     ),
+                    onTap: (){
+                      toUserInfo();
+                    },
                   ),
                   //用户信息
                   Expanded(

@@ -11,6 +11,7 @@ enum GlobalPage {
   dynamic("/dynamic"),
   chat("/chat"),
   append("/append"),
+  userInfo("/userInfo"),
   qr("/qr");
   final String router;
   const GlobalPage(this.router);
