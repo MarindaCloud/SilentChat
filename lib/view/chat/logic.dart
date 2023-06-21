@@ -64,8 +64,8 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       case 1:
         //  用户
         User user =  await UserAPI.selectByUid(id);
-        String userName = user.userName ?? "";
-        title = userName;
+        String username = user.username ?? "";
+        title = username;
         break;
       case 2:
         break;

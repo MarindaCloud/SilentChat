@@ -34,7 +34,7 @@ class AppendLogic extends GetxController {
       case 1:
         for (int i = 0; i < 4; i++) {
           User user = User(id: (i + 1),
-              userName: "用户${(i + 1)}",
+              username: "用户${(i + 1)}",
               phone: "13376549876");
           valueEntityList.add(user);
         }
@@ -84,7 +84,7 @@ class AppendLogic extends GetxController {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          state.type == 1 ? element.userName : element.name,
+                          state.type == 1 ? element.username : element.name,
                           style: TextStyle(
                               fontSize: 15, overflow: TextOverflow.ellipsis,color: Colors.green),),
                       ),

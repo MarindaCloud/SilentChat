@@ -92,11 +92,11 @@ class MessageLogic extends GetxController {
     for(var receiverIdElement in sortReceiverMessageMap.keys){
       Message message = sortReceiverMessageMap[receiverIdElement]!;
       User user = await userReceiver.getEntity(uid: receiverIdElement) as User;
-      String userName = user.userName ?? "";
+      String username = user.username ?? "";
       Map<int,Message> element = {
         receiverIdElement: message
       };
-      messageViewMap[userName] = element;
+      messageViewMap[username] = element;
     }
     return messageViewMap;
   }

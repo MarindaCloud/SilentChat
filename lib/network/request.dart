@@ -6,7 +6,7 @@ import 'package:silentchat/network/interceptors/custom_Interceptor.dart';
 import 'package:silentchat/util/log.dart';
 class Request{
   static String token = "";
-  static String host = "175.24.177.189";
+  static String host = "localhost";
   static int port = 8080;
   static final dioOption = BaseOptions(connectTimeout: 5000,receiveTimeout: 3000);
   static final Dio _dio = Dio(dioOption);

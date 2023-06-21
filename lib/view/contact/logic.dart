@@ -39,9 +39,9 @@ class ContactLogic extends GetxController {
       var letter = state.letterList[i];
       print('当前字母：${letter}');
       for(User user in userList){
-        String userName = user.userName??"";
+        String username = user.username??"";
         //首字母转大写
-        String firstLetter = PinyinHelper.getShortPinyin(userName.substring(0,1)).toUpperCase();
+        String firstLetter = PinyinHelper.getShortPinyin(username.substring(0,1)).toUpperCase();
         if(firstLetter == letter){
           //如果不存在这个字母
           if(!cacheFriendUserMap.containsKey(letter)) {
@@ -139,7 +139,7 @@ class ContactLogic extends GetxController {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Container(
-                            child: Text("${user.userName ?? ""}", style: TextStyle(
+                            child: Text("${user.username ?? ""}", style: TextStyle(
                                 color: Colors.black, fontSize: 14),
                               overflow: TextOverflow.ellipsis,)
                         ),

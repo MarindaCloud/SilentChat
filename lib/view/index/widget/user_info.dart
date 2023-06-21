@@ -68,7 +68,7 @@ class UserInfoState extends State<UserInfoWidget> {
                             alignment: Alignment.topCenter,
                             height: 100.rpx,
                             child: Text(
-                                "用户名：${widget.indexLogic.systemState.user.userName ?? ""}",
+                                "用户名：${widget.indexLogic.systemState.user.username ?? ""}",
                                 style: TextStyle(
                                   color: Colors.red
                                 ),

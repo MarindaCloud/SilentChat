@@ -46,9 +46,9 @@ class UserAPI {
    * @description 登录接口
    */
   static register(User user) async{
-    Log.i("发起用户注册：用户名：${user.userName}");
+    Log.i("发起用户注册：用户名：${user.username}");
     Map<String,dynamic> data = {
-      "username": user.userName,
+      "username": user.username,
       "password": user.password,
       "phone": user.phone
     };

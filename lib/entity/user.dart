@@ -7,16 +7,25 @@ import 'package:silentchat/entity/silent_chat_entity.dart';
  */
 class User extends SilentChatEntity{
   int? _id;
-  String? _userName;
+  int? _number;
+  String? _username;
   String? _password;
   String? _phone;
 
-  User({int? id, String? userName, String? password, String? phone}) {
+  User(
+      {int? id,
+        int? number,
+        String? username,
+        String? password,
+        String? phone}) {
     if (id != null) {
       this._id = id;
     }
-    if (userName != null) {
-      this._userName = userName;
+    if (number != null) {
+      this._number = number;
+    }
+    if (username != null) {
+      this._username = username;
     }
     if (password != null) {
       this._password = password;
@@ -28,8 +37,10 @@ class User extends SilentChatEntity{
 
   int? get id => _id;
   set id(int? id) => _id = id;
-  String? get userName => _userName;
-  set userName(String? userName) => _userName = userName;
+  int? get number => _number;
+  set number(int? number) => _number = number;
+  String? get username => _username;
+  set username(String? username) => _username = username;
   String? get password => _password;
   set password(String? password) => _password = password;
   String? get phone => _phone;
@@ -37,7 +48,8 @@ class User extends SilentChatEntity{
 
   User.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
-    _userName = json['userName'];
+    _number = json['number'];
+    _username = json['username'];
     _password = json['password'];
     _phone = json['phone'];
   }
@@ -45,7 +57,8 @@ class User extends SilentChatEntity{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
-    data['userName'] = this._userName;
+    data['number'] = this._number;
+    data['username'] = this._username;
     data['password'] = this._password;
     data['phone'] = this._phone;
     return data;
