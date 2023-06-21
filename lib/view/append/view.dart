@@ -20,6 +20,7 @@ class AppendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Obx(() {
       return Scaffold(
         body: Container(
           color: logic.systemState.bodyColor,
@@ -28,7 +29,6 @@ class AppendPage extends StatelessWidget {
               child: Container(
                 child: Column(
                   children: [
-
                     //  头部
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 100.rpx),
@@ -41,20 +41,25 @@ class AppendPage extends StatelessWidget {
                           Expanded(
                             child: TextField(
                               controller: state.accountTextController,
-                              style: TextStyle(color: Colors.grey,fontSize: 14),
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: 14),
                               maxLines: null,
                               // maxLength: 11,
                               decoration: InputDecoration(
                                   label: SizedBox(
                                       width: 100.rpx,
                                       height: 100.rpx,
-                                      child: Image.asset("assets/icon/sousuo.png",fit: BoxFit.cover,color: Colors.grey,)
+                                      child: Image.asset(
+                                        "assets/icon/sousuo.png",
+                                        fit: BoxFit.cover, color: Colors.grey,)
                                   ),
                                   filled: true,
                                   fillColor: Colors.white,
                                   hintText: "请输入目标IM号",
-                                  hintStyle: TextStyle(color: Colors.grey,fontSize: 14),
-                                  contentPadding: EdgeInsets.only(left: 20,right: 20),
+                                  hintStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 14),
+                                  contentPadding: EdgeInsets.only(
+                                      left: 20, right: 20),
                                   border: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: logic.systemState.bodyColor,
@@ -78,21 +83,25 @@ class AppendPage extends StatelessWidget {
                             height: 200.rpx,
                             color: Colors.white,
                             child: TextButton(
-                              onPressed: (){},
+                              onPressed: logic.search,
                               child: Container(
                                 child: Row(
                                   children: [
                                     SizedBox(
                                       width: 100.rpx,
                                       height: 100.rpx,
-                                      child: Image.asset("assets/icon/dynamic.png",fit: BoxFit.cover,color: Colors.grey,),
+                                      child: Image.asset(
+                                        "assets/icon/dynamic.png",
+                                        fit: BoxFit.cover, color: Colors.grey,),
                                     ),
                                     SizedBox(
                                       width: 50.rpx,
                                     ),
                                     Text(
                                       "查询",
-                                      style: TextStyle(color: Colors.black,fontSize: 16,letterSpacing: 5.rpx),
+                                      style: TextStyle(color: Colors.black,
+                                          fontSize: 16,
+                                          letterSpacing: 5.rpx),
                                     )
                                   ],
                                 ),
@@ -104,7 +113,7 @@ class AppendPage extends StatelessWidget {
                     ),
                     SizedBox(height: 100.rpx),
                     //  查询结果
-                    buildSearchResult()
+                    state.searchFlag.value ? buildSearchResult() : Center(child: Text("未找到相关数据！",style: TextStyle(fontSize: 23,color: Colors.red),),)
                   ],
                 ),
               ),
@@ -112,6 +121,7 @@ class AppendPage extends StatelessWidget {
           ),
         ),
       );
+    });
   }
 
   /*
@@ -120,7 +130,8 @@ class AppendPage extends StatelessWidget {
    * @description 构建查询结果
    */
   buildSearchResult() {
-    return Container(
+    return SlideTransition(
+        position: state.animation!,
       child: Column(
         children: [
           Container(
@@ -130,7 +141,7 @@ class AppendPage extends StatelessWidget {
             ),
           )
         ],
-      ),
+      )
     );
   }
 }

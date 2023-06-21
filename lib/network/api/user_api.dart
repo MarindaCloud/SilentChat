@@ -74,4 +74,21 @@ class UserAPI {
     return user;
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/8 16:36
+   * @description 登录接口
+   */
+  static selectUserByNumber(int number) async{
+    Log.i("查询默讯号：${number}的用户！");
+    var data = {
+      "number": number
+    };
+    var response = await Request.sendPost("user/selectByNumber", data: data, header: Request.header);
+    APIResult apiResult = await Request.toAPIResult(response);
+    if(apiResult.data == null) return null;
+    User user = User.fromJson(apiResult.data);
+    return user;
+  }
+
 }
