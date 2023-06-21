@@ -11,13 +11,21 @@ class User extends SilentChatEntity{
   String? _username;
   String? _password;
   String? _phone;
+  int? _sex;
+  DateTime? _birthday;
+  String? _signature;
+  String? _location;
 
   User(
       {int? id,
         int? number,
         String? username,
         String? password,
-        String? phone}) {
+        String? phone,
+        int? sex,
+        DateTime? birthday,
+        String? signature,
+        String? location}) {
     if (id != null) {
       this._id = id;
     }
@@ -33,6 +41,18 @@ class User extends SilentChatEntity{
     if (phone != null) {
       this._phone = phone;
     }
+    if (sex != null) {
+      this._sex = sex;
+    }
+    if (birthday != null) {
+      this._birthday = birthday;
+    }
+    if (signature != null) {
+      this._signature = signature;
+    }
+    if (location != null) {
+      this._location = location;
+    }
   }
 
   int? get id => _id;
@@ -45,6 +65,14 @@ class User extends SilentChatEntity{
   set password(String? password) => _password = password;
   String? get phone => _phone;
   set phone(String? phone) => _phone = phone;
+  int? get sex => _sex;
+  set sex(int? sex) => _sex = sex;
+  DateTime? get birthday => _birthday;
+  set birthday(DateTime? birthday) => _birthday = birthday;
+  String? get signature => _signature;
+  set signature(String? signature) => _signature = signature;
+  String? get location => _location;
+  set location(String? location) => _location = location;
 
   User.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -52,6 +80,10 @@ class User extends SilentChatEntity{
     _username = json['username'];
     _password = json['password'];
     _phone = json['phone'];
+    _sex = json['sex'];
+    _birthday = json['birthday'];
+    _signature = json['signature'];
+    _location = json['location'];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,6 +93,10 @@ class User extends SilentChatEntity{
     data['username'] = this._username;
     data['password'] = this._password;
     data['phone'] = this._phone;
+    data['sex'] = this._sex;
+    data['birthday'] = this._birthday;
+    data['signature'] = this._signature;
+    data['location'] = this._location;
     return data;
   }
 }
