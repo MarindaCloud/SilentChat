@@ -10,6 +10,7 @@ class DateTimeUtil{
   static List<String> ymdhns = ["yyyy","-","mm","-","dd"," ","HH",":","nn",":","ss"];
   static List<String> ymdhn = ["yyyy","-","mm","-","dd"," ","HH",":","nn"];
   static List<String> hn = ["HH", ":", "nn"];
+  static List<String> md = ["mm", "月", "dd","日"];
   /*
    * @author Marinda
    * @date 2023/6/5 14:33

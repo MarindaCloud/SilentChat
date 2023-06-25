@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:silentchat/common/components/icon_button.dart';
+import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/user_info/logic.dart';
@@ -113,11 +115,11 @@ class MainComponentState extends State<MainComponent> {
                               width: 80.rpx,
                               height: 80.rpx,
                               child: Image.asset(
-                                  "assets/icon/man.png", color: Colors.blue,
+                                  getSex() == "男" ? "assets/icon/man.png" : "assets/icon/woman.png", color: getSex() == "男" ? Colors.blue : Colors.pink,
                                   fit: BoxFit.fill)
                           ),
                           SizedBox(width: 10.rpx),
-                          Text("男",
+                          Text(getSex(),
                               style: TextStyle(color: Colors.grey, fontSize: 16)
                           )
                         ],
@@ -133,7 +135,7 @@ class MainComponentState extends State<MainComponent> {
                               color: Color.fromRGBO(207, 207, 207, 1),
                               width: 1))),
                       child: Text(
-                        "20岁",
+                        "${getAge()}岁",
                         style: TextStyle(color: Colors.grey, fontSize: 16),),
                     ),
                     //月份，星座
@@ -148,12 +150,12 @@ class MainComponentState extends State<MainComponent> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              child: Text("1月1日", style: TextStyle(
+                              child: Text(getDate(), style: TextStyle(
                                   color: Colors.grey, fontSize: 16)),
                             ),
                             SizedBox(width: 50.rpx),
                             Container(
-                              child: Text("摩羯座",
+                              child: Text(getConstellAtion(),
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 16),),
                             )
@@ -169,12 +171,12 @@ class MainComponentState extends State<MainComponent> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              child: Text("广东", style: TextStyle(
+                              child: Text(getProvince(), style: TextStyle(
                                   color: Colors.grey, fontSize: 16)),
                             ),
                             SizedBox(width: 50.rpx),
                             Container(
-                              child: Text("广州",
+                              child: Text(getCity(),
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 16),),
                             )
@@ -194,7 +196,7 @@ class MainComponentState extends State<MainComponent> {
                           TextSpan(text: "个性签名：",
                               style: TextStyle(fontSize: 16, color: Colors
                                   .grey)),
-                          TextSpan(text: "这个人很懒，没有留下任何痕迹！",
+                          TextSpan(text: widget.userInfoState.user.value.signature ?? "这个人很懒，没有留下任何痕迹！",
                               style: TextStyle(color: Colors.black,
                                   fontSize: 16))
                         ]
@@ -242,4 +244,131 @@ class MainComponentState extends State<MainComponent> {
     });
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/25 10:29
+   * @description 1男2女
+   */
+  String getSex(){
+    User user = widget.userInfoState.user.value;
+    int sex = user.sex ?? -1;
+    return sex == 1 ? "男" : "女";
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/25 10:30
+   * @description 获取出生日期
+   */
+  String getDate(){
+    User user = widget.userInfoState.user.value;
+    DateTime? dateTime = user.birthday;
+    if(dateTime == null){
+      return "";
+    }
+    print('当前日期：${dateTime}');
+    return DateTimeUtil.formatDateTime(dateTime,format: DateTimeUtil.md);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/25 10:35
+   * @description 获取年龄
+   */
+  int getAge(){
+    User user = widget.userInfoState.user.value;
+    int birthDayYear = user.birthday?.year ?? 0;
+    return (DateTime.now().year - birthDayYear);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/25 10:44
+   * @description 获取位置
+   */
+  String getLocation(){
+    User user = widget.userInfoState.user.value;
+    return user.location.toString();
+  }
+
+
+  String getProvince(){
+    String location = getLocation();
+    String subString = location.substring(0,2);
+    return subString ;
+  }
+
+  String getCity(){
+    String location = getLocation();
+    String subString = location.substring(2);
+    return subString;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/25 11:01
+   * @description 获取星座
+   * 12/22 - 1/19 摩羯
+   * 1/20 - 2/18 水瓶
+   * 2/19 - 3/20 双鱼座
+   * 3/21 - 4/20 白羊座
+   * 4/21 - 5/20 金牛座
+   * 5/21 - 6/21 双子座
+   * 6/22 - 7/22 巨蟹座
+   * 7/23 - 8/22 狮子座
+   * 8/23 - 9/22 处女座
+   * 9/23 - 10/23 天秤座
+   * 10/24 - 11/22 天蝎座
+   * 11/23 - 12/21 射手座
+   */
+  String getConstellAtion(){
+    User user = widget.userInfoState.user.value;
+    DateTime birthDay = user.birthday ?? DateTime.now();
+    if(birthDay == DateTime.now()){
+      return "";
+    }
+    int year = birthDay?.year ?? 0;
+    String constellAtion = "";
+    //摩羯座
+    if(validDateTimeInRange(birthDay, DateTime(year,12,22), DateTime(year,1,19))){
+      constellAtion = "摩羯";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,1,20), DateTime(year,2,18))){
+      constellAtion = "水瓶";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,2,19), DateTime(year,3,20))){
+      constellAtion = "双鱼";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,3,21), DateTime(year,4,20))){
+      constellAtion = "白羊";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,4,21), DateTime(year,5,20))){
+      constellAtion = "金牛";
+    }else if(validDateTimeInRange(birthDay,DateTime(year,5,21), DateTime(year,6,21))){
+      constellAtion = "双子";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,6,22), DateTime(year,7,22))){
+      constellAtion = "巨蟹";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,7,23), DateTime(year,8,22))){
+      constellAtion = "狮子";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,8,23), DateTime(year,9,22))){
+      constellAtion = "处女";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,9,23), DateTime(year,10,23))){
+      constellAtion = "天秤";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,10,24), DateTime(year,11,22))){
+      constellAtion = "天蝎";
+    }else if(validDateTimeInRange(birthDay, DateTime(year,11,23), DateTime(year,12,21))){
+      constellAtion = "射手";
+    }
+    Log.i("星座：${constellAtion}");
+    return constellAtion+"座";
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/25 11:17
+   * @description 校验日期范围
+   */
+  bool validDateTimeInRange(DateTime date,DateTime start,DateTime end){
+    //如果该日期和起始日期相同则直接返回true
+    if(date.year == start.year && date.month == start.month && date.day == start.day){
+      return true;
+    }
+    return start.isBefore(date) && end.isAfter(date);
+  }
 }

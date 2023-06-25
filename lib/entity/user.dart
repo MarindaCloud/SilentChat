@@ -81,7 +81,9 @@ class User extends SilentChatEntity{
     _password = json['password'];
     _phone = json['phone'];
     _sex = json['sex'];
-    _birthday = json['birthday'];
+    if(json["birthday"] != null){
+      _birthday = DateTime.parse(json["birthday"]);
+    }
     _signature = json['signature'];
     _location = json['location'];
   }
