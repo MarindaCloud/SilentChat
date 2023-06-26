@@ -3,6 +3,7 @@ import 'dart:convert';
 import "package:dio/dio.dart";
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/user.dart';
@@ -18,8 +19,8 @@ import 'package:get/get.dart';
  * @description 朋友API
  */
 class FriendsAPI {
-  static SystemLogic systemLogic = Get.find<SystemLogic>();
-  static SystemState systemState = Get.find<SystemLogic>().state;
+  static final userLogic = Get.find<UserLogic>();
+  static final userState = Get.find<UserLogic>().state;
 
   /*
    * @author Marinda
@@ -54,7 +55,7 @@ class FriendsAPI {
    * @description 通过uid获取朋友详情列表
    */
   static selectByUid() async{
-    int uid = systemState.user.id!;
+    int uid = userState.uid.value;
     var data = {
       "uid": uid
     };

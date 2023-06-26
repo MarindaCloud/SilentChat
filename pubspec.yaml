@@ -74,6 +74,8 @@ dev_dependencies:
   hexcolor: ^2.0.7
   #  flukit 组件库
   flukit: ^3.0.1
+  #录音
+  flutter_sound: ^9.2.13
   #  SM2 加密
   sm2cipher: ^0.0.7
   #  sm4 加密

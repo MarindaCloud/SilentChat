@@ -8,8 +8,5 @@ import 'package:get/get.dart';
  * @description 系统state
  */
 class SystemState{
-  User user = User();
-  final uid = 0.obs;
-  final friendUserList = <User>[].obs;
   Color bodyColor = Color.fromRGBO(247, 247, 247, 1);
 }

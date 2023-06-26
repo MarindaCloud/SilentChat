@@ -33,7 +33,7 @@ class UserInfoState extends State<UserInfoWidget> {
   }
 
   toUserInfo(){
-    Get.toNamed(AppPage.userInfo,arguments: widget.indexLogic.systemState.user.id);
+    Get.toNamed(AppPage.userInfo,arguments: widget.indexLogic.userState.user.value.id);
   }
 
   UserInfoState();
@@ -80,7 +80,7 @@ class UserInfoState extends State<UserInfoWidget> {
                             alignment: Alignment.topCenter,
                             height: 100.rpx,
                             child: Text(
-                                "用户名：${widget.indexLogic.systemState.user.username ?? ""}",
+                                "用户名：${widget.indexLogic.userState.user.value.username ?? ""}",
                                 style: TextStyle(
                                   color: Colors.red
                                 ),
@@ -91,7 +91,7 @@ class UserInfoState extends State<UserInfoWidget> {
                             alignment: Alignment.bottomCenter,
                             height: 100.rpx,
                             child: Text(
-                              "手机号：${widget.indexLogic.systemState.user.phone ?? ""}",
+                              "手机号：${widget.indexLogic.userState.user.value.phone ?? ""}",
                               style: TextStyle(
                                   color: Colors.blue
                               ),

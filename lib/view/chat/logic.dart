@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
@@ -25,15 +26,22 @@ import 'package:silentchat/util/font_rpx.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:silentchat/util/log.dart';
 import 'state.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import "package:permission_handler/permission_handler.dart";
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   final ChatState state = ChatState();
   final systemLogic = Get.find<SystemLogic>();
   final systemState = Get.find<SystemLogic>().state;
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
   AnimationController? imageOpacity;
   Animation<double>? imageOpacityTween;
   @override
-  void onInit() {
+  void onInit() async{
     imageOpacity = AnimationController(vsync: this,duration: Duration(seconds: 1));
     imageOpacityTween = Tween<double>(begin: 0,end: 1).animate(imageOpacity!);
     if(Get.arguments == null ) return;
@@ -50,8 +58,59 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     state.picker = picker;
     state.animatedController = AnimationController(vsync: this,duration: Duration(milliseconds: 500));
     state.fadeValue = Tween<double>(begin: 0,end: 1).animate(state.animatedController!);
+    await initSoundSetting();
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/6/26 15:25
+   * @description 初始化声音设置
+   */
+  initSoundSetting() async{
+    await state.flutterSoundPlayer.openPlayer();
+    await state.recordSound.openRecorder();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/26 15:30
+   * @description 关闭声音配置
+   */
+  closeSoundSetting() async{
+    await state.flutterSoundPlayer.closePlayer();
+    await state.recordSound.closeRecorder();
+  }
+
+
+  @override
+  void onClose() async{
+    await closeSoundSetting();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/26 15:31
+   * @description 录音
+   */
+  void recordSound() async{
+    PermissionStatus status = await Permission.microphone.request();
+    //权限校验
+    if (status != PermissionStatus.granted) throw RecordingPermissionException("麦克风权限未授权！");
+    var dir = await getApplicationDocumentsDirectory();
+    Uuid uuid = Uuid();
+    String filePath = p.join(dir.path,uuid.v4());
+    Log.i("录音保存的位置：${filePath}");
+    await state.recordSound.startRecorder(toFile: filePath,codec: Codec.mp3);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/26 15:33
+   * @description
+   */
+  void stopRecordSound() async{
+    await state.recordSound.closeRecorder();
+  }
 
   /*
    * @author Marinda
@@ -103,22 +162,28 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
                   SizedBox(
                     height: 100.rpx,
                   ),
-                  Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius
-                              .circular(10000),
-                          color: Colors.blue
-                      ),
-                      width: 300.rpx,
-                      height: 300.rpx,
-                      child: Center(child: Container(
-                        width: 200.rpx,
-                        height: 200.rpx,
-                        child: Image.asset(
-                          "assets/icon/luyin.png",
-                          color: Colors.white,
-                          fit: BoxFit.cover,),
-                      ),)
+                  InkWell(
+                    onLongPress: (){
+                      Log.i("录音中");
+                      recordSound();
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius
+                                .circular(10000),
+                            color: Colors.blue
+                        ),
+                        width: 300.rpx,
+                        height: 300.rpx,
+                        child: Center(child: Container(
+                          width: 200.rpx,
+                          height: 200.rpx,
+                          child: Image.asset(
+                            "assets/icon/luyin.png",
+                            color: Colors.white,
+                            fit: BoxFit.cover,),
+                        ),)
+                    ),
                   ),
                   //
                   Container(
@@ -156,7 +221,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     int id = state.receiverId.value;
     int type = state.type.value;
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.user.value.id ?? 0;
     List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid).toList();
     if(type == 1){
       for(ChatInfo chatInfo in filterTargetChatInfoList){
@@ -280,7 +345,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     if(image != null){
       String path = image!.path;
       File file = File(path);
-      await insertMessage(systemState.uid.value, state.receiverId.value, MessageType.IMAGE,expand_address: path);
+      await insertMessage(userState.uid.value, state.receiverId.value, MessageType.IMAGE,expand_address: path);
       Log.i("图片文件：${file}");
     }
   }
@@ -348,7 +413,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     ReceiverType type = ReceiverType.CONTACT;
     String message = state.messageController.text;
     if(message.isEmpty){ return;}
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.user.value.id ?? 0;
     int receiverId = state.receiverId.value;
     Log.i("当前接受者id: ${receiverId}");
     await insertMessage(uid,receiverId,messageType);
@@ -368,7 +433,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description 通过异步socket插入Message
    */
    syncInsertMessage(ChatMessage chatMessage) async{
-    int targetId = systemState.user.id ?? -1;
+    int targetId = userState.user.value.id ?? -1;
     String message = chatMessage.chatMessage!;
     DateTime dt = DateTime.now();
     String portait = "assets/user/portait.png";
@@ -459,7 +524,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     List<Widget> list = [];
     for (ChatRecordData chatRecordData in chatRecordDataList) {
       int sendId = chatRecordData.sendId!;
-      int uid = systemState.user.id??0;
+      int uid = userState.user.value.id??0;
       Widget widget = Container(
         margin: EdgeInsets.only(bottom: 100.rpx),
         child: Row(
@@ -497,7 +562,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    */
   List<Widget> buildChatRecordItem(ChatRecordData chatRecordData){
     List<Widget> list = [];
-    int uid = systemState.user.id ?? -1;
+    int uid = userState.user.value.id ?? -1;
     int sendId = chatRecordData.sendId!;
     Widget expaned = SizedBox(width: 50.rpx);
     Widget message = buildMessageTypeComponent(chatRecordData);
@@ -537,7 +602,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   Widget buildMessageTypeComponent(ChatRecordData chatRecordData){
     Widget widget = Container();
     MessageType messageType = chatRecordData.messageType!;
-    int uid = systemState.user.id ?? -1;
+    int uid = userState.user.value.id ?? -1;
     String message = chatRecordData.message ?? "";
     int sendId = chatRecordData.sendId!;
     switch(messageType){

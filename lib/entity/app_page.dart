@@ -2,6 +2,8 @@ import 'package:silentchat/enum/global_page.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/view/append/binding.dart';
 import 'package:silentchat/view/append/view.dart';
+import 'package:silentchat/view/append_message/binding.dart';
+import 'package:silentchat/view/append_message/view.dart';
 import 'package:silentchat/view/chat/binding.dart';
 import 'package:silentchat/view/chat/view.dart';
 import 'package:silentchat/view/contact/binding.dart';
@@ -34,6 +36,7 @@ class AppPage{
   static String append = GlobalPage.append.router;
   static String qr = GlobalPage.qr.router;
   static String userInfo = GlobalPage.userInfo.router;
+  static String appendMessage = GlobalPage.appendMessage.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -45,6 +48,7 @@ class AppPage{
     GetPage(name: append, page: ()=>AppendPage(),binding:AppendBinding()),
     GetPage(name: qr, page: ()=>QrPage(),binding:QrBinding()),
     GetPage(name: userInfo, page: ()=>UserInfoPage(),binding: UserInfoBinding()),
+    GetPage(name: appendMessage, page: ()=>AppendMessagePage(),binding: AppendMessageBinding()),
   ];
 
   AppPage();

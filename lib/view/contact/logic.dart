@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -18,7 +19,8 @@ class ContactLogic extends GetxController {
   final ContactState state = ContactState();
   final SystemLogic systemLogic = Get.find<SystemLogic>();
   final SystemState systemState = Get.find<SystemLogic>().state;
-
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
 
   @override
   void onInit() {
@@ -32,7 +34,7 @@ class ContactLogic extends GetxController {
    * @description 初始化朋友信息
    */
   void initFriendsInfo(){
-    List<User> userList = systemState.friendUserList;
+    List<User> userList = userState.friendUserList;
     Map<String,List<User>> cacheFriendUserMap = {};
     //默认字母排序为A-Z，所以还需要对用户信息做一个字母Map缓存排序
     for(int i = 0;i<state.letterList.length;i++){

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/receiver.dart';
@@ -16,15 +17,15 @@ import 'package:silentchat/util/log.dart';
  * @description 用户接收者
  */
 class UserReceiver implements Receiver{
-  final systemLogic = Get.find<SystemLogic>();
-  final systemState = Get.find<SystemLogic>().state;
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
 
   UserReceiver();
 
 
   @override
   Future<SilentChatEntity> getEntity({int? uid}) async{
-    int targetId = uid ?? systemState.user.id ?? 0;
+    int targetId = uid ?? userState.uid.value?? 0;
     User user = await UserAPI.selectByUid(targetId);
     return user;
   }
@@ -67,7 +68,7 @@ class UserReceiver implements Receiver{
   @override
   Future<List<int>> getReceiverList() async{
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.uid.value;
     List<int> receiverIdList = chatInfoList.where((element) => element.sendId == uid && element.receiverId != uid).toList().map((e) => e.receiverId ?? 0).toList();
     List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid).map((e) => e.sendId ?? 0).toList();
     List<int> list = [];
@@ -82,7 +83,7 @@ class UserReceiver implements Receiver{
    * @description 获取和该接受者的所有聊天记录信息
    */
   Future<List<Message>> getTargetMessageList(int receiverId) async{
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.uid.value;
     List<ChatInfo> chatInfo = await MessageAPI.selectUserChatInfo();
     List<Message> messageList = [];
     List<int> midList = chatInfo.where((e) => e.sendId == uid && e.receiverId == receiverId || e.sendId == receiverId && e.receiverId == uid).toList().map((e) => e.mid?? 0).toList();

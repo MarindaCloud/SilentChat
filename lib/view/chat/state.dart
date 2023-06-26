@@ -5,6 +5,8 @@ import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+
 
 class ChatState {
   TextEditingController messageController = TextEditingController(text: "");
@@ -25,6 +27,8 @@ class ChatState {
   //子控件类型用来拓展
   final subChildType = "".obs;
   final existsContentFlag = false.obs;
+  FlutterSoundPlayer flutterSoundPlayer = FlutterSoundPlayer();
+  FlutterSoundRecorder recordSound = FlutterSoundRecorder();
   ChatState() {
     ///Initialize variables
   }

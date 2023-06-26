@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/UserReceiver.dart';
@@ -28,6 +29,8 @@ class MessageLogic extends GetxController {
   final MessageState state = MessageState();
   final systemState = Get.find<SystemLogic>().state;
   final systemLogic = Get.find<SystemLogic>();
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
 
 
   @override
@@ -42,7 +45,7 @@ class MessageLogic extends GetxController {
    * @description 初始化最近聊天信息
    */
   void initRecordMessage() async{
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.user.value.id ?? 0;
     //获取用户聊天记录详情
     UserReceiver userReceiver = UserReceiver();
     List<int> receiverIdList = await userReceiver.getReceiverList();

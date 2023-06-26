@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/enum/global_page.dart';
 import 'package:silentchat/network/api/user_api.dart';
@@ -10,6 +11,7 @@ import 'package:silentchat/util/log.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'package:silentchat/util/overlay_manager.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,9 +20,8 @@ void main() async{
   await Log.initLogger();
   initService();
   //强制竖屏
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   try {
-
   }catch(e){
     Log.e("初始化失败！");
   }finally{
@@ -30,6 +31,7 @@ void main() async{
 }
 
 class MainApp extends StatefulWidget{
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   State<StatefulWidget> createState() {
@@ -54,6 +56,7 @@ class MainState extends State<MainApp> with WidgetsBindingObserver{
     FontRpx.initialize();
     final TransitionBuilder botToastBuilder = BotToastInit();
     return GetMaterialApp(
+      navigatorKey: MainApp.navigatorKey,
       //移除一下Debug图标
       debugShowCheckedModeBanner: false,
       title: "IM通讯",
@@ -90,4 +93,6 @@ class MainState extends State<MainApp> with WidgetsBindingObserver{
 initService() {
   Get.put(SocketHandle());
   Get.put(SystemLogic());
+  Get.put(OverlayManager());
+  Get.put(UserLogic());
 }

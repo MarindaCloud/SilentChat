@@ -1,5 +1,6 @@
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/util/log.dart';
@@ -11,9 +12,8 @@ import 'package:get/get.dart';
  * @description 用户请求接口
  */
 class UserAPI {
-  static SystemLogic systemLogic = Get.find<SystemLogic>();
-  static SystemState systemState = Get.find<SystemLogic>().state;
-
+  static final userLogic = Get.find<UserLogic>();
+  static final userState = Get.find<UserLogic>().state;
   /*
    * @author Marinda
    * @date 2023/6/8 16:36
@@ -31,9 +31,9 @@ class UserAPI {
     if(apiResult.data != null){
       User user = User.fromJson(apiResult.data["user"]);
       String token = apiResult.data["token"];
-      systemState.user = user;
-      systemState.uid.value = user.id ?? 0;
-      print('全局用户信息：${systemState.user.toJson()}');
+      userState.user.value = user;
+      userState.uid.value = user.id ?? 0;
+      print('全局用户信息：${userState.user.toJson()}');
       Request.token = token;
     }
     Log.i("RequestToken: ${Request.token}");

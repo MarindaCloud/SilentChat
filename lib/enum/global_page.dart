@@ -12,7 +12,8 @@ enum GlobalPage {
   chat("/chat"),
   append("/append"),
   userInfo("/userInfo"),
-  qr("/qr");
+  qr("/qr"),
+  appendMessage("/appendMessage");
   final String router;
   const GlobalPage(this.router);
 }

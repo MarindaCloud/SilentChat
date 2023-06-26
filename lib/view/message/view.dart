@@ -61,7 +61,7 @@ class MessagePage extends StatelessWidget {
                             Container(
                               alignment: Alignment.topLeft,
                               child: Container(
-                                  child: Text("${logic.systemState.user.username}", style: TextStyle(
+                                  child: Text("${logic.userState.user.value.username}", style: TextStyle(
                                       color: Colors.white, fontSize: 14),
                                     overflow: TextOverflow.ellipsis,)
                               ),

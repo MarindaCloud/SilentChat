@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
@@ -18,9 +19,8 @@ import 'state.dart';
 class IndexLogic extends GetxController {
   final IndexState state = IndexState();
   final socketHandle = Get.find<SocketHandle>();
-  final systemLogic = Get.find<SystemLogic>();
-  final systemState = Get.find<SystemLogic>().state;
-
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
   @override
   void onInit() {
     state.contentWidget = Get.arguments;
@@ -43,7 +43,7 @@ class IndexLogic extends GetxController {
    */
   void initSocket() async{
     state.webSocketChannel = socketHandle.webSocketChannel;
-    User user = systemState.user;
+    User user = userState.user.value;
     Packet packet = Packet(type: 1, object: user);
     String packetJSON = json.encode(packet);
     Log.i("初始化Socket连接包：${packetJSON}");
@@ -63,7 +63,7 @@ class IndexLogic extends GetxController {
       User user  = await UserAPI.selectByUid(friendId);
       userList.add(user);
     }
-    systemState.friendUserList.value = userList;
+    userState.friendUserList.value = userList;
     Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/user.dart';
@@ -11,14 +12,15 @@ import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/util/overlay_manager.dart';
 import 'state.dart';
 
 class AppendLogic extends GetxController with GetTickerProviderStateMixin{
   final AppendState state = AppendState();
-  final SystemLogic logic = Get.find<SystemLogic>();
-  final SystemState systemState = Get
-      .find<SystemLogic>()
-      .state;
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
 
   @override
   void onInit() {
@@ -68,10 +70,28 @@ class AppendLogic extends GetxController with GetTickerProviderStateMixin{
           BotToast.showText(text: "用户不存在！");
           return;
         }
+        //如果查找到的用户id是自己
+        if(user.number == userState.user.value.number){
+          BotToast.showText(text: "查询SCID不能为自己！");
+          return;
+        }
         state.searchResultList.value = [user];
         state.searchFlag.value = true;
         break;
     }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/26 16:25
+   * @description 显示添加消息的请求组件
+   */
+  toAppendMessage() async{
+    dynamic target;
+    if(state.type == 1){
+      target = state.searchResultList.value.first;
+    }
+    Get.toNamed(AppPage.appendMessage,arguments: {"type": state.type,"element": target});
   }
 
   /*
@@ -265,7 +285,8 @@ class AppendLogic extends GetxController with GetTickerProviderStateMixin{
                 color: Colors.blue,
                 child: TextButton(
                   onPressed: (){
-                    print('test');
+                    Log.i("加好友！");
+                    toAppendMessage();
                   },
                   child: Text(state.type == 1 ? "加好友" : "加入群聊",style: TextStyle(color: Colors.white,fontSize: 14),),
                 ),

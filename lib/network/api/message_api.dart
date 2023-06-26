@@ -1,4 +1,5 @@
 import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
@@ -15,8 +16,8 @@ import 'package:silentchat/util/log.dart';
  * @description 消息API
  */
 class MessageAPI {
-  static final systemLogic = Get.find<SystemLogic>();
-  static final systemState = Get.find<SystemLogic>().state;
+  static final userLogic = Get.find<UserLogic>();
+  static final userState = Get.find<UserLogic>().state;
 
   /*
    * @author Marinda
@@ -69,7 +70,7 @@ class MessageAPI {
    * @description 根据uid获取聊天消息详情数据
    */
   static selectUserChatInfo() async{
-    int uid = systemState.user.id ?? 0;
+    int uid = userState.uid.value;
     Log.i("查询id: ${uid}的消息详情列表");
     var data = {
       "uid" : uid
