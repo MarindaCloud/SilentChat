@@ -4,7 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:get/get.dart';
 class QrState {
   //请求结果
-  final qrValue = "".obs;
+  dynamic qrValue;
   //前置后置
   final viewType = true.obs;
   // 是否打开闪光灯

@@ -29,9 +29,11 @@ class QrPage extends StatelessWidget {
                         controller: state.qrController,
                         onDetect: (capture) {
                           dynamic value = capture.raw;
-                          Log.i("扫码结果: ${value}");
-                          state.qrValue.value = value;
-                          Log.i("raw: ${capture.raw}");
+                          var result = value[0];
+                          Log.i("扫码结果: ${result}");
+                          state.qrValue = result["rawValue"];
+                          logic.toUserInfo();
+                          // Log.i("raw: ${capture.raw}");
                         },
                       ),
                     ),

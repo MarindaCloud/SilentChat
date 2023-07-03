@@ -35,7 +35,7 @@ class IconButtonState extends State<IconButtonComponent>{
       child: SizedBox(
         width: widget.width.rpx,
         height: widget.height.rpx,
-        child: Image.asset("assets/icon/${widget.iconName}.png",fit: BoxFit.fill,color: widget.color,),
+        child: Image.asset("assets/icon/${widget.iconName}.png",fit: BoxFit.fill,color: widget.color ?? Colors.white,),
       ),
       onTap: (){
         widget.onClick();
