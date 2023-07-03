@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'state.dart';
-
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrLogic extends GetxController  {
   final QrState state = QrState();
@@ -13,20 +13,22 @@ class QrLogic extends GetxController  {
 
   @override
   void onInit() {
+    initController();
     // TODO: implement onInit
     super.onInit();
   }
 
   /*
    * @author Marinda
-   * @date 2023/6/20 15:08
-   * @description 显示扫码器
+   * @date 2023/7/1 17:07
+   * @description 初始化控制器
    */
-  void showParseQRCode(){
-
+  initController(){
+    state.qrController = MobileScannerController(
+        detectionSpeed: DetectionSpeed.normal,
+        facing: CameraFacing.front,
+        torchEnabled: state.showFlash.value,
+        returnImage: true
+    );
   }
-
-
-
-
 }
