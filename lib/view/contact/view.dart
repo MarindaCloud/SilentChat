@@ -152,6 +152,7 @@ class ContactPage extends StatelessWidget {
                                 ),
                                 onTap: () {
                                   print("123");
+                                  logic.toFriendsVerify();
                                 },
                               ),
                             ),

@@ -4,7 +4,6 @@ import 'package:silentchat/common/components/back_button.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
-
 import 'logic.dart';
 
 class AppendMessagePage extends StatelessWidget {

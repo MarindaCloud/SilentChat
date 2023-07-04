@@ -10,7 +10,8 @@ class BackButtonComponent extends StatefulWidget{
   double width = 100;
   double height = 100;
   Function onClick = (){Get.back();};
-  BackButtonComponent.build(double width,double height,{Function? onClick}){
+  Color? color;
+  BackButtonComponent.build(double width,double height,{Function? onClick,this.color}){
     this.width = width;
     this.height = height;
     if(onClick != null){
@@ -39,7 +40,7 @@ class BackButtonState extends State<BackButtonComponent>{
       child: SizedBox(
         width: widget.width.rpx,
         height: widget.height.rpx,
-        child: Image.asset("assets/icon/back.png",fit: BoxFit.fill,),
+        child: widget.color == null ? Image.asset("assets/icon/back.png",fit: BoxFit.fill,) : Image.asset("assets/icon/back.png",fit: BoxFit.fill,color: widget.color,),
       ),
       onTap: (){
         widget.onClick();

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -26,6 +27,18 @@ class ContactLogic extends GetxController {
   void onInit() {
     Log.i("联系人初始化完毕！");
     initFriendsInfo();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/7/4 15:16
+   * @description 跳转至朋友验证消息
+   */
+  toFriendsVerify(){
+    Map<String,dynamic> args = {
+      "type": 1
+    };
+    Get.toNamed(AppPage.verify,arguments: args);
   }
 
   /*

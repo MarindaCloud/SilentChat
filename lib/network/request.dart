@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:silentchat/entity/api_result.dart';
+import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/network/interceptors/custom_Interceptor.dart';
 import 'package:silentchat/util/log.dart';
 class Request{
@@ -74,6 +75,27 @@ class Request{
     Map<String,dynamic> responseData = json.decode(responseJson);
     APIResult apiResult = APIResult.fromJson(responseData);
     return apiResult;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/7/4 17:25
+   * @description 根据类型获取header数据
+   */
+  static Map<String,dynamic> getHeader({String type = "basic"}){
+    String value = "";
+    switch(type){
+      case "basic":
+        value = HttpContentType.FORMDATA.type;
+        break;
+      case "json":
+        value = HttpContentType.JSON.type;
+        break;
+    }
+    Map<String,dynamic> header = {
+      "Content-Type": value
+    };
+    return header;
   }
 
 }

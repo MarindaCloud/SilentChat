@@ -12,8 +12,7 @@ import 'package:get/get.dart';
  * @description 用户请求接口
  */
 class UserAPI {
-  static final userLogic = Get.find<UserLogic>();
-  static final userState = Get.find<UserLogic>().state;
+
   /*
    * @author Marinda
    * @date 2023/6/8 16:36
@@ -31,9 +30,6 @@ class UserAPI {
     if(apiResult.data != null){
       User user = User.fromJson(apiResult.data["user"]);
       String token = apiResult.data["token"];
-      userState.user.value = user;
-      userState.uid.value = user.id ?? 0;
-      print('全局用户信息：${userState.user.toJson()}');
       Request.token = token;
     }
     Log.i("RequestToken: ${Request.token}");

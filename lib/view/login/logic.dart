@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/app_page.dart';
+import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/network/request.dart';
 import 'package:silentchat/util/log.dart';
@@ -10,7 +13,8 @@ import 'state.dart';
 
 class LoginLogic extends GetxController {
   final LoginState state = LoginState();
-
+  final UserLogic userLogic = Get.find<UserLogic>();
+  final UserState userState = Get.find<UserLogic>().state;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -34,12 +38,16 @@ class LoginLogic extends GetxController {
   void login() async{
     String userName = state.userName.text;
     String passWord = state.passWord.text;
-    APIResult response = await UserAPI.login(userName, passWord);
-    if(response.code == 400){
+    APIResult apiResult = await UserAPI.login(userName, passWord);
+    User user = User.fromJson(apiResult.data["user"]);
+    if(apiResult.code == 400){
       BotToast.showText(text: "登录失败，账号或密码错误！");
       return;
     }
+    userState.uid.value = user?.id ?? -1;
+    userState.user.value = user;
+    Log.i("用户信息：${user.toJson()}");
     toIndex();
-    Log.i("登录响应结果: ${response}");
+    Log.i("登录响应结果: ${apiResult}");
   }
 }
