@@ -26,7 +26,7 @@ class BaseProvider{
        response = await Request.sendGet(url,data: data,header: headers);
        break;
     }
-    APIResult apiResult = await Request.toAPIResult(response);
+    APIResult apiResult =  Request.toAPIResult(response);
     if(apiResult.data == null) return APIResult(code: 400,data: null,msg: "失败！");
     return apiResult;
   }

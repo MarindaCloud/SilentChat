@@ -70,7 +70,7 @@ class Request{
    * @date 2023/6/8 16:51
    * @description response转成APIResult
    */
-  static Future<APIResult> toAPIResult(response) async{
+  static APIResult toAPIResult(response) {
     String responseJson = json.encode(response);
     Map<String,dynamic> responseData = json.decode(responseJson);
     APIResult apiResult = APIResult.fromJson(responseData);

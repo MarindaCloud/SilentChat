@@ -1,9 +1,12 @@
 import 'package:silentchat/entity/verify.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/verify_view_info.dart';
 class VerifyState {
   final verifyList = <Verify>[].obs;
   dynamic value;
-  //这里预留一下，明天用来处理回显的数据，转Map，因为显示在View中的数据不能async
+  final verifyViewInfo = <VerifyViewInfo>[].obs;
+  //用来储存用户的操作记录 对于每个用户的请求情况
+  Map<int,int> userControlMap = {};
   VerifyState() {
     ///Initialize variables
   }

@@ -71,7 +71,7 @@ class FriendsVerify extends Verify{
     data['uid'] = this._uid;
     data['tid'] = this._tid;
     data['message'] = this._message;
-    data['time'] = this._time;
+    data['time'] = this._time.toString();
     data['status'] = this._status;
     return data;
   }

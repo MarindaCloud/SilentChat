@@ -30,10 +30,12 @@ class FriendsAPI {
   static insertFriends(Friend friend) async{
     Log.i("发起添加消息请求！");
     dynamic data = json.encode(friend.toJson());
-    Map<String,dynamic> header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    return BaseProvider.sendRequest("friends/add", HttpMethods.POST.value, data,header: header);
+    var response = await BaseProvider.sendRequest("friends/add", HttpMethods.POST.value, data,header: Request.getHeader(type: "json"));
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return false;
+    }
+    return apiResult.data;
   }
 
   /*

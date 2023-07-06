@@ -26,7 +26,7 @@ class UserAPI {
     };
     var response = await Request.sendPost("user/login", data: data, header: Request.header);
     Log.i("response: ${response}");
-    APIResult apiResult = await Request.toAPIResult(response);
+    APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data != null){
       User user = User.fromJson(apiResult.data["user"]);
       String token = apiResult.data["token"];
@@ -62,7 +62,7 @@ class UserAPI {
       "id": id,
     };
     var response = await Request.sendPost("user/selectById", data: data, header: Request.header);
-    APIResult apiResult = await Request.toAPIResult(response);
+    APIResult apiResult =  Request.toAPIResult(response);
     if(apiResult.data == null){
       return APIResult.fail("失败");
     }
@@ -81,7 +81,7 @@ class UserAPI {
       "number": number
     };
     var response = await Request.sendPost("user/selectByNumber", data: data, header: Request.header);
-    APIResult apiResult = await Request.toAPIResult(response);
+    APIResult apiResult =  Request.toAPIResult(response);
     if(apiResult.data == null) return null;
     User user = User.fromJson(apiResult.data);
     return user;
