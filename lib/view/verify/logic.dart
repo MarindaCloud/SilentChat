@@ -83,6 +83,13 @@ class VerifyLogic extends GetxController {
   List<Widget> buildFriendsVerifyList(){
     List<Widget> widgetList = [];
     Log.i("更新！");
+    if(state.verifyViewInfo.isEmpty){
+      Widget emptyWidget = Container(
+        height: 200.rpx,
+        child: Center(child: Text("暂无收到好友验证消息")),
+      );
+      widgetList.add(emptyWidget);
+    }
     for(var verifyViewInfo in state.verifyViewInfo){
       FriendsVerify friendsVerify = verifyViewInfo.verify as FriendsVerify;
       //朋友验证对象
@@ -210,8 +217,10 @@ class VerifyLogic extends GetxController {
       //用户
       case 1:
         List<FriendsVerify> friendsVerifyList = await VerifyAPI.selectByUidOrTidList(uid);
-        resultList = friendsVerifyList;
-        Log.i("朋友验证列表：${friendsVerifyList.map((e) => e.toJson()).toList()}");
+        //过滤一下数据，作为接收方
+        List<FriendsVerify> filterVerifyList = friendsVerifyList.where((element) => element.tid == userState.uid.value).toList();
+        resultList = filterVerifyList;
+        Log.i("朋友验证列表：${filterVerifyList.map((e) => e.toJson()).toList()}");
         break;
     }
     state.verifyList.value = resultList;

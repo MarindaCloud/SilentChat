@@ -214,7 +214,7 @@ class AppendMessagePage extends StatelessWidget {
                                     SizedBox(
                                       // height: 500.rpx,
                                       child: TextField(
-                                        // controller: TextEditingController(),
+                                        controller: state.controller,
                                         decoration: InputDecoration(
                                             hintText: "验证消息",
                                             enabled: true,
@@ -250,8 +250,9 @@ class AppendMessagePage extends StatelessWidget {
                       child: Container(
                         color: Colors.blue,
                         child: TextButton(
-                            onPressed: () {
+                            onPressed: () async{
                               Log.i("发送申请");
+                              await logic.sendFriendsVerify();
                             },
                             child: Text("添加好友！", style: TextStyle(
                                 color: Colors.white, fontSize: 16),)

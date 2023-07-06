@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:silentchat/entity/api_result.dart';
+import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/friends_verify.dart';
 import 'package:silentchat/network/request.dart';
 import 'package:silentchat/util/log.dart';
@@ -52,6 +53,20 @@ class VerifyAPI {
       }
       return true;
     }
+  }
 
+  /*
+   * @author Marinda
+   * @date 2023/7/6 14:36
+   * @description 插入朋友验证
+   */
+  static insertFriendsVerify(FriendsVerify friendsVerify) async{
+    Log.i("插入朋友验证消息");
+    var response = await Request.sendPost("friendsVerify/add", data: json.encode(friendsVerify.toJson()), header: Request.getHeader(type: "json"));
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return -1;
+    }
+    return apiResult.data;
   }
 }

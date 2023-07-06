@@ -60,7 +60,7 @@ class VerifyPage extends StatelessWidget {
                     margin: EdgeInsets.only(top: 20),
                     color: Color.fromRGBO(247, 247, 247, 1),
                     child: Column(
-                      children: logic.buildFriendsVerifyList(),
+                      children: logic.buildFriendsVerifyList()
                     ),
                   )
                 ],
