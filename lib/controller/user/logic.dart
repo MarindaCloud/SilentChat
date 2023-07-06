@@ -1,5 +1,10 @@
 import 'package:get/get.dart';
+import 'package:silentchat/entity/friend.dart';
+import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/friends_api.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
+import 'package:silentchat/util/log.dart';
 
 import 'state.dart';
 
@@ -60,5 +65,22 @@ class UserLogic extends GetxController {
     String location = getLocation();
     String subString = location.substring(2);
     return subString;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/9 18:02
+   * @description 初始化朋友列表
+   */
+  initFriendsList() async{
+    List<Friend> friendList = await FriendsAPI.selectByUid();
+    List<User> userList = [];
+    for(Friend friend in friendList){
+      int friendId = friend?.fid ?? -1;
+      User user  = await UserAPI.selectByUid(friendId);
+      userList.add(user);
+    }
+    state.friendUserList.value = userList.toSet().toList();
+    Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 }

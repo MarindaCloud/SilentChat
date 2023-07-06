@@ -25,7 +25,7 @@ class IndexLogic extends GetxController {
   void onInit() {
     state.contentWidget = Get.arguments;
     initSocket();
-    initFriendsList();
+    initInfo();
     // TODO: implement onInit
     super.onInit();
   }
@@ -34,6 +34,10 @@ class IndexLogic extends GetxController {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+  }
+
+  void initInfo() async{
+    await userLogic.initFriendsList();
   }
 
   /*
@@ -50,22 +54,7 @@ class IndexLogic extends GetxController {
     socketHandle.write(packetJSON);
   }
 
-  /*
-   * @author Marinda
-   * @date 2023/6/9 18:02
-   * @description 初始化朋友列表
-   */
-  initFriendsList() async{
-    List<Friend> friendList = await FriendsAPI.selectByUid();
-    List<User> userList = [];
-    for(Friend friend in friendList){
-      int friendId = friend?.fid ?? -1;
-      User user  = await UserAPI.selectByUid(friendId);
-      userList.add(user);
-    }
-    userState.friendUserList.value = userList.toSet().toList();
-    Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
-  }
+
 
   /*
    * @author Marinda

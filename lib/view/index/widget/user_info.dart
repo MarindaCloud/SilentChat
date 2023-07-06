@@ -187,6 +187,8 @@ class UserInfoState extends State<UserInfoWidget> {
               ),
             ),
             onTap: (){
+              //暂时当退出用
+              Get.back();
               Log.i("设置！");
             },
           )

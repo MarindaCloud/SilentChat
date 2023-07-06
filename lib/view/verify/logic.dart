@@ -41,7 +41,7 @@ class VerifyLogic extends GetxController {
    * @description 初始化验证数据
    */
 
-  void initVerify() async{
+  initVerify() async{
     await initVerifyInfo();
     initVerifyViewInfo();
   }
@@ -60,11 +60,11 @@ class VerifyLogic extends GetxController {
         int uid = element?.uid ?? -1;
         int tid = element?.tid ?? -1;
         if(uid == -1 || tid == -1){ break;}
-        //如果tid == 用户缓存中的当前用户uid,跳出
-        if(tid == userState.uid.value){
+        //如果uid == 用户缓存中的当前用户uid,跳出
+        if(uid == userState.uid.value){
           continue;
         }
-        User targetUser = await UserAPI.selectByUid(tid);
+        User targetUser = await UserAPI.selectByUid(uid);
         Log.i("目标用户：${targetUser.toJson()}");
         VerifyViewInfo viewInfo = VerifyViewInfo(user: targetUser,verify: element);
         verifyViewInfoList.add(viewInfo);
@@ -270,7 +270,7 @@ class VerifyLogic extends GetxController {
     friendsVerify.status = 1;
     bool flag = await VerifyAPI.updateFriendsVerify(friendsVerify);
     if(flag){
-      Friend friend = Friend(uid: userState.uid.value,fid: friendsVerify.tid ?? 0);
+      Friend friend = Friend(uid: userState.uid.value,fid: friendsVerify.uid ?? 0);
       int result = await FriendsAPI.insertFriends(friend);
       //添加失败
       if(result == -1){
@@ -280,6 +280,7 @@ class VerifyLogic extends GetxController {
       BotToast.showText(text: "已同意该用户好友申请！");
     }
     initVerify();
+    Get.back(result: "accept");
   }
 
 

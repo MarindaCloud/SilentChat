@@ -144,7 +144,7 @@ class AppendMessagePage extends StatelessWidget {
                                             child: Text(
                                               DateTimeUtil.getConstellAtion(
                                                   logic.userState.user.value
-                                                      .birthday!),
+                                                      ?.birthday ?? DateTime.now()),
                                               style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 16),),

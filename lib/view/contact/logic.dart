@@ -4,9 +4,12 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
+import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/friends_view_info.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/receiver_type.dart';
+import 'package:silentchat/network/api/friends_api.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:silentchat/util/log.dart';
@@ -37,11 +40,16 @@ class ContactLogic extends GetxController {
    * @date 2023/7/4 15:16
    * @description 跳转至朋友验证消息
    */
-  toFriendsVerify(){
+  toFriendsVerify() async{
     Map<String,dynamic> args = {
       "type": 1
     };
-    Get.toNamed(AppPage.verify,arguments: args);
+    var result = await Get.toNamed(AppPage.verify,arguments: args);
+    if(result == "accept"){
+      await userLogic.initFriendsList();
+      initFriendsInfo();
+      Log.i("通过好友请求，重载好友列表！");
+    }
   }
 
   /*
@@ -80,26 +88,6 @@ class ContactLogic extends GetxController {
             }
           }
       }
-      // for(User user in userList){
-      //   String username = user.username??"";
-      //   //首字母转大写
-      //   String firstLetter = PinyinHelper.getShortPinyin(username.substring(0,1)).toUpperCase();
-      //   if(firstLetter == letter){
-      //     //如果不存在这个字母
-      //     if(!cacheFriendUserMap.containsKey(letter)) {
-      //       cacheFriendUserMap[letter] = [user];
-      //       break;
-      //     }else{
-      //       List<User> cacheUserList = cacheFriendUserMap[letter] ?? [];
-      //       List<User> newList = [];
-      //       newList.addAll(cacheUserList);
-      //       newList.add(user);
-      //       cacheFriendUserMap[letter] = newList;
-      //       Log.i("newList: ${newList.map((e) => e.toJson()).toList()}");
-      //       break;
-      //     }
-      //   }
-      // }
     }
     state.friendsCacheMap.value = cacheFriendUserMap;
     print('各首字母信息：${cacheFriendUserMap}');
