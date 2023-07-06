@@ -4,6 +4,7 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
+import 'package:silentchat/entity/friends_view_info.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -29,6 +30,8 @@ class ContactLogic extends GetxController {
     initFriendsInfo();
   }
 
+
+
   /*
    * @author Marinda
    * @date 2023/7/4 15:16
@@ -48,30 +51,55 @@ class ContactLogic extends GetxController {
    */
   void initFriendsInfo(){
     List<User> userList = userState.friendUserList;
-    Map<String,List<User>> cacheFriendUserMap = {};
-    //默认字母排序为A-Z，所以还需要对用户信息做一个字母Map缓存排序
+    Map<String,List<FriendsViewInfo>> cacheFriendUserMap = {};
+    List<FriendsViewInfo> friendsViewInfoList = [];
+    for(User user in userList){
+      FriendsViewInfo friendsViewInfo = FriendsViewInfo(user: user);
+      String userName = user.username ?? "";
+      String letter = PinyinHelper.getShortPinyin(userName.substring(0,1)).toUpperCase();
+      friendsViewInfo.letter = letter;
+      friendsViewInfoList.add(friendsViewInfo);
+    }
+    List<FriendsViewInfo> filterList = friendsViewInfoList.toSet().toList();
+    Log.i("朋友信息列表：${filterList}");
+    // //默认字母排序为A-Z，所以还需要对用户信息做一个字母Map缓存排序
     for(int i = 0;i<state.letterList.length;i++){
       var letter = state.letterList[i];
-      print('当前字母：${letter}');
-      for(User user in userList){
-        String username = user.username??"";
-        //首字母转大写
-        String firstLetter = PinyinHelper.getShortPinyin(username.substring(0,1)).toUpperCase();
-        if(firstLetter == letter){
-          //如果不存在这个字母
-          if(!cacheFriendUserMap.containsKey(letter)) {
-            cacheFriendUserMap[letter] = [user];
-            break;
-          }else{
-            List<User> cacheUserList = cacheFriendUserMap[letter] ?? [];
-            List<User> newList = [];
-            newList.addAll(cacheUserList);
-            newList.add(user);
-            cacheFriendUserMap[letter] = newList;
-            break;
+      for(FriendsViewInfo friendsViewInfo in filterList){
+          if(friendsViewInfo.letter == letter){
+            //如果存在
+            if(cacheFriendUserMap.containsKey(letter)){
+              //缓存
+              List<FriendsViewInfo> cacheNewList = [];
+              List<FriendsViewInfo> cacheViewInfoList = cacheFriendUserMap[letter] ?? [];
+              cacheNewList.addAll(cacheViewInfoList);
+              cacheNewList.add(friendsViewInfo);
+              cacheFriendUserMap[letter] = cacheNewList;
+            }else{
+              cacheFriendUserMap[letter] = [friendsViewInfo];
+            }
           }
-        }
       }
+      // for(User user in userList){
+      //   String username = user.username??"";
+      //   //首字母转大写
+      //   String firstLetter = PinyinHelper.getShortPinyin(username.substring(0,1)).toUpperCase();
+      //   if(firstLetter == letter){
+      //     //如果不存在这个字母
+      //     if(!cacheFriendUserMap.containsKey(letter)) {
+      //       cacheFriendUserMap[letter] = [user];
+      //       break;
+      //     }else{
+      //       List<User> cacheUserList = cacheFriendUserMap[letter] ?? [];
+      //       List<User> newList = [];
+      //       newList.addAll(cacheUserList);
+      //       newList.add(user);
+      //       cacheFriendUserMap[letter] = newList;
+      //       Log.i("newList: ${newList.map((e) => e.toJson()).toList()}");
+      //       break;
+      //     }
+      //   }
+      // }
     }
     state.friendsCacheMap.value = cacheFriendUserMap;
     print('各首字母信息：${cacheFriendUserMap}');
@@ -86,7 +114,7 @@ class ContactLogic extends GetxController {
   List<Widget> buildFriends(){
     List<Widget> list = [];
     for(String letter in state.friendsCacheMap.keys){
-      List<User> userList = state.friendsCacheMap[letter] ?? [];
+      List<FriendsViewInfo> friendsViewInfoList = state.friendsCacheMap[letter] ?? [];
       Widget child = Container(
         margin: EdgeInsets.only(bottom: 50.rpx),
         child: Column(
@@ -106,7 +134,7 @@ class ContactLogic extends GetxController {
             //用户列表
             Container(
               child: Column(
-                children: buildFriendsInfo(userList),
+                children: buildFriendsInfo(friendsViewInfoList),
               ),
             )
           ],
@@ -122,13 +150,15 @@ class ContactLogic extends GetxController {
    * @date 2023/6/12 11:28
    * @description 构建朋友信息
    */
-  List<Widget> buildFriendsInfo(List<User> userList){
+  List<Widget> buildFriendsInfo(List<FriendsViewInfo> friendsViewInfoList){
     List<Widget> list = [];
-    for(User user in userList){
-      int uid = user.id ?? 0;
+    for(FriendsViewInfo friendsViewInfo in friendsViewInfoList){
+      User user = friendsViewInfo.user ?? User();
+      int uid = user.id ?? -1;
       //用户信息
       Widget widget = InkWell(
         child: Container(
+          margin: EdgeInsets.only(bottom: 50.rpx),
           child: Row(
             children: [
               //头像

@@ -63,7 +63,7 @@ class IndexLogic extends GetxController {
       User user  = await UserAPI.selectByUid(friendId);
       userList.add(user);
     }
-    userState.friendUserList.value = userList;
+    userState.friendUserList.value = userList.toSet().toList();
     Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 
