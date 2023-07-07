@@ -37,6 +37,10 @@ class MessageLogic extends GetxController {
   void onInit() {
     Log.i("消息页初始化！");
     initRecordMessage();
+    //监听User
+    ever(userState.user, (callback){
+
+    });
   }
 
   /*

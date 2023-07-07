@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
@@ -6,6 +9,8 @@ import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/util/log.dart';
 import '../request.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart' as p;
+import 'package:dio/dio.dart' as d;
 /**
  * @author Marinda
  * @date 2023/6/8 16:28
@@ -87,4 +92,38 @@ class UserAPI {
     return user;
   }
 
+
+  /*
+   * @author Marinda
+   * @date 2023/7/7 16:53
+   * @description 上传头像
+   */
+  static uploadPortrait(File file,User user) async{
+    Log.i("${user.username}上传头像");
+    d.MultipartFile multipartFile = await d.MultipartFile.fromFile(file.path);
+    d.FormData formData = d.FormData.fromMap({
+      "file": multipartFile
+    });
+    var response = await Request.sendPost("user/portrait", data: formData, header: {});
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return "";
+    }
+    return apiResult.data;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/7/7 18:05
+   * @description 修改用户信息
+   */
+  static updateUser(User user) async{
+    Log.i("修改${user.id}用户的信息");
+    var response = await Request.sendPost("user/update", data: json.encode(user.toJson()), header: Request.getHeader(type: "json"));
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == 0 || apiResult.data == -1){
+      return false;
+    }
+    return true;
+  }
 }

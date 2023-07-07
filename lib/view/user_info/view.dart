@@ -5,6 +5,7 @@ import 'package:silentchat/common/components/icon_button.dart';
 import 'package:silentchat/view/user_info/widget/footer_component.dart';
 import 'package:silentchat/view/user_info/widget/header_nav.dart';
 import 'package:silentchat/view/user_info/widget/main_component.dart';
+import 'package:silentchat/view/user_info/widget/update_portrait.dart';
 import 'logic.dart';
 
 class UserInfoPage extends StatelessWidget {
@@ -42,6 +43,7 @@ class UserInfoPage extends StatelessWidget {
                 ],
               ),
             ),
+            UpdatePortraitComponent(logic, state),
             //头部
             Positioned(
                 top: 50.rpx,

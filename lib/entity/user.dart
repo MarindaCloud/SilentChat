@@ -15,7 +15,7 @@ class User extends SilentChatEntity{
   DateTime? _birthday;
   String? _signature;
   String? _location;
-
+  String? _portrait;
   User(
       {int? id,
         int? number,
@@ -25,7 +25,8 @@ class User extends SilentChatEntity{
         int? sex,
         DateTime? birthday,
         String? signature,
-        String? location}) {
+        String? location,
+        String? portrait}) {
     if (id != null) {
       this._id = id;
     }
@@ -53,6 +54,9 @@ class User extends SilentChatEntity{
     if (location != null) {
       this._location = location;
     }
+    if(portrait != null){
+      this._portrait = portrait;
+    }
   }
 
   int? get id => _id;
@@ -74,6 +78,9 @@ class User extends SilentChatEntity{
   String? get location => _location;
   set location(String? location) => _location = location;
 
+  String? get portrait => _portrait;
+  set portrait(String? portrait) => _portrait = portrait;
+
   User.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _number = json['number'];
@@ -86,6 +93,10 @@ class User extends SilentChatEntity{
     }
     _signature = json['signature'];
     _location = json['location'];
+    if(json["portrait"] != null){
+      _portrait = json["portrait"];
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -96,9 +107,10 @@ class User extends SilentChatEntity{
     data['password'] = this._password;
     data['phone'] = this._phone;
     data['sex'] = this._sex;
-    data['birthday'] = this._birthday;
+    data['birthday'] = this._birthday.toString();
     data['signature'] = this._signature;
     data['location'] = this._location;
+    data["portrait"] = this.portrait;
     return data;
   }
 }
