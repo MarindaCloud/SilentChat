@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:silentchat/common/components/custom_image/view.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/util/overlay_manager.dart';
 import 'state.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -16,8 +18,7 @@ import 'package:image_picker/image_picker.dart';
  * @description 用户信息
  */
 class UserInfoLogic extends GetxController {
-  final UserInfoState state
-  = UserInfoState();
+  final UserInfoState state = UserInfoState();
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
 
@@ -48,6 +49,17 @@ class UserInfoLogic extends GetxController {
       BotToast.showText(text: "头像修改失败！");
     }
     BotToast.showText(text: "修改头像成功！");
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/7/20 14:35
+   * @description 显示修改头像组件
+   */
+  showUpdatePortrait(){
+    OverlayManager().createOverlay("customImage", CustomImageComponent(state.user.value.portrait ?? "", (){Log.i("保存");}),uniqueKey: true);
+    Log.i("显示修改头像组件！");
   }
 
 

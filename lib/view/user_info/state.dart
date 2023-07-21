@@ -5,6 +5,7 @@ class UserInfoState {
   final user = User().obs;
   ImagePicker imagePicker = ImagePicker();
   final portrait = "".obs;
+  final updatePortrait = false.obs;
   UserInfoState() {
     ///Initialize variables
   }

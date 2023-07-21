@@ -43,7 +43,9 @@ class UserInfoPage extends StatelessWidget {
                 ],
               ),
             ),
-            UpdatePortraitComponent(logic, state),
+            Visibility(
+                visible: state.updatePortrait.value,
+                child: UpdatePortraitComponent(logic,state)),
             //头部
             Positioned(
                 top: 50.rpx,

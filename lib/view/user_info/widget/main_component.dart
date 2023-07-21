@@ -46,18 +46,23 @@ class MainComponentState extends State<MainComponent> {
                 height: 300.rpx,
                 child: Row(
                   children: [
-                    Container(
-                      width: 300.rpx,
-                      height: 300.rpx,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10000),
-                          image: DecorationImage(
-                              image: Image
-                                  .asset("assets/user/portait.png")
-                                  .image,
-                              fit: BoxFit.cover
-                          )
+                    InkWell(
+                      child: Container(
+                        width: 300.rpx,
+                        height: 300.rpx,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10000),
+                            image: DecorationImage(
+                                image: Image
+                                    .asset("assets/user/portait.png")
+                                    .image,
+                                fit: BoxFit.cover
+                            )
+                        ),
                       ),
+                      onTap: (){
+                        widget.userInfoLogic.showUpdatePortrait();
+                      },
                     ),
                     SizedBox(
                       width: 70.rpx,

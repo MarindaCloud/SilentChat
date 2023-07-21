@@ -15,12 +15,13 @@ import 'package:silentchat/util/overlay_manager.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  //强制竖屏
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // 全部去除
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await Log.initLogger();
   initService();
-  //强制竖屏
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   try {
   }catch(e){
     Log.e("初始化失败！");

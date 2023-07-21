@@ -58,6 +58,7 @@ dev_dependencies:
   #  swiper
   card_swiper: ^2.0.4
   bot_toast: ^4.0.0
+  photo_view: ^0.14.0
   flutter_emoji: ^2.4.0
   #  websocket支持
   web_socket_channel: ^2.2.0
