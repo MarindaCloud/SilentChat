@@ -2,10 +2,12 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
+import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/enum/http_method.dart';
 import 'package:silentchat/network/api/base_provider.dart';
+import 'package:silentchat/network/api/group_info_api.dart';
 import 'package:silentchat/network/request.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
@@ -83,6 +85,27 @@ class MessageAPI {
     print('list: ${list}');
     List<ChatInfo> chatInfoList = list.map((e) => ChatInfo.fromJson(e)).toList();
     return chatInfoList;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/6/12 11:35
+   * @description 根据uid获取聊天消息详情数据
+   */
+  static selectGroupChatInfos() async{
+    List<GroupUserInfo> groupUserInfoList = await GroupInfoAPI.selectByUid(userState.user.value.id ?? -1);
+    List<ChatInfo> groupChatInfo = [];
+    for(var groupElement in groupUserInfoList){
+      int groupId = groupElement.gid ?? -1;
+      ChatInfo element = await selectGroupChatInfo(groupId);
+      groupChatInfo.add(element);
+    }
+
+    if(groupChatInfo.isEmpty){
+      return null;
+    }
+    return groupChatInfo;
   }
 
 

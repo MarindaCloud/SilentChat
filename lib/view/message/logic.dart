@@ -6,7 +6,9 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
-import 'package:silentchat/entity/UserReceiver.dart';
+import 'package:silentchat/entity/group_receiver.dart';
+import 'package:silentchat/entity/receiver.dart';
+import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
@@ -40,6 +42,7 @@ class MessageLogic extends GetxController {
     initRecordMessage();
   }
 
+
   /*
    * @author Marinda
    * @date 2023/6/12 11:34
@@ -49,25 +52,51 @@ class MessageLogic extends GetxController {
     int uid = userState.user.value.id ?? 0;
     //获取用户聊天记录详情
     UserReceiver userReceiver = UserReceiver();
+    GroupReceiver groupReceiver = GroupReceiver();
     List<int> receiverIdList = await userReceiver.getReceiverList();
+    List<int> groupReceiverIdList = await groupReceiver.getReceiverList();
     //接受者总长度
     int receiverLength = receiverIdList.length;
     Log.i("接受者id长度: ${receiverLength}");
+
     Map<int,Message> cacheReceiverMap = {};
     List<Message> messageList = [];
+    //用户消息列表
+    List<Message> userMessageList = await getAllMessageByReceiver(receiverIdList, userReceiver);
+    //群组消息列表
+    List<Message> groupMessageList = await getAllMessageByReceiver(groupReceiverIdList, groupReceiver);
+
+    // for(int receiverId in receiverIdList){
+    //   Message? message = await userReceiver.getNewMessage(id: uid,receiverId: receiverId);
+    //   print('最新的消息：${message?.toJson()}');
+    //   if(message == null){
+    //     continue;
+    //   }
+    //   cacheReceiverMap[receiverId] = message;
+    //   messageList.add(message);
+    // }
+    // var messageViewMap = await sortMessageRank(userReceiver,messageList,cacheReceiverMap);
+    // //排序处理，时间最近的优先排序
+    // state.messageViewMap.value = messageViewMap;
+    print('涉及到的视图map详情: ${messageViewMap}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/7/24 18:43
+   * @description 获取目标接受者所有消息雷暴
+   */
+  Future<List<Message>> getAllMessageByReceiver(List<int> receiverIdList,Receiver receiver) async{
+    List<Message> messageList = [];
     for(int receiverId in receiverIdList){
-      Message? message = await userReceiver.getNewMessage(uid: uid,receiverId: receiverId);
+      Message? message = await receiver.getNewMessage(id: userState.user.value.id ?? -1,receiverId: receiverId);
       print('最新的消息：${message?.toJson()}');
       if(message == null){
         continue;
       }
-      cacheReceiverMap[receiverId] = message;
       messageList.add(message);
     }
-    var messageViewMap = await sortMessageRank(userReceiver,messageList,cacheReceiverMap);
-    //排序处理，时间最近的优先排序
-    state.messageViewMap.value = messageViewMap;
-    print('涉及到的视图map详情: ${messageViewMap}');
+    return messageList;
   }
 
   /*
@@ -95,7 +124,7 @@ class MessageLogic extends GetxController {
     });
     for(var receiverIdElement in sortReceiverMessageMap.keys){
       Message message = sortReceiverMessageMap[receiverIdElement]!;
-      User user = await userReceiver.getEntity(uid: receiverIdElement) as User;
+      User user = await userReceiver.getEntity(id: receiverIdElement) as User;
       String username = user.username ?? "";
       Map<int,Message> element = {
         receiverIdElement: message

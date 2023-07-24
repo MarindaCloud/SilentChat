@@ -1,9 +1,11 @@
+import 'package:silentchat/entity/silent_chat_entity.dart';
+
 /**
  * @author Marinda
  * @date 2023/6/19 17:59
  * @description 群聊实体类
  */
-class Group {
+class Group extends SilentChatEntity{
   int? _id;
   String? _name;
   String? _portrait;

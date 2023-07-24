@@ -49,7 +49,7 @@ class AppendGroupLogic extends GetxController {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(1000),
                       image: DecorationImage(
-                        image: Image.network(e.portrait!, ).image,
+                        image: Image.network(e.portrait!,).image,
                           fit: BoxFit.cover
                       )
                     ),

@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
-import 'package:silentchat/entity/UserReceiver.dart';
+import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/chat_message.dart';

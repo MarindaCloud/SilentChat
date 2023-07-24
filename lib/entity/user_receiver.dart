@@ -24,8 +24,8 @@ class UserReceiver implements Receiver{
 
 
   @override
-  Future<SilentChatEntity> getEntity({int? uid}) async{
-    int targetId = uid ?? userState.uid.value?? 0;
+  Future<SilentChatEntity> getEntity({int? id}) async{
+    int targetId = id ?? userState.uid.value?? 0;
     User user = await UserAPI.selectByUid(targetId);
     return user;
   }
@@ -44,11 +44,11 @@ class UserReceiver implements Receiver{
   }
 
   @override
-  Future<Message?> getNewMessage({int? uid, int? receiverId}) async{
-    if(uid == null || receiverId == null) return null;
+  Future<Message?> getNewMessage({int? id, int? receiverId}) async{
+    if(id == null || receiverId == null) return null;
     //获取用户聊天记录详情
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == receiverId || element.receiverId == uid && element.sendId == receiverId).toList();
+    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId || element.receiverId == id && element.sendId == receiverId).toList();
     List<int> midList = filterList.map((e) => e.mid ?? 0).toList();
     List<Message> messageList = [];
     for(int mid in midList){

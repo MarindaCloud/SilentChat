@@ -1,5 +1,5 @@
 import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/entity/UserReceiver.dart';
+import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/silent_chat_entity.dart';
 import 'package:get/get.dart';
@@ -13,9 +13,9 @@ abstract class Receiver {
   /*
    * @author Marinda
    * @date 2023/6/12 15:04
-   * @description 获取标题
+   * @description 获取目标
    */
-  Future<SilentChatEntity> getEntity({int? uid});
+  Future<SilentChatEntity> getEntity({int? id});
 
   /*
    * @author Marinda
@@ -30,7 +30,7 @@ abstract class Receiver {
    * @date 2023/6/12 15:44
    * @description 获取最新的消息
    */
-  Future<Message?> getNewMessage({int? uid,int? receiverId});
+  Future<Message?> getNewMessage({int? id,int? receiverId});
 
   /*
    * @author Marinda
