@@ -12,6 +12,7 @@ import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
+import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
@@ -37,10 +38,6 @@ class MessageLogic extends GetxController {
   void onInit() {
     Log.i("消息页初始化！");
     initRecordMessage();
-    //监听User
-    ever(userState.user, (callback){
-
-    });
   }
 
   /*
@@ -121,6 +118,29 @@ class MessageLogic extends GetxController {
     Log.i("插入结果: ${recordMessageData.id}");
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/7/24 16:48
+   * @description 插入消息记录信息
+   */
+  insertMessageRecord(String name,Message message,int id,[bool isGroup = false]) async{
+    Map<int,Message> map = {};
+    //如果存在相同的key
+    if(state.messageViewMap.containsKey(name)){
+      Map<int,Message> val = state.messageViewMap[name] ?? {};
+      //则比较一下目标id
+      if(val.containsKey(id)){
+        map[id!] = message;
+        state.messageViewMap[name] = map;
+        Log.i("替换消息视图信息");
+      }
+    }else{
+      // map[id]
+      // state.messageViewMap[name] =
+    }
+
+
+  }
 
 
   /*
@@ -179,11 +199,16 @@ class MessageLogic extends GetxController {
         ),
         onTap: (){
           print(getToolName(i));
-          if(i == 1){
-            Get.toNamed(AppPage.append);
-          }
-          if(i == 2){
-            Get.toNamed(AppPage.qr);
+          switch(i){
+            case 0:
+              Get.toNamed(AppPage.appendGroup);
+              break;
+            case 1:
+              Get.toNamed(AppPage.append);
+              break;
+            case 2:
+              Get.toNamed(AppPage.qr);
+              break;
           }
         },
       );

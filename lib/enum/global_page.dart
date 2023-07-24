@@ -14,7 +14,8 @@ enum GlobalPage {
   userInfo("/userInfo"),
   qr("/qr"),
   appendMessage("/appendMessage"),
-  verify("/verify");
+  verify("/verify"),
+  appendGroup("/appendGroup");
 
   final String router;
   const GlobalPage(this.router);
