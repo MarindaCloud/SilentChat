@@ -78,7 +78,7 @@ class MessageLogic extends GetxController {
     // var messageViewMap = await sortMessageRank(userReceiver,messageList,cacheReceiverMap);
     // //排序处理，时间最近的优先排序
     // state.messageViewMap.value = messageViewMap;
-    print('涉及到的视图map详情: ${messageViewMap}');
+    // print('涉及到的视图map详情: ${messageViewMap}');
   }
 
   /*

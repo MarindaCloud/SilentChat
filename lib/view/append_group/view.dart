@@ -133,7 +133,7 @@ class AppendGroupPage extends StatelessWidget {
                                                 ),
                                                 //创建群聊
                                                 onPressed: (){
-
+                                                  logic.createGroup();
                                                 },
                                                 child: Text("下一步",style: TextStyle(color: Colors.white,fontSize: 14),)),
                                           )

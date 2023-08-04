@@ -59,6 +59,7 @@ class AppendGroupLogic extends GetxController {
                       width: 20,
                       height: 20,
                       decoration: BoxDecoration(
+                        color: state.chooseUserList.contains(e) ? Colors.blue : Colors.transparent,
                           // borderRadius: BorderRadius.circular(10000),
                           border: Border.all(
                               color: Color.fromRGBO(204, 204, 204, 1),
@@ -111,7 +112,7 @@ class AppendGroupLogic extends GetxController {
       groupName += "${userName}、";
     }
     Log.i("群组名称：${groupName}");
-    Group group = Group(name: groupName);
+    Group group = Group(name: groupName,personMax: 20,adminMax: 20);
     int result = await GroupAPI.insertGroup(group);
     if(result != -1){
       //异步插入，涉及到for循环，走同步怕耽误太多时间

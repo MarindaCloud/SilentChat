@@ -65,8 +65,8 @@ class Group extends SilentChatEntity{
     _name = json['name'];
     _portrait = json['portrait'];
     _description = json['description'];
-    _personMax = json['person_max'];
-    _adminMax = json['admin_max'];
+    _personMax = json['personMax'];
+    _adminMax = json['adminMax'];
     _rank = json['rank'];
   }
 
@@ -76,8 +76,8 @@ class Group extends SilentChatEntity{
     data['name'] = this._name;
     data['portrait'] = this._portrait;
     data['description'] = this._description;
-    data['person_max'] = this._personMax;
-    data['admin_max'] = this._adminMax;
+    data['personMax'] = this._personMax;
+    data['adminMax'] = this._adminMax;
     data['rank'] = this._rank;
     return data;
   }
