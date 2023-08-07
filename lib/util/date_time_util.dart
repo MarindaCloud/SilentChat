@@ -82,7 +82,7 @@ class DateTimeUtil{
     for(DateTime dateTime in dateTimeList){
       Duration duration = intervalTime.difference(dateTime);
       //指定区间范围
-      if(duration.inMinutes <=interval.inMinutes) {
+      if(duration.inMinutes <=interval.inMinutes && duration.inMinutes>0) {
         timeList.add(dateTime);
       }
     }

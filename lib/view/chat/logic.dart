@@ -300,28 +300,23 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   sortRecordInfo(){
     Map<String,List<ChatRecordData>> recordMap = {};
     Map<DateTime,List<DateTime>> timeMap = {};
-    List<DateTime> dateTimeList = [];
-    //获取所有时间
-    for(int i = 0 ;i<state.chatRecordList.length;i++){
-      ChatRecordData element = state.chatRecordList[i];
-      DateTime targetTime = element.time!;
-      dateTimeList.add(targetTime);
-    }
+    List<DateTime> dateTimeList = state.chatRecordList.map((element) => element.time!).toList();
+
     List<DateTime> cloneDateTime = [];
     cloneDateTime.addAll(dateTimeList);
-    //遍历克隆的所有时间
+    Log.i("当前所有聊天信息时间: ${dateTimeList}");
+    //遍历克隆的所有时间 跟当前传递的时间比较，如果时间间隔相差不超过10分钟则以最早的key为主
     for(DateTime startTime in cloneDateTime){
       List<DateTime> timeList = DateTimeUtil.getDateTimeInterval(startTime, dateTimeList, Duration(minutes: 10));
+      Log.i("当前时间: ${startTime},符合条件的列表: ${timeList}");
       //如果不存在这个key
       if(!timeMap.containsKey(startTime)){
       //  检查一下日期缓存中是否有存过这条日期
-        print('valid: ${validTimeExists(startTime, timeMap)}');
         if(validTimeExists(startTime, timeMap)){
-          break;
+          continue;
         }
         timeMap[startTime] = timeList;
       }
-      continue;
     }
     Log.i("时间Map缓存数据：${timeMap}");
   //  遍历所有聊天列表数据
@@ -506,6 +501,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     //遍历记录列表
     for(String key in state.recordMap.keys){
       List<ChatRecordData> element = state.recordMap[key] ?? [];
+      //这个是需要做一下特殊处理如果距离下一个时间点间隔差 达到5分钟视为新消息
       Widget child = Container(
         child: Column(
           children: [
