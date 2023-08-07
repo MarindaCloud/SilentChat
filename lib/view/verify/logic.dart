@@ -272,8 +272,10 @@ class VerifyLogic extends GetxController {
     if(flag){
       Friend friend = Friend(uid: userState.uid.value,fid: friendsVerify.uid ?? 0);
       int result = await FriendsAPI.insertFriends(friend);
+      Friend targetFriend = Friend(uid: friendsVerify.uid ?? 0,fid: userState.uid.value);
+      int result2 = await FriendsAPI.insertFriends(targetFriend);
       //添加失败
-      if(result == -1){
+      if(result == -1 || result2 == -1){
         BotToast.showText(text: "添加好友出现错误！");
         return;
       }
