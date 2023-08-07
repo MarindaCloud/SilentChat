@@ -64,6 +64,16 @@ class GroupInfoAPI {
       "uid": uid
     };
     Log.i("查询id: ${uid}的群组详情数据");
-    return BaseProvider.sendRequest("groupUserInfo/selectById", HttpMethods.POST.value, data,header: Request.header);
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return false;
+    }
+    List<GroupUserInfo> groupUserInfoList = [];
+    if(apiResult.data is List){
+      var list = apiResult.data as List;
+      groupUserInfoList = list.map((e) => GroupUserInfo.fromJson(e)).toList();
+    }
+    return groupUserInfoList;
   }
 }

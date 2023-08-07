@@ -49,7 +49,13 @@ class GroupAPI {
       "id": id
     };
     Log.i("查询id: ${id}的群组Id");
-    return BaseProvider.sendRequest("group/selectById", HttpMethods.POST.value, data,header: Request.header);
+    var response = await BaseProvider.sendRequest("group/selectById", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return false;
+    }
+    Group group = Group.fromJson(apiResult.data);
+    return group;
   }
 
   

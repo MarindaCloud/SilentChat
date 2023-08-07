@@ -111,6 +111,12 @@ class AppendGroupLogic extends GetxController {
       String userName = element.username ?? "";
       groupName += "${userName}、";
     }
+    //如果群组名称不为空则视为存在选择的用户，则把当前创建群聊用户名添加至群名中
+    if(groupName != ""){
+      groupName += userState.user.value.username ?? "";
+    }
+    //过滤
+    groupName = groupName.substring(0,groupName.length -1);
     Log.i("群组名称：${groupName}");
     Group group = Group(name: groupName,personMax: 20,adminMax: 20);
     int result = await GroupAPI.insertGroup(group);
@@ -119,6 +125,11 @@ class AppendGroupLogic extends GetxController {
       for(var element in state.chooseUserList){
         int uid = element.id ?? -1;
         GroupUserInfo groupUserInfo = GroupUserInfo(uid: uid,gid: result);
+        GroupInfoAPI.insertGroupInfo(groupUserInfo);
+      }
+      //这里是为了把当前创建群组用户添加至群组里
+      if(state.chooseUserList.isNotEmpty){
+        GroupUserInfo groupUserInfo = GroupUserInfo(uid: userState.user.value.id,gid: result);
         GroupInfoAPI.insertGroupInfo(groupUserInfo);
       }
     //  创建群组完毕之后创建

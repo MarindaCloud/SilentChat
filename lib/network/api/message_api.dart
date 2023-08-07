@@ -82,7 +82,6 @@ class MessageAPI {
       return null;
     }
     List list = result.data;
-    print('list: ${list}');
     List<ChatInfo> chatInfoList = list.map((e) => ChatInfo.fromJson(e)).toList();
     return chatInfoList;
   }
@@ -98,12 +97,8 @@ class MessageAPI {
     List<ChatInfo> groupChatInfo = [];
     for(var groupElement in groupUserInfoList){
       int groupId = groupElement.gid ?? -1;
-      ChatInfo element = await selectGroupChatInfo(groupId);
-      groupChatInfo.add(element);
-    }
-
-    if(groupChatInfo.isEmpty){
-      return null;
+      List<ChatInfo> element = await selectGroupChatInfo(groupId);
+      groupChatInfo.addAll(element);
     }
     return groupChatInfo;
   }
@@ -116,7 +111,7 @@ class MessageAPI {
    */
   static selectGroupChatInfo(int groupId) async{
     var data = {
-      "group_id" : groupId
+      "groupId" : groupId
     };
     Log.i("查询id: ${groupId}的消息信息");
     APIResult result = await BaseProvider.sendRequest("chatInfo/selectGroupChatInfo", HttpMethods.POST.value, data,header: Request.header);

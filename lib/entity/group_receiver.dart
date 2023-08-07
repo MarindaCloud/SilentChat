@@ -37,7 +37,10 @@ class GroupReceiver implements Receiver{
     List<Message> messageList = [];
     //获取用户聊天记录详情
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    for(ChatInfo chatInfo in chatInfoList){
+    //这里是做筛选聊天记录为群聊消息
+    List<ChatInfo> userGroupChatInfoList = chatInfoList.where((element) => element.type == 2).toList();
+    Log.i("该用户群聊消息数据为：${userGroupChatInfoList.map((e) => e.toJson()).toList()}");
+    for(ChatInfo chatInfo in userGroupChatInfoList){
       int mid = chatInfo.mid ?? 0;
       Message message = await MessageAPI.selectMessageById(mid);
       messageList.add(message);

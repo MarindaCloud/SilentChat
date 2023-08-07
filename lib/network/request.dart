@@ -33,7 +33,7 @@ class Request{
         Log.i("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
         return Future.error("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
       }else{
-        Log.i("响应结果：${responseData.data}");
+        // Log.i("响应结果：${responseData.data}");
         return responseData.data;
       }
     }catch(e){

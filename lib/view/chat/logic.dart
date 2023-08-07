@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
@@ -18,6 +19,7 @@ import 'package:silentchat/entity/receiver.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/enum/receiver_type.dart';
+import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -127,6 +129,9 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         title = username;
         break;
       case 2:
+        Group group = await GroupAPI.selectById(id);
+        String name = group.name ?? "";
+        title = name;
         break;
     }
     state.title.value = title;
@@ -220,17 +225,36 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     List<ChatRecordData> list = [];
     int id = state.receiverId.value;
     int type = state.type.value;
-    List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
     int uid = userState.user.value.id ?? 0;
-    List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid).toList();
+    Log.i("当前聊天id: ${id},类型: ${type}");
     if(type == 1){
+      List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
+      List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid && element.type == 1).toList();
       for(ChatInfo chatInfo in filterTargetChatInfoList){
         int sendId = chatInfo.sendId ?? 0;
         int mid = chatInfo.mid ?? 0;
         Message message = await MessageAPI.selectMessageById(mid);
+        User user = await UserAPI.selectByUid(chatInfo.receiverId ?? -1);
         DateTime dt = message.time!;
         int type = message.type!;
-        String portait = "assets/user/portait.png";
+        String portait = user.portrait ?? "";
+        String content = message.content ?? "";
+        MessageType messageType = MessageType.getMessageType(type)!;
+        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portait,message: content);
+        list.add(chatRecordData);
+      }
+    }else{
+      List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
+    //  群组消息
+      List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid && element.type == 2).toList();
+      for(ChatInfo chatInfo in filterTargetChatInfoList){
+        int sendId = chatInfo.sendId ?? 0;
+        int mid = chatInfo.mid ?? 0;
+        Message message = await MessageAPI.selectMessageById(mid);
+        Group group = await GroupAPI.selectById(chatInfo.receiverId ?? -1);
+        DateTime dt = message.time!;
+        int type = message.type!;
+        String portait = group.portrait ?? "";
         String content = message.content ?? "";
         MessageType messageType = MessageType.getMessageType(type)!;
         ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portait,message: content);
@@ -574,7 +598,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
           borderRadius: BorderRadius.circular(10000),
           image: DecorationImage(
               image: Image
-                  .asset("assets/user/portait.png")
+                  .network("${chatRecordData.portrait}")
                   .image,
               fit: BoxFit.fill
           )
