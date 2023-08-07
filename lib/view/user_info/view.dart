@@ -33,7 +33,7 @@ class UserInfoPage extends StatelessWidget {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: Image
-                                .asset("assets/user/portait.png")
+                                .network(state.user.value.portrait ?? "")
                                 .image,
                             fit: BoxFit.fill
                         )

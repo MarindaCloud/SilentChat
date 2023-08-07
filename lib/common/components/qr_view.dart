@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 class QrViewComponent extends StatelessWidget{
 
   final dynamic data;
   final Function closeFunction;
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
   QrViewComponent(this.data,this.closeFunction);
 
 
@@ -29,7 +33,10 @@ class QrViewComponent extends StatelessWidget{
               child: QrImageView(
                 data: data,
                 size: 320,
-                embeddedImage: Image.asset("assets/user/portait.png").image,
+                embeddedImageStyle: const QrEmbeddedImageStyle(
+                  size: Size(50, 50)
+                ),
+                embeddedImage: Image.network("${userState.user.value.portrait}").image,
                 gapless: false,
                 errorStateBuilder: (ctx,err){
                   return Center(

@@ -404,7 +404,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     APIResult apiResult = await MessageAPI.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
     int messageInsertReturningId = apiResult.data;
-    String portrait = "assets/user/portait.png";
+    String portrait = (await UserAPI.selectByUid(receiverId) as User).portrait ?? "";
     ChatRecordData recordData = new ChatRecordData(sendId: sendId,targetId: messageInsertReturningId,message: message,time: dateTime,messageType: type,portrait: portrait);
     ChatInfo chatInfo = ChatInfo(sendId:sendId,receiverId: receiverId,type: type.type,mid: messageInsertReturningId);
     await insertChatInfo(chatInfo);

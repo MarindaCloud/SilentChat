@@ -51,6 +51,8 @@ class UserInfoState extends State<UserInfoWidget> {
               decoration: BoxDecoration(
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   InkWell(
                     child: Container(
@@ -59,7 +61,7 @@ class UserInfoState extends State<UserInfoWidget> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(1000)),
                           image: DecorationImage(
-                              image: Image.asset("assets/user/portait.png",).image,
+                              image: Image.network(widget.indexLogic.userState.user.value.portrait ?? "",).image,
                               fit: BoxFit.fill
                           )
                       ),
@@ -68,39 +70,16 @@ class UserInfoState extends State<UserInfoWidget> {
                       toUserInfo();
                     },
                   ),
-                  //用户信息
-                  Expanded(
-                    child: Container(
-                      width: 200.rpx,
-                      // color: Colors.red,
-                      child: Column(
-                        children: [
-                          Expanded(child: SizedBox()),
-                          Container(
-                            alignment: Alignment.topCenter,
-                            height: 100.rpx,
-                            child: Text(
-                                "用户名：${widget.indexLogic.userState.user.value.username ?? ""}",
-                                style: TextStyle(
-                                  color: Colors.red
-                                ),
-                            ),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            height: 100.rpx,
-                            child: Text(
-                              "手机号：${widget.indexLogic.userState.user.value.phone ?? ""}",
-                              style: TextStyle(
-                                  color: Colors.blue
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text("用户名：${widget.indexLogic.userState.user.value.username}"),
+                  ),
                 ],
               ),
             ),

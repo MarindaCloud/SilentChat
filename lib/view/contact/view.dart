@@ -44,7 +44,7 @@ class ContactPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10000),
                           image: DecorationImage(
                               image: Image
-                                  .asset("assets/user/portait.png")
+                                  .network("${logic.userState.user.value.portrait}")
                                   .image,
                               fit: BoxFit.fill
                           )

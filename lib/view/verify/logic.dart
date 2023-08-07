@@ -107,8 +107,8 @@ class VerifyLogic extends GetxController {
                  decoration: BoxDecoration(
                      borderRadius: BorderRadius.circular(10000),
                      image: DecorationImage(
-                         image: Image.asset(
-                             "assets/user/portait.png")
+                         image: Image.network(
+                             "${verifyViewInfo.user!.portrait}")
                              .image,
                          fit: BoxFit.cover)),
                ),

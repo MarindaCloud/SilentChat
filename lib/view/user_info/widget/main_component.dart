@@ -54,7 +54,7 @@ class MainComponentState extends State<MainComponent> {
                             borderRadius: BorderRadius.circular(10000),
                             image: DecorationImage(
                                 image: Image
-                                    .asset("assets/user/portait.png")
+                                    .network(widget.userInfoLogic.state.user.value.portrait ?? "")
                                     .image,
                                 fit: BoxFit.cover
                             )
