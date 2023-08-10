@@ -53,7 +53,9 @@ class GroupReceiver implements Receiver{
     if(id == null || receiverId == null) return null;
     //获取用户聊天记录详情
     List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
-    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 2 || element.receiverId == id && element.sendId == receiverId && element.type == 2).toList();
+    //获取该群组的所有消息
+    // List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 2 || element.receiverId == id && element.sendId == receiverId && element.type == 2).toList();
+    List<ChatInfo> filterList = chatInfoList.where((element) => element.receiverId == receiverId && element.type == 2).toList();
     List<int> midList = filterList.map((e) => e.mid ?? 0).toList();
     List<Message> messageList = [];
     for(int mid in midList){
@@ -66,9 +68,11 @@ class GroupReceiver implements Receiver{
       DateTime aTime = a.time!;
       return bTime.compareTo(aTime);
     });
-    Log.i("与: ${receiverId}的聊天最新记录为: ${messageList.first}");
+    Log.i("群组的聊天最新记录为: ${messageList.first}");
     return messageList.first;
   }
+
+
 
   @override
   Future<List<int>> getReceiverList() async{

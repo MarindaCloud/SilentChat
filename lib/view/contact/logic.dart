@@ -229,7 +229,7 @@ class ContactLogic extends GetxController {
     List<Widget> list = [];
     for(FriendsViewInfo friendsViewInfo in friendsViewInfoList){
       Group group = friendsViewInfo.element ?? Group();
-      int uid = group.id ?? -1;
+      int groupId = group.id ?? -1;
       //用户信息
       Widget widget = InkWell(
         child: Container(
@@ -272,7 +272,7 @@ class ContactLogic extends GetxController {
           ),
         ),
         onTap: (){
-          toChat(uid, 2);
+          toChat(groupId, 2);
         },
       );
       list.add(widget);

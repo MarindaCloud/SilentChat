@@ -335,13 +335,15 @@ class LoginPage extends StatelessWidget {
                                 children: [
                                   Container(
                                     child: SizedBox(
-                                      width: 250.rpx,
+                                      // width: 250.rpx,
+                                      // height: 210.rpx,
+                                      width: 300.rpx,
                                       height: 210.rpx,
-                                      child: Image.asset("assets/logo.jpg"),
+                                      child: Image.asset("assets/logo2.png",fit: BoxFit.fill,width: 100,height: 200,),
                                     ),
                                   ),
                                   Container(
-                                      child: Text("TIM", style: TextStyle(
+                                      child: Text("", style: TextStyle(
                                           color: Colors.black, fontSize: 35),
                                       ))
                                 ]
