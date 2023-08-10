@@ -23,14 +23,6 @@ class SocketHandle {
 
   IOWebSocketChannel? webSocketChannel;
   SocketHandle(){
-    try{
-      open();
-    }catch(e){
-      //重连3秒
-      Future.delayed(Duration(seconds: 3),(){
-        open();
-      });
-    }
   }
 
   /*

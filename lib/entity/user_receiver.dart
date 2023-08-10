@@ -48,7 +48,7 @@ class UserReceiver implements Receiver{
     if(id == null || receiverId == null) return null;
     //获取用户聊天记录详情
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId || element.receiverId == id && element.sendId == receiverId).toList();
+    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 1 || element.receiverId == id && element.sendId == receiverId && element.type == 1).toList();
     List<int> midList = filterList.map((e) => e.mid ?? 0).toList();
     List<Message> messageList = [];
     for(int mid in midList){
@@ -69,8 +69,8 @@ class UserReceiver implements Receiver{
   Future<List<int>> getReceiverList() async{
     List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
     int uid = userState.uid.value;
-    List<int> receiverIdList = chatInfoList.where((element) => element.sendId == uid && element.receiverId != uid).toList().map((e) => e.receiverId ?? 0).toList();
-    List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid).map((e) => e.sendId ?? 0).toList();
+    List<int> receiverIdList = chatInfoList.where((element) => element.sendId == uid && element.receiverId != uid && element.type == 1).toList().map((e) => e.receiverId ?? 0).toList();
+    List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid && element.type == 1).map((e) => e.sendId ?? 0).toList();
     List<int> list = [];
     list.addAll(receiverIdList);
     list.addAll(sendIdList);

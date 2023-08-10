@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/view/index/logic.dart';
 
 import 'logic.dart';
 
@@ -37,18 +39,23 @@ class ContactPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     //头像
-                    Container(
-                      width: 150.rpx,
-                      height: 150.rpx,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10000),
-                          image: DecorationImage(
-                              image: Image
-                                  .network("${logic.userState.user.value.portrait}")
-                                  .image,
-                              fit: BoxFit.fill
-                          )
+                    InkWell(
+                      child: Container(
+                        width: 150.rpx,
+                        height: 150.rpx,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10000),
+                            image: DecorationImage(
+                                image: Image
+                                    .network("${logic.userState.user.value.portrait}")
+                                    .image,
+                                fit: BoxFit.fill
+                            )
+                        ),
                       ),
+                      onTap: (){
+                        Get.find<IndexLogic>().state.showUserInfo.value = true;
+                      },
                     ),
                     Expanded(
                         child: Container(
@@ -71,8 +78,8 @@ class ContactPage extends StatelessWidget {
                         child: Image.asset("assets/icon/tianjiahaoyou.png",color: Colors.white,),
                       ),
                       onTap: () {
-                        state.showAddFriends.value = !state.showAddFriends
-                            .value;
+                        //跳转至添加好友
+                        Get.toNamed(AppPage.append);
                       },
                     )
                   ],
