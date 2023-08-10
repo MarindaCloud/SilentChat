@@ -43,59 +43,62 @@ class AppendGroupPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     border: Border(right: BorderSide(
                                         color: Color.fromRGBO(
-                                            204, 204, 204, 1)))
+                                            204, 204, 204, 1))),
                                 ),
                                 child: Column(
                                   children: [
                                     //头部
-                                    Container(
-                                      height: 100,
-                                      child: Column(
-                                        children: [
-                                          //搜素详情
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                border: Border(
-                                                    bottom: BorderSide(width: 1,
-                                                        color: Color.fromRGBO(
-                                                            204, 204, 204, 1)))
-                                            ),
-                                            child: SizedBox(
-                                              height: 30,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                    enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide
-                                                            .none,
-                                                        borderRadius: BorderRadius
-                                                            .zero
-                                                    ),
-                                                    focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide
-                                                            .none,
-                                                        borderRadius: BorderRadius
-                                                            .zero
-                                                    ),
-                                                    hintText: "请输入你想搜索的用户名"
-                                                ),
-                                                maxLength: null,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14
+                                    Expanded(
+                                      child: Container(
+                                        height: 100,
+                                        child: Column(
+                                          children: [
+                                            //搜素详情
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  border: Border(
+                                                      bottom: BorderSide(width: 1,
+                                                          color: Color.fromRGBO(
+                                                              204, 204, 204, 1)))
+                                              ),
+                                              child: SizedBox(
+                                                height: 30,
+                                                child: TextField(
+                                                  decoration: InputDecoration(
+                                                      enabledBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide
+                                                              .none,
+                                                          borderRadius: BorderRadius
+                                                              .zero
+                                                      ),
+                                                      focusedBorder: OutlineInputBorder(
+                                                          borderSide: BorderSide
+                                                              .none,
+                                                          borderRadius: BorderRadius
+                                                              .zero
+                                                      ),
+                                                      hintText: "请输入你想搜索的用户名"
+                                                  ),
+                                                  maxLength: null,
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          //  用户列表
-                                          Expanded(
-                                              child: SingleChildScrollView(
+                                            //  用户列表
+                                            SingleChildScrollView(
+                                              child: Container(
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: logic
                                                       .buildContactList(),
                                                 ),
-                                              )
-                                          )
-                                        ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     )
                                   ],

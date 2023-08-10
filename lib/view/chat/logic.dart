@@ -235,7 +235,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         int sendId = chatInfo.sendId ?? 0;
         int mid = chatInfo.mid ?? 0;
         Message message = await MessageAPI.selectMessageById(mid);
-        User user = await UserAPI.selectByUid(chatInfo.receiverId ?? -1);
+        User user = await UserAPI.selectByUid(chatInfo.sendId ?? -1);
         DateTime dt = message.time!;
         int type = message.type!;
         String portait = user.portrait ?? "";
@@ -245,20 +245,20 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         list.add(chatRecordData);
       }
     }else{
-      List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
-    //  群组消息
-      List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id || element.sendId == id && element.receiverId == uid && element.type == 2).toList();
-      for(ChatInfo chatInfo in filterTargetChatInfoList){
+      int groupId = state.receiverId.value;
+      List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(groupId);
+      for(ChatInfo chatInfo in chatInfoList){
         int sendId = chatInfo.sendId ?? 0;
         int mid = chatInfo.mid ?? 0;
         Message message = await MessageAPI.selectMessageById(mid);
         Group group = await GroupAPI.selectById(chatInfo.receiverId ?? -1);
         DateTime dt = message.time!;
         int type = message.type!;
-        String portait = group.portrait ?? "";
+        User user = await UserAPI.selectByUid(sendId);
+        String portrait = user.portrait ?? "";
         String content = message.content ?? "";
         MessageType messageType = MessageType.getMessageType(type)!;
-        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portait,message: content);
+        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content);
         list.add(chatRecordData);
       }
     }
@@ -319,6 +319,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         timeMap[startTime] = timeList;
       }
     }
+    List<ChatRecordData> cacheList = [];
     Log.i("时间Map缓存数据：${timeMap}");
   //  遍历所有聊天列表数据
     for(ChatRecordData recordData in state.chatRecordList){
@@ -331,7 +332,17 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
           List<DateTime> timeList = timeMap[targetTime] ?? [];
           return timeList.contains(element.time);
         }).toList();
-        recordMap[chatRecordWeekDataString] = subChatRecordList;
+
+        List<ChatRecordData> tempList = [];
+        for(var ele in subChatRecordList){
+          //如果缓存中存在则跳出
+          if(cacheList.contains(ele)){
+            continue;
+          }
+          tempList.add(ele);
+        }
+        cacheList.addAll(tempList);
+        recordMap[chatRecordWeekDataString] = tempList;
       }
     }
     state.recordMap.value = recordMap;
@@ -405,7 +416,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     APIResult apiResult = await MessageAPI.insertMessage(entity);
     Log.i("插入结果：${apiResult.toJson()}");
     int messageInsertReturningId = apiResult.data;
-    String portrait = (await UserAPI.selectByUid(receiverId) as User).portrait ?? "";
+    String portrait = (await UserAPI.selectByUid(sendId) as User).portrait ?? "";
     int chatType = state.type.value;
     Log.i("聊天目标类型为：${chatType}");
     ChatRecordData recordData = new ChatRecordData(sendId: sendId,targetId: messageInsertReturningId,message: message,time: dateTime,messageType: type,portrait: portrait);

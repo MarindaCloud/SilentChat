@@ -82,20 +82,41 @@ class MessageLogic extends GetxController {
       Group group = await GroupAPI.selectById(element);
       cacheReceiverMap[group] = message;
     }
-    var ele = cacheReceiverMap.entries.toList()..sort((a,b){
+    state.messageViewMap.value = cacheReceiverMap;
+    //排序处理，时间最近的优先排序
+    sortRecordMessage();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/8/10 14:37
+   * @description 排序消息记录
+   */
+  void sortRecordMessage(){
+    var ele = state.messageViewMap.entries.toList()..sort((a,b){
       DateTime dt = a.value.time!;
       DateTime dt2 = b.value.time!;
       return dt2.compareTo(dt);
     });
-    ele.forEach((element) {
-      Log.i("排序后结果: ${element.value.toJson()}");
-    });
     Map<SilentChatEntity, Message> sortedMap = {
       for (var entry in ele) entry.key: entry.value,
     };
-    //排序处理，时间最近的优先排序
     state.messageViewMap.value = sortedMap;
     print('涉及到的视图map详情: ${sortedMap}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/8/10 14:13
+   * @description 插入消息至当页
+   */
+  insertMessage(dynamic element,int type,Message message){
+    //如果当前消息页不存在这个目标则添加
+    if(!state.messageViewMap.containsKey(element)){
+      state.messageViewMap[element] = message;
+      sortRecordMessage();
+    }
+
   }
 
   /*

@@ -8,8 +8,8 @@ class ContactState {
   final chooseLetter = "A".obs;
   //用来储存朋友缓存信息，字母 & 用户信息
   final friendsCacheMap = RxMap<String,List<FriendsViewInfo>>();
-  //朋友视图列表
-  final friendsViewInfoList = <FriendsViewInfo>[].obs;
+  //用来储存群组缓存信息，字母 & 群组信息
+  final groupsCacheMap = RxMap<String,List<FriendsViewInfo>>();
   ContactState() {
     ///Initialize variables
   }

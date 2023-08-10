@@ -1,4 +1,4 @@
-import 'package:silentchat/entity/user.dart';
+
 
 /**
  * @author Marinda
@@ -6,15 +6,15 @@ import 'package:silentchat/entity/user.dart';
  * @description 朋友信息视图
  */
 class FriendsViewInfo {
-  User? user;
+  dynamic element;
   String? letter;
 
-  FriendsViewInfo({this.user,this.letter});
+  FriendsViewInfo({this.element,this.letter});
 
-  get getUser => user;
+  get getElement => element;
   get getLetter => letter;
 
 
-  set setUser(User? user) => this.user = user;
+  set setElement(dynamic element) => this.element = element;
   set setLetter(String? letter) => this.letter = letter;
 }

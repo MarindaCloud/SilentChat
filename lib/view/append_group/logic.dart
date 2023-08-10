@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/api_result.dart';
+import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/group_info_api.dart';
+import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/message/logic.dart';
-
+import 'package:bot_toast/bot_toast.dart';
 import 'state.dart';
 
 class AppendGroupLogic extends GetxController {
@@ -30,7 +33,8 @@ class AppendGroupLogic extends GetxController {
    * @description 构建联系人列表
    */
   buildContactList([List<User>? list, bool chooseFlag = false]) {
-    List<User> friendsList = list ?? userState.friendUserList.value;
+    List<User> friendsList = list ?? userState.friendUserList;
+    Log.i("朋友列表: ${friendsList.map((e) => e.toJson()).toList()}");
     return friendsList.map((e) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -107,6 +111,7 @@ class AppendGroupLogic extends GetxController {
     Log.i("创建群聊");
     //群聊名是通过全部用户名称拼接的结果
     String groupName = "";
+    String msg = "${userState.user.value.username}创建了该群聊";
     for(var element in state.chooseUserList){
       String userName = element.username ?? "";
       groupName += "${userName}、";
@@ -115,26 +120,38 @@ class AppendGroupLogic extends GetxController {
     if(groupName != ""){
       groupName += userState.user.value.username ?? "";
     }
-    //过滤
-    groupName = groupName.substring(0,groupName.length -1);
     Log.i("群组名称：${groupName}");
-    Group group = Group(name: groupName,personMax: 20,adminMax: 20);
+    //插入群组数据
+    Group group = Group(name: groupName,personMax: 20,adminMax: 20,portrait: "http://175.24.177.189:8080/assets/ac880ff4-cbff-4568-9484-09d19d9524cf.png");
     int result = await GroupAPI.insertGroup(group);
+    //插入消息数据
+    Message createGroupMsg = Message(content: msg,type: 1,time: DateTime.now());
+    APIResult api = await MessageAPI.insertMessage(createGroupMsg);
+    int messageId = api.data;
     if(result != -1){
       //异步插入，涉及到for循环，走同步怕耽误太多时间
       for(var element in state.chooseUserList){
         int uid = element.id ?? -1;
         GroupUserInfo groupUserInfo = GroupUserInfo(uid: uid,gid: result);
         GroupInfoAPI.insertGroupInfo(groupUserInfo);
+        // ChatInfo chatInfo = ChatInfo(sendId: uid,receiverId: element.id,type: 2);
       }
       //这里是为了把当前创建群组用户添加至群组里
       if(state.chooseUserList.isNotEmpty){
         GroupUserInfo groupUserInfo = GroupUserInfo(uid: userState.user.value.id,gid: result);
         GroupInfoAPI.insertGroupInfo(groupUserInfo);
       }
-    //  创建群组完毕之后创建
-      MessageLogic messageLogic = Get.find<MessageLogic>();
 
+      //插入ChatInfo
+      ChatInfo groupChatInfo = ChatInfo(sendId: userState.user.value.id,receiverId: result,type: 2,mid: messageId);
+      await MessageAPI.insertChatInfo(groupChatInfo);
+      //  插入消息完毕后追加至该用户Message中
+      MessageLogic messageLogic = Get.find<MessageLogic>();
+      //这里需要把groupId重新带进去
+      group.id = result;
+      messageLogic.insertMessage(group, 2, createGroupMsg);
+      BotToast.showText(text: "创建群聊成功！");
+      Get.back();
       // await messageLogic.insertCacheRecord(receiverId, message);
     }
   }

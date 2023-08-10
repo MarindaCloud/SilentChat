@@ -7,6 +7,7 @@ import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/group.dart';
+import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/enum/http_method.dart';
@@ -58,5 +59,24 @@ class GroupAPI {
     return group;
   }
 
-  
+  /*
+   * @author Marinda
+   * @date 2023/8/10 16:34
+   * @description 查询用户群组列表
+   */
+  static selectUserGroups() async{
+    int id = userState.user.value.id ?? -1;
+    var data = {
+      "uid": id
+    };
+    Log.i("查询uid: ${id}加入的群组列表");
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return false;
+    }
+    List list = apiResult.data;
+    List<GroupUserInfo> groupUserInfoList = list.map((e) => GroupUserInfo.fromJson(e)).toList();
+    return groupUserInfoList;
+  }
 }

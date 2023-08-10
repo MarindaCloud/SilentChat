@@ -225,7 +225,7 @@ class ContactPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      //分组详情
+                      //群组详情
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(top: 30.rpx),
@@ -274,9 +274,45 @@ class ContactPage extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              //  群聊
+                              //群组
                               Container(
-                                color: Colors.blue,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      child: SingleChildScrollView(
+                                        child: Container(
+                                          padding: EdgeInsets.only(left: 50.rpx, right: 100.rpx),
+                                          child: Column(
+                                            children: logic.buildGroups(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //  字母排序
+                                    Positioned(
+                                        right: 10.rpx,
+                                        top: 300.rpx,
+                                        child: Container(
+                                          child: Column(
+                                            children: state.letterList.map((e){
+                                              return InkWell(
+                                                child: Container(
+                                                  margin: EdgeInsets.only(bottom: 10.rpx),
+                                                  child: Text(e,style: TextStyle(
+                                                      color: state.chooseLetter.value == e ? Colors.blue : Colors.grey,
+                                                      fontSize: 12
+                                                  )),
+                                                ),
+                                                onTap: (){
+                                                  state.chooseLetter.value = e;
+                                                },
+                                              );
+                                            }).toList(),
+                                          ),
+                                        )
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),

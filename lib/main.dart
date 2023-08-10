@@ -18,7 +18,7 @@ void main() async{
   //强制竖屏
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // 全部去除
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await Log.initLogger();
   initService();
 
