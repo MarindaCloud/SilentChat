@@ -272,7 +272,7 @@ class ContactLogic extends GetxController {
           ),
         ),
         onTap: (){
-          toChat(uid, ReceiverType.CONTACT.type);
+          toChat(uid, 2);
         },
       );
       list.add(widget);
