@@ -78,11 +78,11 @@ class GroupReceiver implements Receiver{
   Future<List<int>> getReceiverList() async{
     List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
     int uid = userState.uid.value;
-    List<int> receiverIdList = chatInfoList.where((element) => element.sendId == uid && element.receiverId != uid && element.type == 2).toList().map((e) => e.receiverId ?? 0).toList();
-    List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid && element.type == 2).map((e) => e.sendId ?? 0).toList();
+    List<int> receiverIdList = chatInfoList.where((element) => element.receiverId != null && element.type == 2).toList().map((e) => e.receiverId ?? 0).toList();
+    // List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid && element.type == 2).map((e) => e.sendId ?? 0).toList();
     List<int> list = [];
     list.addAll(receiverIdList);
-    list.addAll(sendIdList);
+    // list.addAll(sendIdList);
     return list.toSet().toList();
   }
 

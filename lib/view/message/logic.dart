@@ -371,7 +371,7 @@ class MessageLogic extends GetxController {
                             message.type != 1 ? resultContent : content,
                             style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 18,
+                                fontSize: 14,
                                 overflow: TextOverflow.ellipsis
                             ),
                           ),
