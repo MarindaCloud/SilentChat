@@ -29,9 +29,11 @@ class MessagePage extends StatelessWidget {
             children: [
               //头部基础内容
               Container(
-                padding: EdgeInsets.only(right: 40.rpx, top: 10.rpx,left: 40.rpx),
+                padding: EdgeInsets.only(right: 40.rpx, top: 0.rpx,left: 40.rpx,bottom: 0.rpx),
                 height: 200.rpx,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     //头像
                     InkWell(
@@ -55,42 +57,56 @@ class MessagePage extends StatelessWidget {
                     //  昵称 & 登录信息
                     Expanded(
                       child: Container(
-                        margin: EdgeInsets.only(left: 30.rpx),
-                        child: Column(
+                        margin: EdgeInsets.only(top: 10.rpx,left: 20.rpx),
+                        child: Stack(
                           children: [
-                            Container(
-                              alignment: Alignment.topLeft,
+                            Positioned(
+                              bottom: 5,
+                              left: 0,
                               child: Container(
-                                  child: Text("${logic.userState.user.value.username}", style: TextStyle(
-                                      color: Colors.white, fontSize: 14),
-                                    overflow: TextOverflow.ellipsis,)
-                              ),
-                            ),
-                            //状态 & 登录设备
-                            Container(
-                              margin: EdgeInsets.only(top: 5.rpx),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 50.rpx,
-                                    height: 50.rpx,
-                                    margin: EdgeInsets.only(
-                                        right: 10.rpx),
-                                    decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius
-                                            .circular(10000)
+                                width: Get.width,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 60.rpx),
+                                          child: Text("${logic.userState.user.value.username}", style: TextStyle(
+                                              color: Colors.white, fontSize: 14),
+                                            overflow: TextOverflow.ellipsis,)
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    child: Text("IPhoneXR在线",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14),),
-                                  )
-                                ],
+                                    //状态 & 登录设备
+                                    Container(
+                                      margin: EdgeInsets.only(top: 5.rpx),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 50.rpx,
+                                            height: 50.rpx,
+                                            margin: EdgeInsets.only(
+                                                right: 10.rpx),
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius: BorderRadius
+                                                    .circular(10000)
+                                            ),
+                                          ),
+                                          Container(
+                                            child: Text("IPhoneXR在线",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
+
+
                           ],
                         ),
                       ),

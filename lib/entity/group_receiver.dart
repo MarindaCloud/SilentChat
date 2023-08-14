@@ -51,12 +51,13 @@ class GroupReceiver implements Receiver{
   @override
   Future<Message?> getNewMessage({int? id, int? receiverId}) async{
     if(id == null || receiverId == null) return null;
+    DateTime startTime = DateTime.now();
     //获取用户聊天记录详情
-    List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
+    // List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(receiverId);
+    List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(receiverId);
     //获取该群组的所有消息
     // List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 2 || element.receiverId == id && element.sendId == receiverId && element.type == 2).toList();
-    List<ChatInfo> filterList = chatInfoList.where((element) => element.receiverId == receiverId && element.type == 2).toList();
-    List<int> midList = filterList.map((e) => e.mid ?? 0).toList();
+    List<int> midList = chatInfoList.map((e) => e.mid ?? 0).toList();
     List<Message> messageList = [];
     for(int mid in midList){
       Message message = await MessageAPI.selectMessageById(mid);
@@ -68,6 +69,8 @@ class GroupReceiver implements Receiver{
       DateTime aTime = a.time!;
       return bTime.compareTo(aTime);
     });
+    DateTime endTime = DateTime.now();
+    Log.i("获取最新聊天记录耗时：${(endTime.difference(startTime).inSeconds)}");
     Log.i("群组的聊天最新记录为: ${messageList.first}");
     return messageList.first;
   }
@@ -79,10 +82,8 @@ class GroupReceiver implements Receiver{
     List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfos();
     int uid = userState.uid.value;
     List<int> receiverIdList = chatInfoList.where((element) => element.receiverId != null && element.type == 2).toList().map((e) => e.receiverId ?? 0).toList();
-    // List<int> sendIdList = chatInfoList.where((element) => element.receiverId == uid && element.sendId != uid && element.type == 2).map((e) => e.sendId ?? 0).toList();
     List<int> list = [];
     list.addAll(receiverIdList);
-    // list.addAll(sendIdList);
     return list.toSet().toList();
   }
 
