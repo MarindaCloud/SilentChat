@@ -6,6 +6,7 @@ class UserState {
   final uid = 0.obs;
   final friendsViewInfoList = <FriendsViewInfo>[].obs;
   final friendUserList = <User>[].obs;
+  String deviceName = "";
   UserState() {
     ///Initialize variables
   }

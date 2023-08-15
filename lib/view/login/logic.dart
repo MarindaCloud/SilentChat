@@ -10,6 +10,7 @@ import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/message/view.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'state.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class LoginLogic extends GetxController {
   final LoginState state = LoginState();
@@ -17,6 +18,7 @@ class LoginLogic extends GetxController {
   final UserState userState = Get.find<UserLogic>().state;
   @override
   void onInit() {
+    getDeviceName();
     // TODO: implement onInit
     super.onInit();
   }
@@ -28,6 +30,26 @@ class LoginLogic extends GetxController {
    */
   void toIndex(){
     Get.toNamed(AppPage.index,arguments: MessagePage());
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/8/15 10:26
+   * @description 获取设备名称
+   */
+  void getDeviceName() async{
+    DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    String deviceName = "";
+    if(GetPlatform.isAndroid){
+      AndroidDeviceInfo androidDeviceInfo = await deviceInfoPlugin.androidInfo;
+      deviceName = androidDeviceInfo.model;
+    }else{
+      IosDeviceInfo iosDeviceInfo = await deviceInfoPlugin.iosInfo;
+      deviceName = iosDeviceInfo.name;
+    }
+    userState.deviceName = deviceName;
+    Log.i("设备名称: ${deviceName}");
+
   }
 
   /*

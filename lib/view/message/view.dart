@@ -93,7 +93,7 @@ class MessagePage extends StatelessWidget {
                                             ),
                                           ),
                                           Container(
-                                            child: Text("IPhoneXR在线",
+                                            child: Text("${logic.userState.deviceName}在线",
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 14),),

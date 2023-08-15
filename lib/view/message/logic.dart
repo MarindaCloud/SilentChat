@@ -24,7 +24,7 @@ import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:drift/drift.dart' as drift;
 import 'state.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 /**
  * @author Marinda
  * @date 2023/6/9 17:30
@@ -43,6 +43,7 @@ class MessageLogic extends GetxController {
     Log.i("消息页初始化！");
     initRecordMessage();
   }
+
 
 
   /*
