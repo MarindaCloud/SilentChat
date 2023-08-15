@@ -30,15 +30,20 @@ class SocketHandle {
    * @date 2023/5/29 10:48
    * @description 连接
    */
-  open() async{
+  open(){
    WebSocket.connect(SocketUtil.url).then((value){
      webSocketChannel = IOWebSocketChannel(value);
      BotToast.showText(text: "连接成功！");
      listener();
    }).timeout(Duration(seconds: 3),onTimeout: (){
-     open();
+     BotToast.showText(text: "连接超时，重试连接！");
      Log.i("重新连接！");
-    });
+    }).onError((error, stackTrace){
+      Future.delayed(Duration(seconds: 3),(){
+        BotToast.showText(text: "连接出现错误，重新连接！");
+        Log.i("连接出现错误，重新连接！");
+      });
+   });
   }
 
   /*
@@ -81,6 +86,7 @@ class SocketHandle {
   close() async{
     if(webSocketChannel != null){
       webSocketChannel?.sink.close();
+      webSocketChannel = null;
     }
   }
 }

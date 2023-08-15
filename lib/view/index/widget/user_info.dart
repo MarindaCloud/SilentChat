@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/index/logic.dart';
@@ -168,7 +169,8 @@ class UserInfoState extends State<UserInfoWidget> {
             onTap: (){
               //暂时当退出用
               Get.back();
-              Log.i("设置！");
+              Get.find<SocketHandle>().close();
+              Log.i("退出至根目录");
             },
           )
         ],

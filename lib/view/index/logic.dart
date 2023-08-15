@@ -45,13 +45,18 @@ class IndexLogic extends GetxController {
    * @date 2023/5/29 10:54
    * @description 连接Socket
    */
-  void initSocket() async{
+  void initSocket() {
+    socketHandle.open();
     state.webSocketChannel = socketHandle.webSocketChannel;
     User user = userState.user.value;
     Packet packet = Packet(type: 1, object: user);
     String packetJSON = json.encode(packet);
     Log.i("初始化Socket连接包：${packetJSON}");
-    socketHandle.write(packetJSON);
+    Future.delayed(Duration(milliseconds: 300),(){
+      socketHandle.write(packetJSON);
+      Log.i("初始化包发送完毕");
+    });
+
   }
 
 

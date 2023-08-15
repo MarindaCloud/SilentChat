@@ -27,13 +27,11 @@ class ChatPage extends StatelessWidget {
           body: Container(
             color: Color.fromRGBO(247, 247, 247, 1),
             child: SafeArea(
-              bottom: false,
               child: Container(
-                child: Stack(
+                child: Column(
                     children: [
                       //头部信息
                       Container(
-                        height: 150.rpx,
                         child: Container(
                           padding: EdgeInsets.only(left: 80.rpx, right: 150
                               .rpx),
@@ -53,7 +51,7 @@ class ChatPage extends StatelessWidget {
                                                 right: 0.rpx),
                                             padding: EdgeInsets.all(5.rpx),
                                             width: 120.rpx,
-                                            height: 120.rpx,
+                                            // height: 120.rpx,
                                             decoration: BoxDecoration(
                                                 color: Color.fromRGBO(76,175,80,1),
                                                 borderRadius: BorderRadius
@@ -90,199 +88,195 @@ class ChatPage extends StatelessWidget {
                         ),
                       ),
                       //内容信息
-                      Container(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(top: 190.rpx),
-                                color: Color.fromRGBO(241, 241, 241, 1),
-                                // color: Colors.red,
-                                child: SingleChildScrollView(
-                                  child: Container(
+                      Expanded(
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 50.rpx),
+                                  color: Color.fromRGBO(241, 241, 241, 1),
+                                  // color: Colors.red,
+                                  child: SingleChildScrollView(
                                     child: Column(
                                       children: logic.buildChatMessage(),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       //    底部
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        child: Container(
-                          width: Get.width,
-                          padding: EdgeInsets.only(top: 0.rpx, bottom: 0),
-                          color: Color.fromRGBO(247, 247, 247, 1),
-                          child: Column(
-                            children: [
-                              //输入框
-                              Container(
-                                height: 230.rpx,
-                                padding: EdgeInsets.only(
-                                    top: 50.rpx, left: 50.rpx, right: 50.rpx),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        maxLength: null,
-                                        maxLines: null,
-                                        style: TextStyle(
-                                          fontSize: 16
+                      Container(
+                        width: Get.width,
+                        padding: EdgeInsets.only(top: 0.rpx, bottom: 0),
+                        color: Color.fromRGBO(247, 247, 247, 1),
+                        child: Column(
+                          children: [
+                            //输入框
+                            Container(
+                              height: 230.rpx,
+                              padding: EdgeInsets.only(
+                                  top: 50.rpx, left: 50.rpx, right: 50.rpx),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      maxLength: null,
+                                      maxLines: null,
+                                      style: TextStyle(
+                                        fontSize: 16
+                                      ),
+                                      controller: state.messageController,
+                                      onChanged: (val){
+                                        if(val.isEmpty){state.existsContentFlag.value = false;return;}
+                                        state.existsContentFlag.value = true;
+                                      },
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.only(
+                                            left: 100.rpx, right: 50.rpx),
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius
+                                                .circular(20),
+                                            borderSide: BorderSide.none
                                         ),
-                                        controller: state.messageController,
-                                        onChanged: (val){
-                                          if(val.isEmpty){state.existsContentFlag.value = false;return;}
-                                          state.existsContentFlag.value = true;
-                                        },
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(
-                                              left: 100.rpx, right: 50.rpx),
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          enabledBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius
-                                                  .circular(20),
-                                              borderSide: BorderSide.none
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius: BorderRadius
-                                                  .circular(20),
-                                              borderSide: BorderSide.none
-                                          ),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius
+                                                .circular(20),
+                                            borderSide: BorderSide.none
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 50.rpx,
-                                    ),
-                                    SizedBox(
-                                      width: 250.rpx,
-                                      height: 200.rpx,
-                                      child: InkWell(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: state.existsContentFlag.value ? Colors.blue : Color.fromRGBO(182,182,182,1),
-                                              borderRadius: BorderRadius
-                                                  .circular(5)
-                                          ),
-                                          child: Center(
-                                            child: Text("发送",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16),),
-                                          ),
+                                  ),
+                                  Container(
+                                    width: 50.rpx,
+                                  ),
+                                  SizedBox(
+                                    width: 250.rpx,
+                                    height: 200.rpx,
+                                    child: InkWell(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: state.existsContentFlag.value ? Colors.blue : Color.fromRGBO(182,182,182,1),
+                                            borderRadius: BorderRadius
+                                                .circular(5)
                                         ),
-                                        onTap: () {
-                                          logic.sendMessage();
-                                        },
+                                        child: Center(
+                                          child: Text("发送",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16),),
+                                        ),
                                       ),
-                                    )
-                                  ],
-                                ),
+                                      onTap: () {
+                                        logic.sendMessage();
+                                      },
+                                    ),
+                                  )
+                                ],
                               ),
-                              Container(
-                                margin: EdgeInsets.only(top: 30.rpx),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceAround,
-                                  children: [
-                                    Container(
-                                      child: InkWell(
-                                        child: SizedBox(
-                                          width: 150.rpx,
-                                          height: 150.rpx,
-                                          child: Image.asset(
-                                            "assets/icon/luyin.png",
-                                            color: state.subChildType.value == "luyin" ? Colors.blue :Colors.black,
-                                            // color: Colors.black,
-                                            fit: BoxFit.cover,),
-                                        ),
-                                        onTap: () {
-                                          logic.chooseSubChild("luyin");
-                                        },
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 30.rpx),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceAround,
+                                children: [
+                                  Container(
+                                    child: InkWell(
+                                      child: SizedBox(
+                                        width: 150.rpx,
+                                        height: 150.rpx,
+                                        child: Image.asset(
+                                          "assets/icon/luyin.png",
+                                          color: state.subChildType.value == "luyin" ? Colors.blue :Colors.black,
+                                          // color: Colors.black,
+                                          fit: BoxFit.cover,),
                                       ),
+                                      onTap: () {
+                                        logic.chooseSubChild("luyin");
+                                      },
                                     ),
-                                    Container(
-                                      child: InkWell(
-                                        child: SizedBox(
-                                          width: 150.rpx,
-                                          height: 150.rpx,
-                                          child: Image.asset(
-                                            "assets/icon/tuxiang.png",
-                                            color: Colors.black,),
-                                        ),
-                                        onTap: () {
-                                          logic.openImagePicker();
-                                        },
+                                  ),
+                                  Container(
+                                    child: InkWell(
+                                      child: SizedBox(
+                                        width: 150.rpx,
+                                        height: 150.rpx,
+                                        child: Image.asset(
+                                          "assets/icon/tuxiang.png",
+                                          color: Colors.black,),
                                       ),
+                                      onTap: () {
+                                        logic.openImagePicker();
+                                      },
                                     ),
-                                    Container(
-                                      child: InkWell(
-                                        child: SizedBox(
-                                          width: 150.rpx,
-                                          height: 150.rpx,
-                                          child: Image.asset(
-                                            "assets/icon/luzhishipin.png",
-                                            color: Colors.black,),
-                                        ),
-                                        onTap: () {
-                                          logic.openVideoPicker();
-                                          // print("视频");
-                                        },
+                                  ),
+                                  Container(
+                                    child: InkWell(
+                                      child: SizedBox(
+                                        width: 150.rpx,
+                                        height: 150.rpx,
+                                        child: Image.asset(
+                                          "assets/icon/luzhishipin.png",
+                                          color: Colors.black,),
                                       ),
+                                      onTap: () {
+                                        logic.openVideoPicker();
+                                        // print("视频");
+                                      },
                                     ),
-                                    Container(
-                                      child: InkWell(
-                                        child: SizedBox(
-                                          width: 150.rpx,
-                                          height: 150.rpx,
-                                          child: Image.asset(
-                                            "assets/icon/biaoqing.png",
-                                            color: state.subChildType.value == "emote" ? Colors.blue :Colors.black,),
-                                        ),
-                                        onTap: () {
-                                          logic.chooseSubChild("emote");
-                                        },
+                                  ),
+                                  Container(
+                                    child: InkWell(
+                                      child: SizedBox(
+                                        width: 150.rpx,
+                                        height: 150.rpx,
+                                        child: Image.asset(
+                                          "assets/icon/biaoqing.png",
+                                          color: state.subChildType.value == "emote" ? Colors.blue :Colors.black,),
                                       ),
+                                      onTap: () {
+                                        logic.chooseSubChild("emote");
+                                      },
                                     ),
-                                    Container(
-                                      child: InkWell(
-                                        child: SizedBox(
-                                          width: 150.rpx,
-                                          height: 150.rpx,
-                                          child: Image.asset(
-                                            "assets/icon/jiahao.png",
-                                            color: Colors.black,),
-                                        ),
-                                        onTap: () {
-                                          print("更多");
-                                        },
+                                  ),
+                                  Container(
+                                    child: InkWell(
+                                      child: SizedBox(
+                                        width: 150.rpx,
+                                        height: 150.rpx,
+                                        child: Image.asset(
+                                          "assets/icon/jiahao.png",
+                                          color: Colors.black,),
                                       ),
+                                      onTap: () {
+                                        print("更多");
+                                      },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              // 子组件
-                              FadeTransition(
-                                opacity: state.fadeValue!,
-                                child: Visibility(
-                                  visible: state.chooseSubChild.value,
-                                  child: logic.buildSubWidget(),
-                                  // child: logic.buildEmojiWidget(),
-                                ),
+                            ),
+                            // 子组件
+                            FadeTransition(
+                              opacity: state.fadeValue!,
+                              child: Visibility(
+                                visible: state.chooseSubChild.value,
+                                child: logic.buildSubWidget(),
+                                // child: logic.buildEmojiWidget(),
                               ),
-                              Container(
-                                height: 100.rpx,
-                                color: Color.fromRGBO(247, 247, 247, 1),
-                              )
-                              // Expanded(child: SizedBox())
-                            ],
-                          ),
+                            ),
+                            Container(
+                              height: 50.rpx,
+                              color: Color.fromRGBO(247, 247, 247, 1),
+                            )
+                            // Expanded(child: SizedBox())
+                          ],
                         ),
                       )
                     ]

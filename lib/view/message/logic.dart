@@ -6,6 +6,7 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
+import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_receiver.dart';
 import 'package:silentchat/entity/receiver.dart';
@@ -111,13 +112,36 @@ class MessageLogic extends GetxController {
    * @date 2023/8/10 14:13
    * @description 插入消息至当页
    */
-  insertMessage(dynamic element,int type,Message message){
+  insertMessage(dynamic element,int type,Message message,{ChatMessage? chatMessage}) async{
     //如果当前消息页不存在这个目标则添加
     if(!state.messageViewMap.containsKey(element)){
+      if(element is User){
+        //如果接受者id不是当前用户
+        if(element.id != userState.uid.value){
+          state.messageViewMap[element] = message;
+        }else{
+        //  如果接受者是自己，则获取发送者进行消息替换
+          if(chatMessage != null){
+            User sendUser = await userLogic.selectByUid(chatMessage.uid ?? -1);
+            var targetKey = User();
+            for(var ele in state.messageViewMap.keys){
+              if(ele is User){
+                if(ele.username == sendUser.username){
+                  targetKey = ele;
+                  break;
+                }
+              }
+            }
+            state.messageViewMap[targetKey] = message;
+          }
+        }
+      }
+    }else{
+    //  如果存在则替换
       state.messageViewMap[element] = message;
-      sortRecordMessage();
+      Log.i("存在该消息，替换最新消息");
     }
-
+    sortRecordMessage();
   }
 
   /*

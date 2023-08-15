@@ -376,7 +376,8 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     if(image != null){
       String path = image!.path;
       File file = File(path);
-      await insertMessage(userState.uid.value, state.receiverId.value, MessageType.IMAGE,expand_address: path);
+      Message message = Message(content: "",type: MessageType.IMAGE.type,expandAddress: path,time: DateTime.now());
+      await MessageAPI.insertMessage(message);
       Log.i("图片文件：${file}");
     }
   }
@@ -400,41 +401,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   }
 
 
-  /*
-   * @author Marinda
-   * @date 2023/6/9 16:13
-   * @description 插入消息
-   */
-  insertMessage(int sendId,int receiverId,MessageType type,{String? expand_address}) async{
-    String message = state.messageController.text;
-    DateTime dateTime = DateTime.now();
-    Log.i("当前时间：${DateTimeUtil.formatDateTime(dateTime,format: DateTimeUtil.ymdhns)}");
-    Message entity = Message(content: message,type: type.type,time: dateTime);
-    Log.i("当前消息：${message}");
-    if(expand_address != "" && expand_address != null){entity.expandAddress = expand_address;entity.content = expand_address;}
-    Log.i("插入Content: ${entity.content}");
-    APIResult apiResult = await MessageAPI.insertMessage(entity);
-    Log.i("插入结果：${apiResult.toJson()}");
-    int messageInsertReturningId = apiResult.data;
-    String portrait = (await UserAPI.selectByUid(sendId) as User).portrait ?? "";
-    int chatType = state.type.value;
-    Log.i("聊天目标类型为：${chatType}");
-    ChatRecordData recordData = new ChatRecordData(sendId: sendId,targetId: messageInsertReturningId,message: message,time: dateTime,messageType: type,portrait: portrait);
-    ChatInfo chatInfo = ChatInfo(sendId:sendId,receiverId: receiverId,type: chatType,mid: messageInsertReturningId);
-    await insertChatInfo(chatInfo);
-    state.chatRecordList.add(recordData);
-    sortRecordInfo();
-  }
-
-  /*
-   * @author Marinda
-   * @date 2023/6/12 17:34
-   * @description 插入聊天详情
-   */
-  insertChatInfo(ChatInfo chatInfo) async{
-    bool result = await MessageAPI.insertChatInfo(chatInfo!);
-    Log.i("插入聊天详情结果：${result}");
-  }
 
   /*
    * @author Marinda
@@ -448,9 +414,21 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     if(message.isEmpty){ return;}
     int uid = userState.user.value.id ?? 0;
     int receiverId = state.receiverId.value;
-    Log.i("当前接受者id: ${receiverId}");
-    await insertMessage(uid,receiverId,messageType);
-    ChatMessage chatMessage = ChatMessage(uid: uid,chatMessage: message,receiverId: receiverId,receiverType: type);
+    Message msg = Message(content: message,type: messageType.type,time: DateTime.now());
+    APIResult response = await MessageAPI.insertMessage(msg);
+    int mid = response.data;
+    Log.i("当前消息id: ${mid}");
+    //插入用户信息
+    User user = await UserAPI.selectByUid(uid);
+    String portrait = user.portrait ?? "";
+    Log.i("用户信息: ${user.toJson()}");
+    ChatInfo chatInfo = ChatInfo(sendId: uid,receiverId: receiverId,type: type.type,mid: mid);
+    ChatRecordData recordData = ChatRecordData(sendId: uid,targetId: mid,message: message,time: DateTime.now(),messageType: messageType,portrait: portrait);
+    await MessageAPI.insertChatInfo(chatInfo);
+    state.chatRecordList.add(recordData);
+    sortRecordInfo();
+
+    ChatMessage chatMessage = ChatMessage(uid: uid,mid: mid,receiverId: receiverId,receiverType: type);
     Packet packet = Packet(type: 2,object: chatMessage);
     Log.i("发包详情：${packet.toJson()}");
     String packetJSON = json.encode(packet);
@@ -467,10 +445,13 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    */
    syncInsertMessage(ChatMessage chatMessage) async{
     int targetId = userState.user.value.id ?? -1;
-    String message = chatMessage.chatMessage!;
+    Message msg = await MessageAPI.selectMessageById(chatMessage.mid ?? -1);
+    String message = msg.content ?? "";
     DateTime dt = DateTime.now();
-    String portait = "assets/user/portait.png";
+
     int sendId = chatMessage.receiverId!;
+    User user = await userLogic.selectByUid(sendId);
+    String portait = user.portrait!;
     MessageType messageType = MessageType.TEXT;
     ChatRecordData chatRecordData = ChatRecordData(portrait: portait,targetId: targetId,message: message,messageType: messageType,time: dt,sendId: sendId);
     state.chatRecordList.add(chatRecordData);

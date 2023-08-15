@@ -8,16 +8,16 @@ import 'package:silentchat/enum/receiver_type.dart';
  */
 class ChatMessage {
   int? _uid;
-  String? _chatMessage;
+  int? _mid;
   ReceiverType? _receiverType;
   int? _receiverId;
 
-  ChatMessage({int? uid, String? chatMessage,ReceiverType? receiverType,int? receiverId}) {
+  ChatMessage({int? uid, int? mid,ReceiverType? receiverType,int? receiverId}) {
     if (uid != null) {
       this._uid = uid;
     }
-    if (chatMessage != null) {
-      this._chatMessage = chatMessage;
+    if (mid != null) {
+      this._mid = mid;
     }
     if(receiverType != null){
       this._receiverType = receiverType;
@@ -29,8 +29,8 @@ class ChatMessage {
 
   int? get uid => _uid;
   set uid(int? uid) => _uid = uid;
-  String? get chatMessage => _chatMessage;
-  set chatMessage(String? chatMessage) => _chatMessage = chatMessage;
+  int? get mid => _mid;
+  set chatMessage(int? mid) => _mid = mid;
 
 
   ReceiverType? get receiverType => _receiverType;
@@ -41,7 +41,7 @@ class ChatMessage {
 
   ChatMessage.fromJson(Map<String, dynamic> json) {
     _uid = json['uid'];
-    _chatMessage = json['chatMessage'];
+    _mid = json['mid'];
     if(json["receiverType"] != null){
       _receiverType = ReceiverType.getMessageType(json["receiverType"]);
     }
@@ -53,7 +53,7 @@ class ChatMessage {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uid'] = this._uid;
-    data['chatMessage'] = this._chatMessage;
+    data['mid'] = this._mid;
     data["receiverType"] = this._receiverType?.type;
     data["receiverId"] = this.receiverId;
     return data;
