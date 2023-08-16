@@ -1,4 +1,4 @@
-import 'package:silentchat/enum/webocket_code.dart';
+import 'package:silentchat/enum/websocket_code.dart';
 
 /**
  * @author Marinda

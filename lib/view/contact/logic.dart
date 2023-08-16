@@ -180,6 +180,28 @@ class ContactLogic extends GetxController {
     return list;
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/8/16 15:26
+   * @description 插入至当前联系人列表
+   */
+  insertContact(User user){
+    String userName = user.username ?? "";
+    String letter = PinyinHelper.getShortPinyin(userName.substring(0,1)).toUpperCase();
+    FriendsViewInfo friendsViewInfo = FriendsViewInfo(element: user,letter: letter);
+    if(state.friendsCacheMap.containsKey(letter)){
+      List<FriendsViewInfo> list = state.friendsCacheMap[letter] ?? [];
+      List<FriendsViewInfo> cloneList = [];
+      cloneList.addAll(list);
+      cloneList.add(friendsViewInfo);
+      state.friendsCacheMap[letter] = cloneList;
+    }else{
+      state.friendsCacheMap[letter] = [friendsViewInfo];
+    }
+    state.friendsCacheMap.refresh();
+    Log.i("插入联系人：${user.username}完毕！");
+  }
+
 
   /*
    * @author Marinda

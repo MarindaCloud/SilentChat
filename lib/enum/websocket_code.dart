@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 import 'package:silentchat/socket/socket_on_message.dart';
 enum WebSocketCode{
   //接收消息
-  chatMessage(2, cbFn: SocketOnMessage.chatMessage);
+  chatMessage(2, cbFn: SocketOnMessage.chatMessage),
+  friends(3, cbFn: SocketOnMessage.friends);
 
   final int code;
 

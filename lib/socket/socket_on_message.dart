@@ -6,7 +6,10 @@ import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/packet_verify_friend.dart';
 import 'package:silentchat/enum/receiver_type.dart';
+import 'package:silentchat/enum/websocket_code.dart';
+import 'package:silentchat/enum/websocket_friends_code.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/log.dart';
@@ -53,5 +56,19 @@ class SocketOnMessage{
       case 2:
         break;
     }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/8/16 13:54
+   * @description 朋友包处理
+   */
+  static friends(Packet packet) async{
+    String message = json.encode(packet.object);
+    dynamic result = json.decode(message);
+    PacketVerifyFriend packetVerifyFriend = PacketVerifyFriend.fromJson(result);
+    int code = packetVerifyFriend.code!;
+    WebSocketFriendsCode friendsCode = WebSocketFriendsCode.getWebSocketCodeEnum(code)!;
+    friendsCode.cbFn?.call(packetVerifyFriend);
   }
 }

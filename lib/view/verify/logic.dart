@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
@@ -6,12 +8,15 @@ import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/friends_verify.dart';
+import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/packet_verify_friend.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/entity/verify.dart';
 import 'package:silentchat/entity/verify_view_info.dart';
 import 'package:silentchat/network/api/friends_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/network/api/verify_api.dart';
+import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'state.dart';
@@ -25,6 +30,8 @@ class VerifyLogic extends GetxController {
   final VerifyState state = VerifyState();
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
+  final SocketHandle socketHandle = Get.find<SocketHandle>();
+
 
   @override
   void onInit() {
@@ -256,6 +263,18 @@ class VerifyLogic extends GetxController {
     Log.i("用户操作记录Map: ${state.userControlMap}");
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/8/16 15:05
+   * @description 发包
+   */
+  sendPacket(PacketVerifyFriend packetVerifyFriend){
+    Packet packet = Packet(type: 3,object: packetVerifyFriend);
+    var packetInfo = json.encode(packet);
+    Log.i("发送Packet信息: ${packetInfo}");
+    socketHandle.write(packetInfo);
+  }
+
 
   /*
    * @author Marinda
@@ -279,6 +298,8 @@ class VerifyLogic extends GetxController {
         BotToast.showText(text: "添加好友出现错误！");
         return;
       }
+      PacketVerifyFriend packetVerifyFriend = PacketVerifyFriend(code: 2,uid: userState.uid.value,receiverId: friendsVerify.uid,verifyMsg: "通过好友请求");
+      sendPacket(packetVerifyFriend);
       BotToast.showText(text: "已同意该用户好友申请！");
     }
     initVerify();
@@ -300,6 +321,8 @@ class VerifyLogic extends GetxController {
       BotToast.showText(text: "拒绝好友出现错误！");
       return;
     }
+    PacketVerifyFriend packetVerifyFriend = PacketVerifyFriend(code: 3,uid: userState.uid.value,receiverId: friendsVerify.tid,verifyMsg: "拒绝了好友请求");
+    sendPacket(packetVerifyFriend);
     BotToast.showText(text: "已拒绝该用户好友请求！");
     initVerify();
   }

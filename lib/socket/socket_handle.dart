@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/web_socket_message.dart';
-import 'package:silentchat/enum/webocket_code.dart';
+import 'package:silentchat/enum/websocket_code.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/socket_util.dart';
 import 'dart:io';
