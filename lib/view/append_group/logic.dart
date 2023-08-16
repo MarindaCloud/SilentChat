@@ -17,6 +17,7 @@ import 'package:silentchat/network/api/group_info_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/view/contact/logic.dart';
 import 'package:silentchat/view/message/logic.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'state.dart';
@@ -130,6 +131,7 @@ class AppendGroupLogic extends GetxController {
     //插入群组数据
     Group group = Group(name: groupName,personMax: 20,adminMax: 20,portrait: "http://175.24.177.189:8080/assets/ac880ff4-cbff-4568-9484-09d19d9524cf.png");
     int result = await GroupAPI.insertGroup(group);
+
     //插入消息数据
     Message createGroupMsg = Message(content: msg,type: 1,time: DateTime.now());
     APIResult api = await MessageAPI.insertMessage(createGroupMsg);
@@ -151,9 +153,16 @@ class AppendGroupLogic extends GetxController {
       //插入ChatInfo
       ChatInfo groupChatInfo = ChatInfo(sendId: userState.user.value.id,receiverId: result,type: 2,mid: messageId);
       await MessageAPI.insertChatInfo(groupChatInfo);
+
       //  插入消息完毕后追加至该用户Message中
       MessageLogic messageLogic = Get.find<MessageLogic>();
       messageLogic.initRecordMessage();
+      //校验是否打开过ContactLogic
+      if(Get.isRegistered<ContactLogic>()){
+        ContactLogic contactLogic = Get.find<ContactLogic>();
+        contactLogic.initGroupsInfo();
+        Log.i("重新获取群聊信息");
+      }
       //这里需要把groupId重新带进去
       group.id = result;
       BotToast.showText(text: "创建群聊成功！");

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/view/contact/state.dart';
 import 'package:silentchat/view/index/logic.dart';
 
 import 'logic.dart';
@@ -12,12 +13,10 @@ import 'logic.dart';
  * @description 联系人
  */
 class ContactPage extends StatelessWidget {
-  ContactPage({Key? key}) : super(key: key);
+  ContactPage({Key? key}) : logic = Get.put(ContactLogic()),state = Get.find<ContactLogic>().state, super(key: key);
 
-  final logic = Get.find<ContactLogic>();
-  final state = Get
-      .find<ContactLogic>()
-      .state;
+  final ContactLogic logic;
+  final ContactState state;
 
   @override
   Widget build(BuildContext context) {

@@ -33,12 +33,18 @@ class SocketGroupsOnMessage{
    * @date 2023/8/16 16:13
    * @description 创建群聊
    */
-  static create(PacketGroup packetGroup) async{
+  static create(PacketGroup packetGroup) {
     List<int> receiverIdList = packetGroup.receiverIdList ?? [];
     //如果当前用户是接受者
     if(receiverIdList.contains(userState.uid.value)){
       MessageLogic messageLogic = Get.find<MessageLogic>();
       messageLogic.initRecordMessage();
+      //校验是否打开过ContactLogic
+      if(Get.isRegistered<ContactLogic>()){
+        ContactLogic contactLogic = Get.find<ContactLogic>();
+        contactLogic.initGroupsInfo();
+        Log.i("重新获取群聊信息");
+      }
       Log.i("收到创建群聊包，群聊id：${packetGroup.gid}");
 
     }
