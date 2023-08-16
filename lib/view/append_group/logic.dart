@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/controller/user/logic.dart';
@@ -7,10 +9,13 @@ import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/message.dart';
+import 'package:silentchat/entity/packet.dart';
+import 'package:silentchat/entity/packet_group.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/group_info_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
+import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/message/logic.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -20,6 +25,7 @@ class AppendGroupLogic extends GetxController {
   final AppendGroupState state = AppendGroupState();
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
+  final SocketHandle socketHandle = Get.find<SocketHandle>();
 
   @override
   void onInit() {
@@ -147,13 +153,29 @@ class AppendGroupLogic extends GetxController {
       await MessageAPI.insertChatInfo(groupChatInfo);
       //  插入消息完毕后追加至该用户Message中
       MessageLogic messageLogic = Get.find<MessageLogic>();
+      messageLogic.initRecordMessage();
       //这里需要把groupId重新带进去
       group.id = result;
-      messageLogic.insertMessage(group, 2, createGroupMsg);
       BotToast.showText(text: "创建群聊成功！");
+      sendPacket(1, result);
+
       Get.back();
       // await messageLogic.insertCacheRecord(receiverId, message);
     }
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/8/16 16:27
+   * @description 发送群组包
+   */
+  sendPacket(int code,int gid){
+    PacketGroup packetGroup = PacketGroup(code: code,uid: userState.uid.value,gid: gid,receiverIdList: state.chooseUserList.map((element) => element.id ?? -1).toList());
+    Packet createGroupPacket = Packet(type: 4,object: packetGroup);
+    String packetJson = json.encode(createGroupPacket);
+    Log.i("群组包详情：${packetJson}");
+    socketHandle.write(packetJson);
   }
 
   @override
