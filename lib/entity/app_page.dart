@@ -19,6 +19,8 @@ import 'package:silentchat/view/login/view.dart';
 import 'package:silentchat/view/message/view.dart';
 import 'package:silentchat/view/qr/binding.dart';
 import 'package:silentchat/view/qr/view.dart';
+import 'package:silentchat/view/space/binding.dart';
+import 'package:silentchat/view/space/view.dart';
 import 'package:silentchat/view/user_info/binding.dart';
 import 'package:silentchat/view/user_info/view.dart';
 import 'package:silentchat/view/verify/binding.dart';
@@ -43,6 +45,7 @@ class AppPage{
   static String appendMessage = GlobalPage.appendMessage.router;
   static String verify = GlobalPage.verify.router;
   static String appendGroup = GlobalPage.appendGroup.router;
+  static String space = GlobalPage.space.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -57,6 +60,7 @@ class AppPage{
     GetPage(name: appendMessage, page: ()=>AppendMessagePage(),binding: AppendMessageBinding()),
     GetPage(name: verify, page: ()=>VerifyPage(),binding: VerifyBinding()),
     GetPage(name: appendGroup, page: ()=> AppendGroupPage(),binding: AppendGroupBinding()),
+    GetPage(name: space, page: ()=> SpacePage(),binding: SpaceBinding()),
   ];
 
   AppPage();

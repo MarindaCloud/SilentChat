@@ -120,7 +120,8 @@ class DynamicPage extends StatelessWidget {
                               ],
                             ),
                             onTap: (){
-                              print("测试");
+                              logic.toSpace();
+
                             },
                           ),
                         ),
