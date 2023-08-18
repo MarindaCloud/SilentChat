@@ -3,7 +3,7 @@
  * @date 2023/8/17 17:05
  * @description 空间评论详情
  */
-class SpaceComment {
+class SpaceDynamic {
   int? _id;
   int? _uid;
   String? _content;
@@ -11,7 +11,7 @@ class SpaceComment {
   String? _time;
   int? _type;
 
-  SpaceComment(
+  SpaceDynamic(
       {int? id,
         int? uid,
         String? content,
@@ -51,7 +51,7 @@ class SpaceComment {
   int? get type => _type;
   set type(int? type) => _type = type;
 
-  SpaceComment.fromJson(Map<String, dynamic> json) {
+  SpaceDynamic.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _uid = json['uid'];
     _content = json['content'];

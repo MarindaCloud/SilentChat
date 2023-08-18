@@ -1,12 +1,16 @@
 class Space {
   int? _id;
+  int? _uid;
   String? _name;
   int? _exp;
   int? _level;
 
-  Space({int? id, String? name, int? exp, int? level}) {
+  Space({int? id, int? uid, String? name, int? exp, int? level}) {
     if (id != null) {
       this._id = id;
+    }
+    if (uid != null) {
+      this._uid = uid;
     }
     if (name != null) {
       this._name = name;
@@ -21,6 +25,8 @@ class Space {
 
   int? get id => _id;
   set id(int? id) => _id = id;
+  int? get uid => _uid;
+  set uid(int? uid) => _uid = uid;
   String? get name => _name;
   set name(String? name) => _name = name;
   int? get exp => _exp;
@@ -30,6 +36,7 @@ class Space {
 
   Space.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
+    _uid = json['uid'];
     _name = json['name'];
     _exp = json['exp'];
     _level = json['level'];
@@ -38,6 +45,7 @@ class Space {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
+    data['uid'] = this._uid;
     data['name'] = this._name;
     data['exp'] = this._exp;
     data['level'] = this._level;
