@@ -384,7 +384,7 @@ class SpaceLogic extends GetxController {
         textSpanList.add(textSpan);
       }
       //追加结尾
-      textSpanList.add(                              TextSpan(
+      textSpanList.add(TextSpan(
         text: "等${(len - 3)}个人觉得很赞",
         style: TextStyle(
             color: Colors.black,
