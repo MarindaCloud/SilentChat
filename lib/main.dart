@@ -12,7 +12,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:silentchat/util/overlay_manager.dart';
-
+import 'package:get_storage/get_storage.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   //强制竖屏
@@ -26,6 +26,7 @@ void main() async{
   }catch(e){
     Log.e("初始化失败！");
   }finally{
+    await GetStorage.init();
     runApp(MainApp());
   }
 
