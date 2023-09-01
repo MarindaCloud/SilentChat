@@ -142,4 +142,20 @@ class SpaceAPI {
     }
     
   }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/9/1 14:27
+   * @description 删除点赞
+   */
+  static deleteDynamicLike(SpaceDynamicLike spaceDynamicLike) async{
+    Log.i("删除空间动态点赞详情");
+    var data = {
+      "dynamicId": spaceDynamicLike.dynamicId ?? -1,
+      "uid": spaceDynamicLike.uid ?? -1
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/delete", HttpMethods.POST.value,data,header: Request.header);
+    return apiResult.data;
+  }
 }

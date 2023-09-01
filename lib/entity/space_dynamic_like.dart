@@ -17,13 +17,13 @@ class SpaceDynamicLike {
   set uid(int? uid) => _uid = uid;
 
   SpaceDynamicLike.fromJson(Map<String, dynamic> json) {
-    _dynamicId = json['dynamic_id'];
+    _dynamicId = json['dynamicId'];
     _uid = json['uid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dynamic_id'] = this._dynamicId;
+    data['dynamicId'] = this._dynamicId;
     data['uid'] = this._uid;
     return data;
   }

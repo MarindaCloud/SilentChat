@@ -9,6 +9,7 @@ import 'package:silentchat/entity/user.dart';
 class SpaceDynamicView{
   User? user;
   SpaceDynamicInfoView? viewInfo;
+  String? tag;
 
-  SpaceDynamicView({this.user, this.viewInfo});
+  SpaceDynamicView({this.user, this.viewInfo,this.tag});
 }

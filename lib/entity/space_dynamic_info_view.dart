@@ -9,7 +9,6 @@ import 'package:silentchat/entity/user.dart';
 class SpaceDynamicInfoView{
   SpaceDynamic? _element;
   List<User>? _commentLikeUserList;
-
   SpaceDynamicInfoView(this._element,this._commentLikeUserList);
 
   List<User>? get commentLikeUserList => _commentLikeUserList;
@@ -23,4 +22,5 @@ class SpaceDynamicInfoView{
   set element(SpaceDynamic? value) {
     _element = value;
   }
+
 }

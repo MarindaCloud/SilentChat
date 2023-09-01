@@ -37,6 +37,7 @@ class SpaceLogic extends GetxController {
   void initSpaceInfo() async{
     List<SpaceDynamic> contactDynamicList = await SpaceAPI.selectContactDynamicList();
     List<SpaceDynamicView> dynamicViewList = [];
+    int index = 1;
     for(SpaceDynamic spaceDynamicElement in contactDynamicList){
       int dynamicId = spaceDynamicElement.id ?? -1;
       int dynamicUid = spaceDynamicElement.uid ?? -1;
@@ -50,26 +51,13 @@ class SpaceLogic extends GetxController {
           likeUserList.add(likeUser);
         }
       }
+      String tag = "dynamic_${index}";
       SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamicElement,likeUserList);
-      SpaceDynamicView dynamicView = SpaceDynamicView(user: dynamicUser,viewInfo: infoView);
+      SpaceDynamicView dynamicView = SpaceDynamicView(user: dynamicUser,viewInfo: infoView,tag: tag);
       dynamicViewList.add(dynamicView);
+      index++;
     }
     state.dynamicViewInfoList.value = dynamicViewList;
-    // User user = await userLogic.selectByUid(3);
-    // User user2 = await userLogic.selectByUid(10);
-    // SpaceDynamic spaceDynamic = SpaceDynamic(id: 1,uid: 3,content: "人不行别怪路不平",device: "IPhone6 Plus",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 1);
-    // List<String> imgList = ["http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png","http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png"];
-    // SpaceDynamic spaceDynamic2 = SpaceDynamic(id: 2,uid: 5,content: json.encode(imgList),device: "IPhone13 Pro Max",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 2);
-    // List<User> likeUserList = [];
-    // for(var i = 1;i<=4;i++){
-    //  likeUserList.add(await userLogic.selectByUid(i));
-    // }
-    // SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamic,likeUserList);
-    // SpaceDynamicInfoView infoView2 = SpaceDynamicInfoView(spaceDynamic2,likeUserList);
-    // SpaceDynamicView dynamicView = SpaceDynamicView(user: user,viewInfo: infoView);
-    // SpaceDynamicView dynamicView2 = SpaceDynamicView(user: user2,viewInfo: infoView2);
-    // state.dynamicViewInfoList.add(dynamicView);
-    // state.dynamicViewInfoList.add(dynamicView2);
   }
 
 
@@ -205,11 +193,15 @@ class SpaceLogic extends GetxController {
                         child: SizedBox(
                           width: 130.rpx,
                           height: 130.rpx,
-                          child: Image.asset("assets/icon/good.png",
-                              fit: BoxFit.fill),
+                          child: dynamicUserList.firstWhereOrNull((element) => element.id == userState.uid.value)== null ?
+                          Image.asset("assets/icon/good.png",
+                              fit: BoxFit.fill)
+                          : Image.asset("assets/icon/good.png",
+                            fit: BoxFit.fill,
+                            color: Colors.blue)
                         ),
                         onTap: () {
-                          print("点赞");
+                          thumbLike(element);
                         },
                       ),
                     ),
@@ -329,6 +321,53 @@ class SpaceLogic extends GetxController {
     }
     return "";
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/1 11:33
+   * @description 点赞
+   */
+  thumbLike(SpaceDynamicView dynamicView) async{
+    SpaceDynamicInfoView dynamicInfoView = dynamicView.viewInfo!;
+    List<User> dynamicUserList = dynamicInfoView.commentLikeUserList ?? [];
+    var existsUser = dynamicUserList.firstWhereOrNull((element) => element.id == userState.uid.value);
+    int dynamicId = dynamicInfoView.element?.id ?? -1;
+    int uid = userState.uid.value;
+    //索引
+    int index = state.dynamicViewInfoList.indexWhere((element) => element.tag == dynamicView.tag);
+    SpaceDynamicLike spaceDynamicLike = SpaceDynamicLike(dynamicId: dynamicId,uid: uid);
+    SpaceDynamic targetDynamic = dynamicInfoView.element!;
+    //更改点赞用户列表
+    List<User> newUserList = [];
+    if(existsUser == null){
+      //找到目标动态对象
+      Log.i("index: ${index},当前动态tag: ${dynamicView.tag},动态id: ${dynamicId}");
+
+      newUserList.addAll(dynamicUserList);
+      User user = userState.user.value;
+      newUserList.add(user);
+      //替换一个新的目标对象
+      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList);
+      SpaceDynamicView newSpaceDynamicView = SpaceDynamicView(user: dynamicView.user,viewInfo: spaceDynamicInfoView,tag: dynamicView.tag);
+      state.dynamicViewInfoList[index] = newSpaceDynamicView;
+      Log.i("${uid}点赞${dynamicId}成功");
+      //异步追加即可，本地在指定条目上做更改
+      SpaceAPI.insertDynamicLike(spaceDynamicLike);
+    }else{
+      //存在点赞
+      newUserList.addAll(dynamicUserList);
+      int targetIndex = newUserList.indexWhere((element) => element.id == uid);
+      Log.i("移除目标索引：${targetIndex}");
+      newUserList.removeAt(targetIndex);
+      //替换一个新的目标对象
+      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList);
+      SpaceDynamicView newSpaceDynamicView = SpaceDynamicView(user: dynamicView.user,viewInfo: spaceDynamicInfoView,tag: dynamicView.tag);
+      state.dynamicViewInfoList[index] = newSpaceDynamicView;
+      SpaceAPI.deleteDynamicLike(spaceDynamicLike);
+    }
+    state.dynamicViewInfoList.refresh();
+  }
+
 
   /*
    * @author Marinda
