@@ -28,7 +28,7 @@ class SpaceAPI {
    * @date 2023/8/21 14:28
    * @description 查询当前用户 / 指定用户uid的动态信息
    */
-  selectSpaceDynamicByUid([int uid = -1]) async{
+  static selectSpaceDynamicByUid([int uid = -1]) async{
     int targetId = uid != -1 ? uid : userState.uid.value;
     var data = {
       "uid": targetId
@@ -42,32 +42,13 @@ class SpaceAPI {
     return [];
   }
 
-  /*
-   * @author Marinda
-   * @date 2023/8/21 14:31
-   * @description 插入Space
-   */
-  insertSpace(Space space) async{
-    Log.i("插入空间信息");
-    var data = json.encode(space.toJson());
-    var header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: header);
-    var value = apiResult.data;
-    if(value == null){
-      return null;
-    }
-    Space spaceResult = Space.fromJson(apiResult.data);
-    return spaceResult;
-  }
 
   /*
    * @author Marinda
    * @date 2023/8/21 14:31
    * @description 插入Space
    */
-  insertDynamic(Space space) async{
+  static insertDynamic(Space space) async{
     Log.i("插入空间信息");
     var data = json.encode(space.toJson());
     var header = {
@@ -87,13 +68,13 @@ class SpaceAPI {
    * @date 2023/8/21 14:45
    * @description 插入空间详情
    */
-  insertDynamicInfo(SpaceInfo spaceInfo) async{
+  static insertDynamicInfo(SpaceInfo spaceInfo) async{
     Log.i("插入空间动态详情");
     var data = json.encode(spaceInfo.toJson());
     var header = {
       "Content-Type": HttpContentType.JSON.type
     };
-    APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: header);
+    APIResult apiResult = await BaseProvider.sendRequest("dynamicInfo/add", HttpMethods.POST.value,data,header: header);
     var value = apiResult.data;
     if(value == null){
       return null;
@@ -105,9 +86,9 @@ class SpaceAPI {
   /*
    * @author Marinda
    * @date 2023/8/21 14:55
-   * @description 插入动态点赞信息了
+   * @description 插入空间动态点赞信息
    */
-  insertDynamicLike(SpaceDynamicLike spaceDynamicLike) async{
+  static insertDynamicLike(SpaceDynamicLike spaceDynamicLike) async{
     Log.i("插入空间动态点赞详情");
     var data = json.encode(spaceDynamicLike.toJson());
     var header = {
@@ -117,5 +98,48 @@ class SpaceAPI {
     return apiResult.data;
   }
 
-  
+  /*
+   * @author Marinda
+   * @date 2023/9/1 10:34
+   * @description 查询当前用户所有好友动态列表
+   */
+  static selectContactDynamicList() async{
+    int uid = userState.uid.value;
+    var data = {
+      "uid": uid
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectContactDynamicListByUid", HttpMethods.POST.value,data,header: Request.header);
+    if(apiResult.data == null){
+      return null;
+    }
+    //api结果为list
+    if(apiResult.data is List){
+      var list = apiResult.data as List;
+      List<SpaceDynamic> spaceDynamic = list.map((e) => SpaceDynamic.fromJson(e)).toList();
+      return spaceDynamic;
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/1 10:55
+   * @description 查询指定动态点赞详情列表
+   */
+  static selectDynamicLikeByDid(int dynamicId) async{
+    Log.i("查询动态：${dynamicId}的点赞详情列表");
+    var data = {
+      "dynamic_id": dynamicId
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/selectDynamicLikeByDid", HttpMethods.POST.value,data,header: Request.header);
+    if(apiResult.data == null){
+      return null;
+    }
+    //api结果为list
+    if(apiResult.data is List){
+      var list = apiResult.data as List;
+      List<SpaceDynamicLike> spaceDynamicLikeList = list.map((e) => SpaceDynamicLike.fromJson(e)).toList();
+      return spaceDynamicLikeList;
+    }
+    
+  }
 }

@@ -6,10 +6,14 @@ import 'package:get/get.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
 import 'package:silentchat/entity/space_dynamic_info_view.dart';
+import 'package:silentchat/entity/space_dynamic_like.dart';
 import 'package:silentchat/entity/space_dynamic_view.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/space_api.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/util/log.dart';
 
 import 'state.dart';
 
@@ -31,21 +35,41 @@ class SpaceLogic extends GetxController {
    * @description 初始化空间动态详情
    */
   void initSpaceInfo() async{
-    User user = await userLogic.selectByUid(3);
-    User user2 = await userLogic.selectByUid(10);
-    SpaceDynamic spaceDynamic = SpaceDynamic(id: 1,uid: 3,content: "人不行别怪路不平",device: "IPhone6 Plus",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 1);
-    List<String> imgList = ["http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png","http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png"];
-    SpaceDynamic spaceDynamic2 = SpaceDynamic(id: 2,uid: 5,content: json.encode(imgList),device: "IPhone13 Pro Max",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 2);
-    List<User> likeUserList = [];
-    for(var i = 1;i<=4;i++){
-     likeUserList.add(await userLogic.selectByUid(i));
+    List<SpaceDynamic> contactDynamicList = await SpaceAPI.selectContactDynamicList();
+    List<SpaceDynamicView> dynamicViewList = [];
+    for(SpaceDynamic spaceDynamicElement in contactDynamicList){
+      int dynamicId = spaceDynamicElement.id ?? -1;
+      int dynamicUid = spaceDynamicElement.uid ?? -1;
+      User dynamicUser = await UserAPI.selectByUid(dynamicUid);
+      var spaceDynamicLikeList = await SpaceAPI.selectDynamicLikeByDid(dynamicId);
+      List<User> likeUserList = [];
+      if(spaceDynamicLikeList != null){
+        for(var element in spaceDynamicLikeList){
+          int likeUid  = element.uid ?? -1;
+          User likeUser = await UserAPI.selectByUid(likeUid);
+          likeUserList.add(likeUser);
+        }
+      }
+      SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamicElement,likeUserList);
+      SpaceDynamicView dynamicView = SpaceDynamicView(user: dynamicUser,viewInfo: infoView);
+      dynamicViewList.add(dynamicView);
     }
-    SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamic,likeUserList);
-    SpaceDynamicInfoView infoView2 = SpaceDynamicInfoView(spaceDynamic2,likeUserList);
-    SpaceDynamicView dynamicView = SpaceDynamicView(user: user,viewInfo: infoView);
-    SpaceDynamicView dynamicView2 = SpaceDynamicView(user: user2,viewInfo: infoView2);
-    state.dynamicViewInfoList.add(dynamicView);
-    state.dynamicViewInfoList.add(dynamicView2);
+    state.dynamicViewInfoList.value = dynamicViewList;
+    // User user = await userLogic.selectByUid(3);
+    // User user2 = await userLogic.selectByUid(10);
+    // SpaceDynamic spaceDynamic = SpaceDynamic(id: 1,uid: 3,content: "人不行别怪路不平",device: "IPhone6 Plus",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 1);
+    // List<String> imgList = ["http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png","http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png"];
+    // SpaceDynamic spaceDynamic2 = SpaceDynamic(id: 2,uid: 5,content: json.encode(imgList),device: "IPhone13 Pro Max",time: DateTimeUtil.formatDateTime(DateTime.now(),format: DateTimeUtil.ymdhn),type: 2);
+    // List<User> likeUserList = [];
+    // for(var i = 1;i<=4;i++){
+    //  likeUserList.add(await userLogic.selectByUid(i));
+    // }
+    // SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamic,likeUserList);
+    // SpaceDynamicInfoView infoView2 = SpaceDynamicInfoView(spaceDynamic2,likeUserList);
+    // SpaceDynamicView dynamicView = SpaceDynamicView(user: user,viewInfo: infoView);
+    // SpaceDynamicView dynamicView2 = SpaceDynamicView(user: user2,viewInfo: infoView2);
+    // state.dynamicViewInfoList.add(dynamicView);
+    // state.dynamicViewInfoList.add(dynamicView2);
   }
 
 
@@ -59,6 +83,7 @@ class SpaceLogic extends GetxController {
       User user = element.user ?? User();
       SpaceDynamicInfoView dynamicInfoView = element.viewInfo!;
       int dynamicType = dynamicInfoView.element?.type ?? 0;
+      List<User> dynamicUserList = dynamicInfoView.commentLikeUserList ?? [];
       //动态
       return Container(
           width: Get.width,
@@ -205,32 +230,35 @@ class SpaceLogic extends GetxController {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(left: 20.rpx,right: 0.rpx),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 50.rpx),
-                      child: InkWell(
-                        child: SizedBox(
-                          width: 80.rpx,
-                          height: 80.rpx,
-                          child: Image.asset(
-                            "assets/icon/good.png",
-                            fit: BoxFit.fill,
-                            color: Colors.blue,
+              Visibility(
+                visible: dynamicUserList.isNotEmpty,
+                child: Container(
+                  padding: EdgeInsets.only(left: 20.rpx,right: 0.rpx),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(right: 50.rpx),
+                        child: InkWell(
+                          child: SizedBox(
+                            width: 80.rpx,
+                            height: 80.rpx,
+                            child: Image.asset(
+                              "assets/icon/good.png",
+                              fit: BoxFit.fill,
+                              color: Colors.blue,
+                            ),
                           ),
+                          onTap: (){
+                            print("打开点赞列表");
+                          },
                         ),
-                        onTap: (){
-                          print("打开点赞列表");
-                        },
                       ),
-                    ),
-                    Expanded(
-                      child: buildCommentLikeList(dynamicInfoView.commentLikeUserList ?? [])
-                    ),
-                  ],
+                      Expanded(
+                        child: buildCommentLikeList(dynamicInfoView.commentLikeUserList ?? [])
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -392,11 +420,11 @@ class SpaceLogic extends GetxController {
         ),
       ),);
     }else{
-      for(var i = 0;i<3;i++){
+      for(var i = 0;i<commentLikeUserList.length;i++){
         var user = commentLikeUserList[i];
         String userName = user.username ?? "";
         var textSpan = TextSpan(
-            text: userName,
+            text: "${userName}${i == commentLikeUserList.length-1 ? "" : "、"}",
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 14
