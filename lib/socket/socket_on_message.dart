@@ -12,6 +12,7 @@ import 'package:silentchat/enum/receiver_type.dart';
 import 'package:silentchat/enum/websocket_code.dart';
 import 'package:silentchat/enum/websocket_friends_code.dart';
 import 'package:silentchat/enum/websocket_groups_code.dart';
+import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/log.dart';
@@ -36,27 +37,27 @@ class SocketOnMessage{
     dynamic result = json.decode(message);
     ChatMessage chatMessage = ChatMessage.fromJson(result);
     int type = chatMessage.receiverType?.type ?? -1;
-    switch(type){
-      //用户
-      case 1:
-        //如果在当前聊天页
-        if(Get.isRegistered<ChatLogic>()){
-          var chatLogic = Get.find<ChatLogic>();
-          await chatLogic.syncInsertMessage(chatMessage);
-          Log.i("插入当前消息！");
-        }else{
-          var message = Get.find<MessageLogic>();
-          var targetMessage = await MessageAPI.selectMessageById(chatMessage.mid ?? -1);
-          Log.i("目标message: ${targetMessage.toJson()}");
-          var user = await UserAPI.selectByUid(chatMessage.receiverId ?? -1);
-          Log.i("目标用户: ${user.toJson()}");
-          message.insertMessage(user, type, targetMessage,chatMessage: chatMessage);
-          // message.insertMessage(group, 2, createGroupMsg);
-        }
-        break;
-      //  群聊
-      case 2:
-        break;
+    //如果在当前聊天页
+    if(Get.isRegistered<ChatLogic>()){
+      var chatLogic = Get.find<ChatLogic>();
+      await chatLogic.syncInsertMessage(chatMessage);
+      chatLogic.state.sendFlag = true;
+      Log.i("插入通讯消息！");
+    }else{
+      var message = Get.find<MessageLogic>();
+      var targetMessage = await MessageAPI.selectMessageById(chatMessage.mid ?? -1);
+      Log.i("message: ${targetMessage.toJson()}");
+      dynamic element;
+      if(type == 1){
+        var user = await UserAPI.selectByUid(chatMessage.receiverId ?? -1);
+        element = user;
+      }else{
+        var group = await GroupAPI.selectById(chatMessage.receiverId ?? -1);
+        element = group;
+      }
+      Log.i("消息目标: ${element.toJson()}");
+      message.insertMessage(element, type, targetMessage,chatMessage: chatMessage);
+      // message.insertMessage(group, 2, createGroupMsg);
     }
   }
 

@@ -409,7 +409,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    */
   void sendMessage() async{
     MessageType messageType = MessageType.TEXT;
-    ReceiverType type = ReceiverType.CONTACT;
+    ReceiverType type = state.type.value == 1 ? ReceiverType.CONTACT : ReceiverType.GROUP;
     String message = state.messageController.text;
     if(message.isEmpty){ return;}
     int uid = userState.user.value.id ?? 0;

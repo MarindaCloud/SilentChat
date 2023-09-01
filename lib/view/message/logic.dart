@@ -135,6 +135,16 @@ class MessageLogic extends GetxController {
             state.messageViewMap[targetKey] = message;
           }
         }
+      }else{
+        SilentChatEntity target = state.messageViewMap.keys.firstWhere((element){
+          Group group = element as Group;
+          return group.id == element.id;
+        });
+        if(target == null){
+          state.messageViewMap[element] = message;
+        }else{
+          state.messageViewMap[target] = message;
+        }
       }
     }else{
     //  如果存在则替换
@@ -408,7 +418,7 @@ class MessageLogic extends GetxController {
             ],
           ),
         ),
-        onTap: (){
+        onTap: () {
           var key = type == 1 ? (target as User).id : (target as Group).id;
           print("当前选择的id: ${key}");
           toChat(key ?? -1,type);
@@ -454,6 +464,7 @@ class MessageLogic extends GetxController {
     //result = true 则视为Chat页发送过消息所以刷新所有数据
     var result = await Get.toNamed("/chat",arguments: args);
     if(result){
+      Log.i("重置");
       initRecordMessage();
     }
   }
