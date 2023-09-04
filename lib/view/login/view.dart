@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:flukit/flukit.dart';
 import 'logic.dart';
@@ -233,9 +234,9 @@ class LoginPage extends StatelessWidget {
                                     ),
                                     Text("和",style: TextStyle(fontSize: 12,color: Colors.grey)),
                                     InkWell(
-                                      child: Text("TIM隐私保护指引",style: TextStyle(fontSize: 12,color: Colors.blue)),
+                                      child: Text("默讯隐私保护指引",style: TextStyle(fontSize: 12,color: Colors.blue)),
                                       onTap: (){
-                                        print("tim协议保护");
+                                        print("默讯协议保护");
                                       },
                                     )
                                   ],
@@ -299,13 +300,18 @@ class LoginPage extends StatelessWidget {
                                 )
                             ),
                             Expanded(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      border: Border(right: BorderSide(color: Color.fromRGBO(230,230,230,1),width: 2))                            ),
+                                child: InkWell(
                                   child: Container(
-                                    child: Text("新用户注册",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                        border: Border(right: BorderSide(color: Color.fromRGBO(230,230,230,1),width: 2))                            ),
+                                    child: Container(
+                                      child: Text("新用户注册",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                    ),
                                   ),
+                                  onTap: (){
+                                    Get.toNamed(AppPage.register);
+                                  },
                                 )
                             ),
                             Expanded(
