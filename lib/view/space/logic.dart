@@ -75,8 +75,9 @@ class SpaceLogic extends GetxController {
       //动态
       return Container(
           width: Get.width,
-          margin: EdgeInsets.only(bottom: 300.rpx),
-          padding: EdgeInsets.only(left: 20.rpx,right: 10.rpx),
+          color: Colors.white,
+          margin: EdgeInsets.only(bottom: 80.rpx),
+          padding: EdgeInsets.only(left: 20.rpx,right: 10.rpx,bottom: 50.rpx,top: 50.rpx),
           child: Column(
             children: [
               //  用户详情
