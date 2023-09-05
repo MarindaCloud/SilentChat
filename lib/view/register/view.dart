@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/icon_button.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -74,38 +75,35 @@ class RegisterPage extends StatelessWidget {
                                   right: 100.rpx,
                                   top: 20.rpx,
                                   bottom: 0.rpx),
-                              child: AfterLayout(
-                                callback: logic.userNameReaderLayoutInfo,
-                                child: Container(
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        child: Text("用户名：",style: TextStyle(color: Colors.black,fontSize: 16,letterSpacing: 5),),
-                                      ),
-                                      Expanded(
-                                          child: SizedBox(
-                                            height: 200.rpx,
-                                            child: TextField(
-                                              controller: state.userName,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16
-                                              ),
-                                              maxLines: 1,
-                                              maxLength: null,
-                                              decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.grey,width: 1)
-                                                ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                      borderSide: BorderSide(color: Colors.grey,width: 1)
-                                                  ),
-                                                contentPadding: EdgeInsets.only(left: 50.rpx,right: 50.rpx)
-                                              ),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      child: Text("用户名：",style: TextStyle(color: Colors.black,fontSize: 16,letterSpacing: 5),),
+                                    ),
+                                    Expanded(
+                                        child: SizedBox(
+                                          height: 200.rpx,
+                                          child: TextField(
+                                            controller: state.userName,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16
                                             ),
-                                          )),
-                                    ],
-                                  ),
+                                            maxLines: 1,
+                                            maxLength: null,
+                                            decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(color: Colors.grey,width: 1)
+                                              ),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.grey,width: 1)
+                                                ),
+                                              contentPadding: EdgeInsets.only(left: 50.rpx,right: 50.rpx)
+                                            ),
+                                          ),
+                                        )),
+                                  ],
                                 ),
                               ),
                             ),
@@ -126,6 +124,7 @@ class RegisterPage extends StatelessWidget {
                                         child: SizedBox(
                                           height: 200.rpx,
                                           child: TextField(
+                                            obscureText: true,
                                             controller: state.passWord,
                                             style: TextStyle(
                                                 color: Colors.black,
@@ -155,54 +154,71 @@ class RegisterPage extends StatelessWidget {
                                   right: 100.rpx,
                                   top: 20.rpx,
                                   bottom: 0.rpx),
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      child: Text("邮箱：",style: TextStyle(color: Colors.black,fontSize: 16,letterSpacing: 12),),
-                                    ),
-                                    Expanded(
-                                        child: SizedBox(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Text("邮箱：",style: TextStyle(color: Colors.black,fontSize: 16,letterSpacing: 12),),
+                                        ),
+                                        Expanded(
+                                            child: SizedBox(
+                                              height: 200.rpx,
+                                              child: TextField(
+                                                controller: state.email,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16
+                                                ),
+                                                focusNode: state.verifyFocusNode,
+                                                maxLines: 1,
+                                                maxLength: null,
+                                                decoration: InputDecoration(
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Colors.grey,width: 1)
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(color: Colors.grey,width: 1)
+                                                    ),
+                                                    contentPadding: EdgeInsets.only(left: 50.rpx,right: 50.rpx)
+                                                ),
+                                              ),
+                                            )),
+                                        Container(
+                                          width: 250.rpx,
                                           height: 200.rpx,
-                                          child: TextField(
-                                            controller: state.email,
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16
-                                            ),
-                                            maxLines: 1,
-                                            maxLength: null,
-                                            decoration: InputDecoration(
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.grey,width: 1)
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.grey,width: 1)
-                                                ),
-                                                contentPadding: EdgeInsets.only(left: 50.rpx,right: 50.rpx)
+                                          margin: EdgeInsets.only(left: 100.rpx),
+                                          padding: EdgeInsets.only(left: 30.rpx,right: 30.rpx),
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                                  Color.fromRGBO(89,192,247,1),
+                                                  Color.fromRGBO(68,153,235,1),
+                                                ]
                                             ),
                                           ),
-                                        )),
-                                    Container(
-                                      height: 200.rpx,
-                                      margin: EdgeInsets.only(left: 100.rpx),
-                                      padding: EdgeInsets.only(left: 30.rpx,right: 30.rpx),
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              Color.fromRGBO(89,192,247,1),
-                                              Color.fromRGBO(68,153,235,1),
-                                            ]
+                                          child: InkWell(
+                                            child: Center(
+                                              child: Text("${state.verifyText.value}",style: TextStyle(color: Colors.white,fontSize: 16,letterSpacing: 5),),
+                                            ),
+                                            onTap: logic.sendVerifyCode,
+                                          ),
                                         ),
-                                      ),
-                                      child: Center(
-                                        child: Text("发送",style: TextStyle(color: Colors.white,fontSize: 16,letterSpacing: 5),),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                      ],
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: state.validEmailVis.value,
+                                    child: Container(
+                                      alignment: Alignment.topRight,
+                                      margin: EdgeInsets.only(top: 10.rpx),
+                                      child: Text("你的邮箱格式有误！",style: TextStyle(color: Colors.red,fontSize: 14)),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                             //验证码
@@ -228,8 +244,9 @@ class RegisterPage extends StatelessWidget {
                                             fontSize: 16
                                         ),
                                         maxLines: 1,
-                                        maxLength: null,
+                                        maxLength: 6,
                                         decoration: InputDecoration(
+                                          counterText: "",
                                             enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(color: Colors.grey,width: 1)
                                             ),
@@ -247,55 +264,55 @@ class RegisterPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // //协议
-                      Container(
-                        padding: EdgeInsets.only(left: 150.rpx, right: 50.rpx),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 200.rpx,
-                              height: GetPlatform.isDesktop ?  100.rpx : 200.rpx,
-                            ),
-                            InkWell(
-                              child: Container(
-                                width: 80.rpx,
-                                height: 80.rpx,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 2),
-                                    borderRadius: BorderRadius.circular(10000),
-                                    color: state.accept.value ?Colors.blue:Colors.white
-                                ),
-                              ),
-                              onTap: () {
-                                state.accept.value = !state.accept.value;
-                              },
-                            ),
-                            SizedBox(width: 5),
-                            Expanded(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        child: Text("已阅读并同意",style: TextStyle(fontSize: 12,color: Colors.grey))),
-                                    InkWell(
-                                      child: Text("服务协议",style: TextStyle(fontSize: 12,color: Colors.blue)
-                                      ),
-                                      onTap: (){
-                                        print("服务协议");
-                                      },
-                                    ),
-                                    Text("和",style: TextStyle(fontSize: 12,color: Colors.grey)),
-                                    InkWell(
-                                      child: Text("默讯保护指引",style: TextStyle(fontSize: 12,color: Colors.blue)),
-                                      onTap: (){
-                                        print("默讯协议保护");
-                                      },
-                                    )
-                                  ],
-                                )
-                            )
-                          ],
-                        ),
-                      ),
+                      // // //协议
+                      // Container(
+                      //   padding: EdgeInsets.only(left: 150.rpx, right: 50.rpx),
+                      //   child: Row(
+                      //     children: [
+                      //       Container(
+                      //         width: 200.rpx,
+                      //         height: GetPlatform.isDesktop ?  100.rpx : 200.rpx,
+                      //       ),
+                      //       InkWell(
+                      //         child: Container(
+                      //           width: 80.rpx,
+                      //           height: 80.rpx,
+                      //           decoration: BoxDecoration(
+                      //               border: Border.all(color: Colors.grey, width: 2),
+                      //               borderRadius: BorderRadius.circular(10000),
+                      //               color: state.accept.value ?Colors.blue:Colors.white
+                      //           ),
+                      //         ),
+                      //         onTap: () {
+                      //           state.accept.value = !state.accept.value;
+                      //         },
+                      //       ),
+                      //       SizedBox(width: 5),
+                      //       Expanded(
+                      //           child: Row(
+                      //             children: [
+                      //               Container(
+                      //                   child: Text("已阅读并同意",style: TextStyle(fontSize: 12,color: Colors.grey))),
+                      //               InkWell(
+                      //                 child: Text("服务协议",style: TextStyle(fontSize: 12,color: Colors.blue)
+                      //                 ),
+                      //                 onTap: (){
+                      //                   print("服务协议");
+                      //                 },
+                      //               ),
+                      //               Text("和",style: TextStyle(fontSize: 12,color: Colors.grey)),
+                      //               InkWell(
+                      //                 child: Text("默讯保护指引",style: TextStyle(fontSize: 12,color: Colors.blue)),
+                      //                 onTap: (){
+                      //                   print("默讯协议保护");
+                      //                 },
+                      //               )
+                      //             ],
+                      //           )
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
 
                       SizedBox(
                         height: GetPlatform.isDesktop ?  50.rpx : 0.rpx,
@@ -326,7 +343,7 @@ class RegisterPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          onTap: (){print("注册");},
+                          onTap: logic.register,
                         ),
                       ),
                     ],

@@ -10,7 +10,7 @@ class User extends SilentChatEntity{
   int? _number;
   String? _username;
   String? _password;
-  String? _phone;
+  String? _email;
   int? _sex;
   DateTime? _birthday;
   String? _signature;
@@ -21,7 +21,7 @@ class User extends SilentChatEntity{
         int? number,
         String? username,
         String? password,
-        String? phone,
+        String? email,
         int? sex,
         DateTime? birthday,
         String? signature,
@@ -39,8 +39,8 @@ class User extends SilentChatEntity{
     if (password != null) {
       this._password = password;
     }
-    if (phone != null) {
-      this._phone = phone;
+    if (email != null) {
+      this._email = email;
     }
     if (sex != null) {
       this._sex = sex;
@@ -67,8 +67,8 @@ class User extends SilentChatEntity{
   set username(String? username) => _username = username;
   String? get password => _password;
   set password(String? password) => _password = password;
-  String? get phone => _phone;
-  set phone(String? phone) => _phone = phone;
+  String? get email => _email;
+  set email(String? email) => _email = email;
   int? get sex => _sex;
   set sex(int? sex) => _sex = sex;
   DateTime? get birthday => _birthday;
@@ -86,7 +86,7 @@ class User extends SilentChatEntity{
     _number = json['number'];
     _username = json['username'];
     _password = json['password'];
-    _phone = json['phone'];
+    _email = json['email'];
     _sex = json['sex'];
     if(json["birthday"] != null){
       _birthday = DateTime.parse(json["birthday"]);
@@ -105,7 +105,7 @@ class User extends SilentChatEntity{
     data['number'] = this._number;
     data['username'] = this._username;
     data['password'] = this._password;
-    data['phone'] = this._phone;
+    data['email'] = this._email;
     data['sex'] = this._sex;
     data['birthday'] = this._birthday.toString();
     data['signature'] = this._signature;

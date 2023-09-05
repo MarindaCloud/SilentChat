@@ -51,9 +51,10 @@ class UserAPI {
     Map<String,dynamic> data = {
       "username": user.username,
       "password": user.password,
-      "phone": user.phone
+      "email": user.email
     };
-    return await Request.sendPost("user/register", data: data, header: Request.header);
+    var response = await Request.sendPost("user/register", data: data, header: Request.header);
+    return Request.toAPIResult(response);
   }
 
   /*
