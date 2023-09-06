@@ -60,7 +60,7 @@ class DynamicLogic extends GetxController {
       return [];
     }
     //长度>=2
-    if(spaceDynamicList.length >=2){
+    if(spaceDynamicList.length >=0 && spaceDynamicList.length<=2){
       for(var element in spaceDynamicList){
         int uid = element.uid ?? -1;
         int dynamicId = element.id ?? -1;

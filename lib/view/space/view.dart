@@ -39,7 +39,7 @@ class SpacePage extends StatelessWidget {
                               offset: Offset(30, 0),
                               child: Container(
                                   child: IconButtonComponent(
-                                      "back", Colors.white)),
+                                      "back", Colors.grey.withOpacity(.7))),
                             ),
                             Center(
                                 child: Container(
@@ -78,7 +78,7 @@ class SpacePage extends StatelessWidget {
                                   image: DecorationImage(
                                       image: Image
                                           .network(
-                                          "http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png")
+                                          "${logic.userState.user.value.portrait}")
                                           .image,
                                       fit: BoxFit.cover)),
                             ),
@@ -269,7 +269,7 @@ class SpacePage extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(top: 80.rpx),
                         // color: Colors.white,
-                        child: SingleChildScrollView(
+                        child: state.dynamicViewInfoList.isEmpty ? Container(color: Colors.white,height: Get.height.rpx ,child: Center(child: Text("暂无好友动态",style: TextStyle(color: Colors.black,fontSize: 16),))) :SingleChildScrollView(
                           child: Column(
                             children: logic.buildSpaceDynamicList(),
                           ),
