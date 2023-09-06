@@ -58,7 +58,7 @@ class UserInfoLogic extends GetxController {
    * @description 显示修改头像组件
    */
   showUpdatePortrait(){
-    OverlayManager().createOverlay("customImage", CustomImageComponent(state.user.value.portrait ?? "", (){Log.i("保存");}),uniqueKey: true);
+    OverlayManager().createOverlay("customImage", CustomImageComponent(state.user.value.portrait ?? "", (){Log.i("保存");}));
     Log.i("显示修改头像组件！");
   }
 

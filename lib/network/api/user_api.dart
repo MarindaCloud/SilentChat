@@ -6,6 +6,7 @@ import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/util/log.dart';
 import '../request.dart';
 import 'package:get/get.dart';
@@ -103,7 +104,8 @@ class UserAPI {
     Log.i("${user.username}上传头像");
     d.MultipartFile multipartFile = await d.MultipartFile.fromFile(file.path);
     d.FormData formData = d.FormData.fromMap({
-      "file": multipartFile
+      "file": multipartFile,
+      "uid": user.id??-1
     });
     var response = await Request.sendPost("user/portrait", data: formData, header: {});
     APIResult apiResult = Request.toAPIResult(response);

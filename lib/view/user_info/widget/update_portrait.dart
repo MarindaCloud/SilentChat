@@ -84,7 +84,7 @@ class UpdatePortraitState extends State<UpdatePortraitComponent>
                       ),
                     ),
                     onTap: () {
-                      widget.userInfoLogic.pickPortrait();
+                      // widget.userInfoLogic.pickPortrait();
                     },
                   ),
                 )

@@ -1,14 +1,24 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/overlay_manager.dart';
-
+import 'dart:ui' as ui;
 import 'state.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:uuid/uuid.dart';
+import 'package:path_provider/path_provider.dart' as path;
+import 'package:image_picker/image_picker.dart';
 
 class CustomImageLogic extends GetxController {
   final CustomImageState state = CustomImageState();
+  final userLogic = Get.find<UserLogic>();
+  final userState = Get.find<UserLogic>().state;
 
   CustomImageLogic(String src,Function saveFun){
     state.src.value = src;
@@ -18,8 +28,15 @@ class CustomImageLogic extends GetxController {
 
   @override
   void onClose() {
-    super.dispose();
     close();
+    super.dispose();
+  }
+
+
+  @override
+  void dispose() {
+    close();
+    super.dispose();
   }
 
   /*
@@ -35,112 +52,64 @@ class CustomImageLogic extends GetxController {
     state.customOffset.value = Offset.zero;
   }
 
-  onTapDown(TapDownDetails details){
-    var position = details.localPosition;
-    // double dx = position.dx;
-    // double dy = position.dy;
-    // int number = 15;
-    state.startOffset = details.localPosition;
-    var currentOffset = state.customOffset.value;
-    var rectSize = state.rectSize.value;
-    //当前的矩形情况
-    var currentRect = Rect.fromLTWH(currentOffset.dx,currentOffset.dy, rectSize.width, rectSize.height);
-    state.customDirection = calculatePositionInRect(currentRect,position,15);
-    Log.i("起始点：${state.startOffset}");
-    Log.i("目标位置：${state.customDirection}");
+  /*
+   * @author Marinda
+   * @date 2023/9/6 17:13
+   * @description 旋转
+   */
+  rotate(){
+    state.controller.rotateLeft();
   }
 
+  pickPortrait() async{
+    XFile? pickFile = await state.imagePicker.pickImage(source: ImageSource.gallery);
+    String path = pickFile?.path ?? "";
+    state.src.value = path;
+    File file = File(path);
+    Log.i("该File是否存在：${file.existsSync()}");
+    state.src.refresh();
+    // var portraitSrc = await UserAPI.uploadPortrait(file, userState.user.value);
+    // Log.i("头像地址：${portraitSrc}");
+    // User user = userState.user.value;
+    // User newUser = User.fromJson(user.toJson());
+    // Log.i("该User: ${newUser.toJson()}");
+    // newUser.portrait = portraitSrc;
+    // var updResult = await UserAPI.updateUser(user);
+    // if(!updResult){
+    //   BotToast.showText(text: "头像修改失败！");
+    // }
+    // BotToast.showText(text: "修改头像成功！");
+  }
 
   /*
    * @author Marinda
-   * @date 2023/7/21 17:17
-   * @description 计算方法
+   * @date 2023/9/6 17:13
+   * @description 保存
    */
-  String calculatePositionInRect(Rect rect, Offset offset, double tolerance) {
-    double left = rect.left;
-    double right = rect.right;
-    double top = rect.top;
-    double bottom = rect.bottom;
+  save() async{
+    ui.Image bitMap = await state.controller.croppedBitmap();
+    var data = await bitMap.toByteData(format: ImageByteFormat.png);
+    var bytes = data!.buffer.asUint8List();
+    var dir = await path.getApplicationDocumentsDirectory();
+    var uuid = Uuid().v4();
+    var filePath = "${dir.path}/${uuid}.png";
+    File file = File(filePath);
+    await file.writeAsBytes(bytes);
+    Log.i("文件地址：${filePath},是否存在:${file.existsSync()}");
+    var result = await UserAPI.uploadPortrait(file,userState.user.value);
 
-    if (offset.dx >= left - tolerance && offset.dx <= left + tolerance &&
-        offset.dy >= top - tolerance && offset.dy <= top + tolerance) {
-      return 'TopLeft';
-    } else if (offset.dx >= right - tolerance && offset.dx <= right + tolerance &&
-        offset.dy >= top - tolerance && offset.dy <= top + tolerance) {
-      return 'TopRight';
-    } else if (offset.dx >= left - tolerance && offset.dx <= left + tolerance &&
-        offset.dy >= bottom - tolerance && offset.dy <= bottom + tolerance) {
-      return 'BottomLeft';
-    } else if (offset.dx >= right - tolerance && offset.dx <= right + tolerance &&
-        offset.dy >= bottom - tolerance && offset.dy <= bottom + tolerance) {
-      return 'BottomRight';
+    Log.i("上传结果：${result}");
+    if(result!=null){
+      BotToast.showText(text: "头像更新成功！");
     }
-
-    return 'Inside';
+    User cloneUser = User.fromJson(userState.user.toJson());
+    cloneUser.portrait = result;
+    Log.i("当前头像地址：${cloneUser.portrait},更新头像地址: ${result}");
+    userState.user.value = cloneUser;
+    userState.user.refresh();
+    Get.forceAppUpdate();
   }
 
-
-  /*
-   * @author Marinda
-   * @date 2023/7/21 14:34
-   * @description 缩放移动处理
-   */
-  scaleUpdate(ScaleUpdateDetails details){
-    if(state.showCustomWidget.value){
-      var currentOffset = state.customOffset.value;
-      var rectSize = state.rectSize.value;
-      //当前的矩形情况
-      var currentRect = Rect.fromLTWH(currentOffset.dx,currentOffset.dy, rectSize.width, rectSize.height);
-      var customOffset = Offset.zero;
-      var newSize = Size.zero;
-      Log.i("当前方向：${state.customDirection}");
-    // 根据方位调整矩形的位置和大小
-      switch (state.customDirection) {
-        case "TopLeft":
-          customOffset = Offset(details.localFocalPoint.dx,details.localFocalPoint.dy);
-          newSize = Size(currentRect.width, currentRect.height);
-          break;
-        case "TopRight":
-          customOffset = Offset(currentRect.left, details.localFocalPoint.dy);
-          newSize = Size(details.localFocalPoint.dx - currentRect.left, currentRect.height);
-          break;
-        case "BottomLeft":
-          customOffset = Offset(details.localFocalPoint.dx, currentRect.top);
-          newSize = Size(currentRect.width, details.localFocalPoint.dy - currentRect.top);
-          break;
-        case "BottomRight":
-          double newWidth = (currentRect.left + details.localFocalPoint.dx) - currentRect.left;
-          double newHeight = (currentRect.top + details.localFocalPoint.dy) - currentRect.top;
-          newSize = Size(newWidth,newHeight);
-          customOffset = Offset(currentRect.left,currentRect.top);
-          break;
-        default:
-          customOffset = details.localFocalPoint;
-          break;
-      }
-      Log.i("当前方向：${state.customDirection},大小: ${newSize}，位置：${customOffset}");
-      state.rectSize.value = newSize;
-      state.customOffset.value = customOffset;
-    }
-
-
-    double scaleValue = details.scale;
-    double value = 0;
-    if(scaleValue >= state.maxScale){
-      value = state.maxScale;
-    }else if(scaleValue <= state.minScale){
-      value = state.minScale;
-    }else{
-      value = scaleValue;
-    }
-    state.scale.value = value;
-    // Log.i("当前缩放倍率：${value}");
-  }
-
-
-  onPanUpdate(DragUpdateDetails details){
-    Log.i("当前移动的点位：${details?.localPosition}");
-  }
 
   /*
    * @author Marinda
