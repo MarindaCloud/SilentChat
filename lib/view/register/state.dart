@@ -7,7 +7,7 @@ import 'package:flukit/flukit.dart';
 class RegisterState {
   TextEditingController userName = TextEditingController(text: "");
   TextEditingController passWord = TextEditingController(text: "");
-  TextEditingController email = TextEditingController(text: "2953084739@qq.com");
+  TextEditingController email = TextEditingController(text: "");
   TextEditingController verify = TextEditingController(text: "");
   final accept = false.obs;
   final accountHistoryList = <AccountHistory>[].obs;

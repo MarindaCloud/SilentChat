@@ -13,14 +13,17 @@ class DynamicPage extends StatelessWidget {
   DynamicPage({Key? key}) : super(key: key);
 
   final logic = Get.find<DynamicLogic>();
-  final state = Get.find<DynamicLogic>().state;
+  final state = Get
+      .find<DynamicLogic>()
+      .state;
 
   @override
   Widget build(BuildContext context) {
+    return Obx(() {
       return Container(
         child: Column(
           children: [
-          //  头像信息
+            //  头像信息
             Container(
               width: double.infinity,
               height: 800.rpx,
@@ -44,7 +47,10 @@ class DynamicPage extends StatelessWidget {
                         child: Container(
                           // color: Colors.green,
                           margin: EdgeInsets.only(bottom: 40.rpx),
-                          padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                          padding: EdgeInsets.only(left: 60.rpx,
+                              right: 60.rpx,
+                              top: 30.rpx,
+                              bottom: 0.rpx),
                           child: InkWell(
                             child: Row(
                               children: [
@@ -54,15 +60,17 @@ class DynamicPage extends StatelessWidget {
                                   child: SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/icon/dynamic.png",color: Colors.orange,),
+                                    child: Image.asset(
+                                      "assets/icon/dynamic.png",
+                                      color: Colors.orange,),
                                   ),
                                 ),
                                 Container(
                                   child: Text("好友动态",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),),
                                 ),
                                 Expanded(child: SizedBox()),
                                 //好友头像+新发表情况
@@ -72,38 +80,13 @@ class DynamicPage extends StatelessWidget {
                                       //多少人发表 & 头像信息
                                       Container(
                                         margin: EdgeInsets.only(right: 30.rpx),
-                                        child: Text("21人新发表",style: TextStyle(color: Colors.grey,fontSize: 14),),
+                                        child: Text(state.dynamicList.isEmpty
+                                            ? "暂无动态"
+                                            : "${state.dynamicList
+                                            .length}人新发表", style: TextStyle(
+                                            color: Colors.grey, fontSize: 14),),
                                       ),
-                                      //头像信息
-                                      Container(
-                                        child: Container(
-                                          width: 100.rpx,
-                                          height: 100.rpx,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(1000),
-                                            image: DecorationImage(
-                                              image: Image.asset("assets/user/portait.png").image,
-                                              fit: BoxFit.fill
-                                            ),
-                                          ),
-                                          
-                                        ),
-                                      ),
-                                      //头像信息
-                                      Container(
-                                        child: Container(
-                                          width: 100.rpx,
-                                          height: 100.rpx,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(1000),
-                                              image: DecorationImage(
-                                                  image: Image.asset("assets/user/portait.png").image,
-                                                  fit: BoxFit.fill
-                                              )
-                                          ),
-
-                                        ),
-                                      )
+                                      ...logic.buildDynamicUserView()
                                     ],
                                   ),
                                 ),
@@ -114,14 +97,14 @@ class DynamicPage extends StatelessWidget {
                                   child: SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/icon/qianwang.png"),
+                                    child: Image.asset(
+                                        "assets/icon/qianwang.png"),
                                   ),
                                 ),
                               ],
                             ),
-                            onTap: (){
+                            onTap: () {
                               logic.toSpace();
-
                             },
                           ),
                         ),
@@ -133,7 +116,10 @@ class DynamicPage extends StatelessWidget {
                         child: Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -144,7 +130,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/youxi.png"),
+                                        child: Image.asset(
+                                            "assets/icon/youxi.png"),
                                       ),
                                     ),
                                     Container(
@@ -161,18 +148,22 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("游戏中心");
                                 },
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -183,7 +174,9 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/fujin.png",color: Colors.green,),
+                                        child: Image.asset(
+                                          "assets/icon/fujin.png",
+                                          color: Colors.green,),
                                       ),
                                     ),
                                     Container(
@@ -200,12 +193,13 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("附近");
                                 },
                               ),
@@ -220,7 +214,10 @@ class DynamicPage extends StatelessWidget {
                         child: Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -231,7 +228,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/yuedu.png"),
+                                        child: Image.asset(
+                                            "assets/icon/yuedu.png"),
                                       ),
                                     ),
                                     Container(
@@ -248,18 +246,22 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("动漫");
                                 },
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -270,7 +272,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/shujiyuedu.png"),
+                                        child: Image.asset(
+                                            "assets/icon/shujiyuedu.png"),
 
                                       ),
                                     ),
@@ -288,18 +291,22 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("阅读");
                                 },
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -310,7 +317,9 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/gouwuche.png",color: Colors.red,),
+                                        child: Image.asset(
+                                          "assets/icon/gouwuche.png",
+                                          color: Colors.red,),
                                       ),
                                     ),
                                     Container(
@@ -327,18 +336,22 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("购物");
                                 },
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -349,7 +362,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/yinle.png"),
+                                        child: Image.asset(
+                                            "assets/icon/yinle.png"),
                                       ),
                                     ),
                                     Container(
@@ -366,18 +380,22 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("音乐");
                                 },
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 60.rpx,right:60.rpx,top: 30.rpx,bottom: 0.rpx),
+                              padding: EdgeInsets.only(left: 60.rpx,
+                                  right: 60.rpx,
+                                  top: 30.rpx,
+                                  bottom: 0.rpx),
                               margin: EdgeInsets.only(bottom: 40.rpx),
                               child: InkWell(
                                 child: Row(
@@ -388,7 +406,8 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/ziyuanxhdpi.png"),                                      ),
+                                        child: Image.asset(
+                                            "assets/icon/ziyuanxhdpi.png"),),
                                     ),
                                     Container(
                                       child: Text("更多",
@@ -404,12 +423,13 @@ class DynamicPage extends StatelessWidget {
                                       child: SizedBox(
                                         width: 80.rpx,
                                         height: 80.rpx,
-                                        child: Image.asset("assets/icon/qianwang.png"),
+                                        child: Image.asset(
+                                            "assets/icon/qianwang.png"),
                                       ),
                                     ),
                                   ],
                                 ),
-                                onTap: (){
+                                onTap: () {
                                   print("更多");
                                 },
                               ),
@@ -424,5 +444,6 @@ class DynamicPage extends StatelessWidget {
           ],
         ),
       );
+    });
   }
 }

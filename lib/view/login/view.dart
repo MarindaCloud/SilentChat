@@ -295,7 +295,7 @@ class LoginPage extends StatelessWidget {
                                       border: Border(right: BorderSide(color: Color.fromRGBO(230,230,230,1),width: 2))
                                   ),
                                   child: Container(
-                                    child: Text("手机号登录",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 13)),
+                                    child: Text("忘记密码",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 13)),
                                   ),
                                 )
                             ),
@@ -318,7 +318,7 @@ class LoginPage extends StatelessWidget {
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text("更多选项",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                    child: Text("帮助",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                                   ),
                                 )
                             ),
