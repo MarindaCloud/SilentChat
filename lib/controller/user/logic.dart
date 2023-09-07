@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
@@ -22,6 +24,21 @@ class UserLogic extends GetxController {
   String getSex(){
     int sex = state.user.value.sex ?? -1;
     return sex == 1 ? "男" : "女";
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/7 17:18
+   * @description 构建头像
+   */
+  buildPortraitWidget([int type = 1,String targetPortrait = ""]){
+    String portrait = "";
+    if(targetPortrait != ""){
+      portrait = targetPortrait;
+    }else{
+     portrait = state.user.value.portrait ?? "";
+    }
+    return CacheImageHandle.buildImageWidget(portrait, type);
   }
 
   /*
@@ -81,6 +98,7 @@ class UserLogic extends GetxController {
     for(Friend friend in friendList){
       int friendId = friend?.fid ?? -1;
       User user  = await UserAPI.selectByUid(friendId);
+      await CacheImageHandle.addImageCache(user.portrait ?? "");
       userList.add(user);
     }
     state.friendUserList.value = userList.toSet().toList();

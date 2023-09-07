@@ -36,7 +36,7 @@ class QrViewComponent extends StatelessWidget{
                 embeddedImageStyle: const QrEmbeddedImageStyle(
                   size: Size(50, 50)
                 ),
-                embeddedImage: Image.network("${userState.user.value.portrait}").image,
+                embeddedImage: userLogic.buildPortraitWidget().image,
                 gapless: false,
                 errorStateBuilder: (ctx,err){
                   return Center(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/friend.dart';
@@ -24,6 +25,10 @@ class IndexLogic extends GetxController {
   @override
   void onInit() {
     state.contentWidget = Get.arguments;
+    ever(userState.user, (target){
+      userState.user.value = target;
+      CacheImageHandle.addImageCache(userState.user.value.portrait ?? "");
+    });
     initSocket();
     initInfo();
     // TODO: implement onInit

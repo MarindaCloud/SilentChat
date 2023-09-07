@@ -9,7 +9,7 @@ class Request{
   static String token = "";
   static String host = "175.24.177.189";
   static int port = 8080;
-  static final dioOption = BaseOptions(connectTimeout: 5000,receiveTimeout: 3000);
+  static final dioOption = BaseOptions();
   static final Dio _dio = Dio(dioOption);
   static bool expireToken = false;
   static Map<String,dynamic> header = {
@@ -21,20 +21,46 @@ class Request{
    * @date 2023/6/8 15:53
    * @description 内置请求
    */
-  static Future<T> _request<T>(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
+  static dynamic requestImage(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
+    Response? responseData;
+    var dio = Dio();
+    dio.options.responseType = ResponseType.stream;
+    try{
+      String url = path;
+      Log.i("请求地址：${url},参数：${data},请求头：${header}");
+      responseData = await dio.request(url,data: data,options: Options(method: method,headers: header));
+      if(responseData.statusCode != 200){
+        Log.i("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
+        return Future.error("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
+      }else{
+        return responseData.data;
+        // Log.i("响应结果：${responseData.data}");
+      }
+    }catch(e){
+      Log.e(e);
+      return Future.error("解析响应数据异常！");
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/6/8 15:53
+   * @description 内置请求
+   */
+  static dynamic _request(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
     try{
       String url = "http://${host}:${port}/${path}";
       if(_dio.interceptors.isEmpty){
         _dio.interceptors.add(CustomInterceptor(_dio));
       }
       Log.i("请求地址：${url},参数：${data},请求头：${header}");
-      Response responseData = await _dio.request(url,data: data,options: Options(method: method,headers: header));
+      var responseData = await _dio.request(url,data: data,options: Options(method: method,headers: header));
       if(responseData.statusCode != 200){
         Log.i("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
         return Future.error("服务器请求错误，状态码：${responseData.statusCode},结果：${responseData.data}");
       }else{
-        // Log.i("响应结果：${responseData.data}");
         return responseData.data;
+        // Log.i("响应结果：${responseData.data}");
       }
     }catch(e){
       Log.e(e);

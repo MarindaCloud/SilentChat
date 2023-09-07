@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/account_history.dart';
@@ -29,10 +30,16 @@ class LoginLogic extends GetxController {
 
   @override
   void onInit() {
+    test();
     getDeviceName();
     initAccountHistory();
     // TODO: implement onInit
     super.onInit();
+  }
+  
+  test() async{
+    // var result =  await CacheImageHandle.downloadImage("assets/9301b88f-a42b-4377-8d06-e014d32d923d.png");
+    // print('结果：${result}');
   }
 
   /*
@@ -210,6 +217,8 @@ class LoginLogic extends GetxController {
         }
       }
     }
+    //添加头像信息至缓存
+    await CacheImageHandle.addImageCache(user.portrait ?? "");
     await storage.write("account", json.encode(accountList));
     Log.i("账号历史记录：${accountList.map((e) => e.toJson()).toList()}");
     Log.i("用户信息：${user.toJson()}");

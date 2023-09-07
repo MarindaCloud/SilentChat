@@ -46,7 +46,6 @@ class MessageLogic extends GetxController {
   }
 
 
-
   /*
    * @author Marinda
    * @date 2023/6/12 11:34
@@ -351,6 +350,7 @@ class MessageLogic extends GetxController {
             break;
         }
       }
+      var portrait = type == 1 ? (target as User).portrait ?? "" : (target as Group).portrait ?? "";
       Widget child = InkWell(
         child: Container(
           padding: EdgeInsets.only(right: 40.rpx, top: 30.rpx,left: 40.rpx),
@@ -365,7 +365,7 @@ class MessageLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: Image.network(type == 1 ? (target as User).portrait ?? "" : (target as Group).portrait ?? "").image,
+                        image: Image.network(portrait).image,
                         fit: BoxFit.fill
                     )
                 ),

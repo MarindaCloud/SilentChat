@@ -12,6 +12,8 @@ import 'package:silentchat/view/contact/binding.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/binding.dart';
 import 'package:silentchat/view/dynamic/view.dart';
+import 'package:silentchat/view/edit_image/binding.dart';
+import 'package:silentchat/view/edit_image/view.dart';
 import 'package:silentchat/view/index/binding.dart';
 import 'package:silentchat/view/index/view.dart';
 import 'package:silentchat/view/login/binding.dart';
@@ -49,6 +51,7 @@ class AppPage{
   static String appendGroup = GlobalPage.appendGroup.router;
   static String space = GlobalPage.space.router;
   static String register= GlobalPage.register.router;
+  static String editImage = GlobalPage.editImage.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -65,6 +68,7 @@ class AppPage{
     GetPage(name: appendGroup, page: ()=> AppendGroupPage(),binding: AppendGroupBinding()),
     GetPage(name: space, page: ()=> SpacePage(),binding: SpaceBinding()),
     GetPage(name: register, page: ()=> RegisterPage(),binding: RegisterBinding()),
+    GetPage(name: editImage, page: ()=> EditImagePage(),binding: EditImageBinding()),
   ];
 
   AppPage();

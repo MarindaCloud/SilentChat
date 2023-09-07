@@ -17,7 +17,8 @@ enum GlobalPage {
   verify("/verify"),
   appendGroup("/appendGroup"),
   space("/space"),
-  register("/register");
+  register("/register"),
+  editImage("/editImage");
 
   final String router;
   const GlobalPage(this.router);

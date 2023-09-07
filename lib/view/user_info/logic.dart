@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:silentchat/common/components/custom_image/view.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -24,33 +24,13 @@ class UserInfoLogic extends GetxController {
 
   @override
   void onInit() {
+    //处理头像变更更新
+    ever(userState.user, (element) {
+      userState.user.value = element;
+    });
     var uid = Get.arguments;
     loadUserInfo(uid);
   }
-
-  /*
-   * @author Marinda
-   * @date 2023/7/7 17:05
-   * @description 选择头像
-   */
-  pickPortrait() async{
-    XFile? pickFile = await state.imagePicker.pickImage(source: ImageSource.gallery);
-    String path = pickFile?.path ?? "";
-    File file = File(path);
-    Log.i("该File是否存在：${file.existsSync()}");
-    var portraitSrc = await UserAPI.uploadPortrait(file, userState.user.value);
-    Log.i("头像地址：${portraitSrc}");
-    User user = userState.user.value;
-    User newUser = User.fromJson(user.toJson());
-    Log.i("该User: ${newUser.toJson()}");
-    newUser.portrait = portraitSrc;
-    var updResult = await UserAPI.updateUser(user);
-    if(!updResult){
-      BotToast.showText(text: "头像修改失败！");
-    }
-    BotToast.showText(text: "修改头像成功！");
-  }
-
 
   /*
    * @author Marinda
@@ -58,8 +38,7 @@ class UserInfoLogic extends GetxController {
    * @description 显示修改头像组件
    */
   showUpdatePortrait(){
-    OverlayManager().createOverlay("customImage", CustomImageComponent(state.user.value.portrait ?? "", (){Log.i("保存");}));
-    Log.i("显示修改头像组件！");
+    Get.toNamed(AppPage.editImage,arguments: userState.user.value.portrait);
   }
 
 

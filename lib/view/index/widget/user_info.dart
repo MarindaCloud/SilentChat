@@ -35,6 +35,7 @@ class UserInfoState extends State<UserInfoWidget> {
 
   toUserInfo(){
     Get.toNamed(AppPage.userInfo,arguments: widget.indexLogic.userState.user.value.id);
+    Get.find<IndexLogic>().state.showUserInfo.value = false;
   }
 
   UserInfoState();
@@ -62,7 +63,7 @@ class UserInfoState extends State<UserInfoWidget> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(1000)),
                           image: DecorationImage(
-                              image: Image.network(widget.indexLogic.userState.user.value.portrait ?? "",).image,
+                              image: widget.indexLogic.userLogic.buildPortraitWidget().image,
                               fit: BoxFit.fill
                           )
                       ),

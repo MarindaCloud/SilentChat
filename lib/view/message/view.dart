@@ -43,8 +43,7 @@ class MessagePage extends StatelessWidget {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
                             image: DecorationImage(
-                                image: Image
-                                    .network(logic.userState.user.value.portrait ?? "")
+                                image: logic.userLogic.buildPortraitWidget()
                                     .image,
                                 fit: BoxFit.fill
                             )

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
@@ -114,6 +115,7 @@ class ContactLogic extends GetxController {
       String letter = PinyinHelper.getShortPinyin(groupName.substring(0,1)).toUpperCase();
       friendsViewInfo.letter = letter;
       friendsViewInfoList.add(friendsViewInfo);
+      await CacheImageHandle.downloadImage(group.portrait ?? "");
     }
     List<FriendsViewInfo> filterList = friendsViewInfoList.toSet().toList();
     Log.i("群组信息列表：${filterList}");
@@ -265,8 +267,7 @@ class ContactLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: Image
-                            .network("${group.portrait}")
+                        image: userLogic.buildPortraitWidget()
                             .image,
                         fit: BoxFit.fill
                     )
@@ -325,8 +326,7 @@ class ContactLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: Image
-                            .network("${friendsViewInfo.element!.portrait}")
+                        image: userLogic.buildPortraitWidget()
                             .image,
                         fit: BoxFit.fill
                     )

@@ -53,8 +53,7 @@ class MainComponentState extends State<MainComponent> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
                             image: DecorationImage(
-                                image: Image
-                                    .network(widget.userInfoLogic.state.user.value.portrait ?? "")
+                                image: widget.userInfoLogic.userLogic.buildPortraitWidget()
                                     .image,
                                 fit: BoxFit.cover
                             )
@@ -160,7 +159,7 @@ class MainComponentState extends State<MainComponent> {
                             ),
                             SizedBox(width: 50.rpx),
                             Container(
-                              child: Text(DateTimeUtil.getConstellAtion(widget.userInfoState.user.value.birthday!),
+                              child: Text(DateTimeUtil.getConstellAtion(widget.userInfoState.user.value.birthday ?? DateTime.now()),
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 16),),
                             )
