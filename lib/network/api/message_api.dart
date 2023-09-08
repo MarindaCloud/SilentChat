@@ -138,4 +138,23 @@ class MessageAPI {
     return true;
   }
 
+
+  /*
+   * @author Marinda
+   * @date 2023/9/8 16:44
+   * @description 查询两名用户最新聊天消息
+   */
+  static selectNewMessage(int sendId,int receiverId,[int type = 1]) async{
+    Log.i("查询${sendId}和${receiverId}最新聊天消息");
+    var data = {
+      "sendId": sendId,
+      "receiverId": receiverId,
+      "type": type
+    };
+    APIResult result = await BaseProvider.sendRequest("message/getNewMessage", HttpMethods.POST.value,data ,header: Request.header);
+    if(result.data == null){return false;}
+    Message message = Message.fromJson(result.data);
+    return message;
+  }
+
 }

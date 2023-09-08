@@ -46,23 +46,10 @@ class UserReceiver implements Receiver{
   @override
   Future<Message?> getNewMessage({int? id, int? receiverId}) async{
     if(id == null || receiverId == null) return null;
-    //获取用户聊天记录详情
-    List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
-    List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 1 || element.receiverId == id && element.sendId == receiverId && element.type == 1).toList();
-    List<int> midList = filterList.map((e) => e.mid ?? 0).toList();
-    List<Message> messageList = [];
-    for(int mid in midList){
-      Message message = await MessageAPI.selectMessageById(mid);
-      messageList.add(message);
-      Log.i("当前消息：${message.toJson()}");
-    }
-    messageList.sort((a,b){
-      DateTime bTime = b.time!;
-      DateTime aTime = a.time!;
-      return bTime.compareTo(aTime);
-    });
-    Log.i("与: ${receiverId}的聊天最新记录为: ${messageList.first}");
-    return messageList.first;
+    Log.i("获取${id}和${receiverId}最新聊天记录");
+    Message message = await MessageAPI.selectNewMessage(id, receiverId);
+    Log.i("两名用户最新聊天记录为：${message.toJson()}");
+    return message;
   }
 
   @override

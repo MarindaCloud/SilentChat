@@ -51,28 +51,10 @@ class GroupReceiver implements Receiver{
   @override
   Future<Message?> getNewMessage({int? id, int? receiverId}) async{
     if(id == null || receiverId == null) return null;
-    DateTime startTime = DateTime.now();
-    //获取用户聊天记录详情
-    // List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(receiverId);
-    List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(receiverId);
-    //获取该群组的所有消息
-    // List<ChatInfo> filterList = chatInfoList.where((element) => element.sendId == id && element.receiverId == receiverId && element.type == 2 || element.receiverId == id && element.sendId == receiverId && element.type == 2).toList();
-    List<int> midList = chatInfoList.map((e) => e.mid ?? 0).toList();
-    List<Message> messageList = [];
-    for(int mid in midList){
-      Message message = await MessageAPI.selectMessageById(mid);
-      messageList.add(message);
-      Log.i("当前消息：${message.toJson()}");
-    }
-    messageList.sort((a,b){
-      DateTime bTime = b.time!;
-      DateTime aTime = a.time!;
-      return bTime.compareTo(aTime);
-    });
-    DateTime endTime = DateTime.now();
-    Log.i("获取最新聊天记录耗时：${(endTime.difference(startTime).inSeconds)}");
-    Log.i("群组的聊天最新记录为: ${messageList.first}");
-    return messageList.first;
+    Log.i("获取${receiverId}群组最新聊天记录");
+    Message message = await MessageAPI.selectNewMessage(id, receiverId,2);
+    Log.i("${receiverId}群组最新聊天记录为：${message.toJson()}");
+    return message;
   }
 
 

@@ -173,41 +173,6 @@ class MessageLogic extends GetxController {
 
   /*
    * @author Marinda
-   * @date 2023/6/17 14:19
-   * @description 排序消息排行
-   */
-  // Future<Map<SilentChatEntity,Message>> sortMessageRank(UserReceiver userReceiver,List<Message> messageList,Map<int,Message> cacheReceiverMap) async{
-  //   Map<String,Map<int,Message>> messageViewMap = {};
-  //   messageList.sort((a,b)=>b.time!.compareTo(a.time!));
-  //   Log.i('消息排序后：${messageList.map((e) => e.toJson()).toList()}');
-  //   Map<int,Message> sortReceiverMessageMap = {};
-  //   for(var element in messageList){
-  //     for(int receiverTarget in cacheReceiverMap.keys){
-  //       var receiverMessage = cacheReceiverMap[receiverTarget];
-  //       if(receiverMessage! == element){
-  //         sortReceiverMessageMap[receiverTarget] = element;
-  //         continue;
-  //       }
-  //       continue;
-  //     }
-  //   }
-  //   sortReceiverMessageMap.forEach((key, value) {
-  //     Log.i('排序后的结果Map信息：Key: ${key},Value: ${value.toJson()}');
-  //   });
-  //   for(var receiverIdElement in sortReceiverMessageMap.keys){
-  //     Message message = sortReceiverMessageMap[receiverIdElement]!;
-  //     User user = await userReceiver.getEntity(id: receiverIdElement) as User;
-  //     String username = user.username ?? "";
-  //     Map<int,Message> element = {
-  //       receiverIdElement: message
-  //     };
-  //     messageViewMap[username] = element;
-  //   }
-  //   return messageViewMap;
-  // }
-
-  /*
-   * @author Marinda
    * @date 2023/6/14 17:49
    * @description 插入缓存记录信息
    */
@@ -218,31 +183,6 @@ class MessageLogic extends GetxController {
     RecordMessageData recordMessageData = await recordDao.insertRecordMessage(recordInfo);
     Log.i("插入结果: ${recordMessageData.id}");
   }
-
-  /*
-   * @author Marinda
-   * @date 2023/7/24 16:48
-   * @description 插入消息记录信息
-   */
-  // insertMessageRecord(String name,Message message,int id,[bool isGroup = false]) async{
-  //   Map<int,Message> map = {};
-  //   //如果存在相同的key
-  //   if(state.messageViewMap.containsKey(name)){
-  //     Map<int,Message> val = state.messageViewMap[name] ?? {};
-  //     //则比较一下目标id
-  //     if(val.containsKey(id)){
-  //       map[id!] = message;
-  //       state.messageViewMap[name] = map;
-  //       Log.i("替换消息视图信息");
-  //     }
-  //   }else{
-  //     // map[id]
-  //     // state.messageViewMap[name] =
-  //   }
-  //
-  //
-  // }
-
 
   /*
    * @author Marinda

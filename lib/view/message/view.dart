@@ -7,10 +7,7 @@ import 'package:silentchat/view/index/logic.dart';
 import 'logic.dart';
 
 class MessagePage extends StatelessWidget {
-  MessagePage({Key? key}) : super(key: key){
-    Log.i("初始化Message信息！");
-    logic.initRecordMessage();
-  }
+  MessagePage({Key? key}) : super(key: key);
 
   final logic = Get.find<MessageLogic>();
   final state = Get

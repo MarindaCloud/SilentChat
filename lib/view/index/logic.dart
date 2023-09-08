@@ -13,6 +13,7 @@ import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/view.dart';
+import 'package:silentchat/view/message/logic.dart';
 import 'package:silentchat/view/message/view.dart';
 
 import 'state.dart';
@@ -78,6 +79,8 @@ class IndexLogic extends GetxController {
       //消息
       case 0:
         state.contentWidget = MessagePage();
+        var messageLogic = Get.find<MessageLogic>();
+        messageLogic.initRecordMessage();
         break;
       //  联系人
       case 1:
