@@ -26,8 +26,8 @@ class IndexLogic extends GetxController {
   void onInit() {
     state.contentWidget = Get.arguments;
     ever(userState.user, (target){
+      Log.i("修改前User头像: ${userState.user.value.portrait}，修改后User：${target.portrait}");
       userState.user.value = target;
-      CacheImageHandle.addImageCache(userState.user.value.portrait ?? "");
     });
     initSocket();
     initInfo();

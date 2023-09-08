@@ -101,6 +101,14 @@ class EditImageLogic extends GetxController {
 
   pickPortrait() async{
     XFile? pickFile = await state.imagePicker.pickImage(source: ImageSource.gallery);
+    int len = await pickFile?.length() ?? 0;
+    double size = (len / 1000) * 0.001;
+    double fileSize = double.parse(size.toStringAsFixed(3));
+    if(fileSize >=5.0){
+      BotToast.showText(text: "文件大小不能超过5MB!");
+      return;
+    }
+    Log.i("选择图像的信息：大小：${fileSize}MB,mineType: ${pickFile?.mimeType}");
     String path = pickFile?.path ?? "";
     File file = File(path);
     Log.i("当前src: ${path}");
@@ -153,7 +161,8 @@ class EditImageLogic extends GetxController {
    * @description 保存
    */
   save() async{
-    ui.Image bitMap = await state.controller.croppedBitmap();
+    //修改了一下最大Size比例因子，不然出来的图像大小很高导致上传速度变慢&文件大小过大
+    ui.Image bitMap = await state.controller.croppedBitmap(maxSize: 1000);
     var data = await bitMap.toByteData(format: ImageByteFormat.png);
     var bytes = data!.buffer.asUint8List();
     var dir = await path.getApplicationDocumentsDirectory();

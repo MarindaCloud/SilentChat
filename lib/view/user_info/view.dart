@@ -32,7 +32,7 @@ class UserInfoPage extends StatelessWidget {
                     width: Get.width,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: logic.userLogic.buildPortraitWidget()
+                            image: Image.network(logic.userState.user.value.portrait ?? "")
                                 .image,
                             fit: BoxFit.fill
                         )

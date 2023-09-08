@@ -53,7 +53,7 @@ class MainComponentState extends State<MainComponent> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10000),
                             image: DecorationImage(
-                                image: widget.userInfoLogic.userLogic.buildPortraitWidget()
+                                image: Image.network(widget.userInfoLogic.userState.user.value.portrait ?? "")
                                     .image,
                                 fit: BoxFit.cover
                             )

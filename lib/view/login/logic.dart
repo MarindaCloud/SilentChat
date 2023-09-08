@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:silentchat/common/logic/cache_image_handle.dart';
+import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/account_history.dart';
@@ -11,7 +11,6 @@ import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
-import 'package:silentchat/network/request.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/message/view.dart';
@@ -26,6 +25,9 @@ class LoginLogic extends GetxController {
   final LoginState state = LoginState();
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
+  final SystemLogic systemLogic = Get.find<SystemLogic>();
+  final SystemState systemState = Get.find<SystemLogic>().state;
+
   final storage = GetStorage();
 
   @override
@@ -217,12 +219,13 @@ class LoginLogic extends GetxController {
         }
       }
     }
-    //添加头像信息至缓存
-    await CacheImageHandle.addImageCache(user.portrait ?? "");
+    //加载全局缓存
+    await systemLogic.loadGlobalImageCache(userState.user.value);
     await storage.write("account", json.encode(accountList));
     Log.i("账号历史记录：${accountList.map((e) => e.toJson()).toList()}");
     Log.i("用户信息：${user.toJson()}");
     toIndex();
     Log.i("登录响应结果: ${apiResult}");
   }
+
 }

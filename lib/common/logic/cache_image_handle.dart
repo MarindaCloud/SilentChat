@@ -11,6 +11,9 @@ import 'package:dio/dio.dart' as dio;
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:silentchat/util/log.dart';
 import 'package:uuid/uuid.dart';
+import 'package:get_storage/get_storage.dart';
+
+
 /**
  * @author Marinda
  * @date 2023/9/7 15:15
@@ -78,6 +81,7 @@ class CacheImageHandle{
         //文件
         case 1:
           File file = await _createFile(uint8list);
+          Log.i("文件地址：${file.path}");
           _fileCacheImageMap[url]= file;
           break;
         //内存

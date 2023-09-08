@@ -16,10 +16,11 @@ import 'package:get_storage/get_storage.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   //强制竖屏
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
   // 全部去除
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   await Log.initLogger();
+  await GetStorage.init();
   initService();
 
   try {

@@ -63,8 +63,9 @@ class UserInfoState extends State<UserInfoWidget> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(1000)),
                           image: DecorationImage(
-                              image: widget.indexLogic.userLogic.buildPortraitWidget().image,
-                              fit: BoxFit.fill
+                              image: Image.network(widget.indexLogic.userState.user.value.portrait ?? "").image,
+                              fit: BoxFit.fill,
+
                           )
                       ),
                     ),
