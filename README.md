@@ -20,7 +20,7 @@
 
 # ⭐️效果图
 
-![消息页面](https://s1.ax1x.com/2023/08/04/pPFvsit.png){ width=320 height=320 }
+<img src = "https://s1.ax1x.com/2023/09/09/pPc9kc9.png" style="width: 300px;height:300px" />
 ![页面](https://s1.ax1x.com/2023/08/04/pPFxSF1.png)
 ![页面](https://s1.ax1x.com/2023/08/04/pPFvxoR.png)
 ![页面](https://s1.ax1x.com/2023/08/04/pPFvvw9.png)
