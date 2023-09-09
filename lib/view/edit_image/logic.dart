@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
+import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/user_api.dart';
@@ -24,6 +25,8 @@ class EditImageLogic extends GetxController {
   final EditImageState state = EditImageState();
   final userLogic = Get.find<UserLogic>();
   final userState = Get.find<UserLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
 
 
   @override
@@ -173,18 +176,17 @@ class EditImageLogic extends GetxController {
     Log.i("文件地址：${filePath},是否存在:${file.existsSync()}");
     var result = await UserAPI.uploadPortrait(file,userState.user.value);
     Log.i("上传结果：${result}");
-    User cloneUser = User.fromJson(userState.user.toJson());
-    cloneUser.portrait = result;
+    //上传完毕后移除本地缓存
+    file.delete();
     userState.user.value.portrait = result;
     print('用户信息：${userState.user.value.toJson()}');
-    Log.i("当前头像地址：${cloneUser.portrait},更新头像地址: ${result}");
+    Log.i("更新头像地址: ${result}");
     var updResult = await UserAPI.updateUser(userState.user.value);
     if(!updResult){
       BotToast.showText(text: "头像修改失败！");
     }
     BotToast.showText(text: "修改头像成功！");
-    await CacheImageHandle.addImageCache(result);
-    userState.user.value = cloneUser;
+    systemLogic.loadGlobalImageCache(userState.user.value);
     userState.user.refresh();
   }
 

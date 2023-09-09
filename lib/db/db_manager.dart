@@ -27,7 +27,13 @@ LazyDatabase _openConnection(){
 @DriftDatabase(tables: [RecordMessage,GlobalImageCache],daos: [RecordMessageDao,GlobalImageCacheDao])
 class DBManager extends _$DBManager{
 
-  DBManager() : super(_openConnection());
+  static DBManager? dbManager;
+  DBManager._() : super(_openConnection());
+
+  factory DBManager() {
+    dbManager ??= DBManager._();
+    return dbManager!;
+  }
 
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.

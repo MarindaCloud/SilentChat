@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:get/get.dart';
@@ -55,14 +56,26 @@ class SystemLogic extends GetxController {
       //  全局缓存中已有数据
       var element = list.firstWhereOrNull((element) => element.key == portrait);
       if(element != null) {
+        var targetFile = File(element.value);
+        if(!targetFile.existsSync()){
+          await CacheImageHandle.addImageCache(portrait);
+          var newFile = await CacheImageHandle.getImageValue(portrait);
+          Map<String,dynamic> map = element.toJson();
+          map["value"] = newFile.path;
+          GlobalImageCacheData cloneData = GlobalImageCacheData.fromJson(map);
+          await GlobalImageCacheDao(db).updateImageCache(cloneData);
+          Log.i("更新图像缓存数据");
+        }
         Log.i("已存在这条数据");
         return;
+      }else{
+        await CacheImageHandle.addImageCache(portrait);
+        var file = await CacheImageHandle.getImageValue(portrait);
+        var companion = _buildGlobalImageCacheCompanion(portrait, file.path, ownerId);
+        var result = await GlobalImageCacheDao(db).insertImageCache(companion);
+        Log.i("插入图片缓存结果：${result}");
       }
-      await CacheImageHandle.addImageCache(portrait);
-      var file = await CacheImageHandle.getImageValue(portrait);
-      var companion = _buildGlobalImageCacheCompanion(portrait, file.path, ownerId);
-      var result = await GlobalImageCacheDao(db).insertImageCache(companion);
-      Log.i("插入图片缓存结果：${result}");
+
     }
   }
 

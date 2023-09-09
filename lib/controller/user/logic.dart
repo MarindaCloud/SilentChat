@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
+import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
@@ -15,6 +17,8 @@ import 'state.dart';
 
 class UserLogic extends GetxController {
   final UserState state = UserState();
+  final SystemState systemState = Get.find<SystemLogic>().state;
+  final SystemLogic systemLogic = Get.find<SystemLogic>();
 
   /*
    * @author Marinda
@@ -98,7 +102,7 @@ class UserLogic extends GetxController {
     for(Friend friend in friendList){
       int friendId = friend?.fid ?? -1;
       User user  = await UserAPI.selectByUid(friendId);
-      await CacheImageHandle.addImageCache(user.portrait ?? "");
+      await systemLogic.loadGlobalImageCache(user);
       userList.add(user);
     }
     state.friendUserList.value = userList.toSet().toList();

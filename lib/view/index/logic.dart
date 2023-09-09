@@ -76,6 +76,7 @@ class IndexLogic extends GetxController {
    */
   exitLogin(){
     systemState.showHistory.value = false;
+    CacheImageHandle.removeCache();
     Get.offAllNamed(AppPage.login);
     Log.i("退出登录！");
   }

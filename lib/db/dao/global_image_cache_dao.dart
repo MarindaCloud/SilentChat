@@ -56,7 +56,6 @@ class GlobalImageCacheDao extends DatabaseAccessor<DBManager> with _$GlobalImage
       (update(globalImageCache)..where((tbl) =>
       tbl.owner.equals(data.owner))).write(
           GlobalImageCacheCompanion(
-              id: Value(data.id),
               type: Value(data.type),
               key: Value(data.key),
               value: Value(data.value),
