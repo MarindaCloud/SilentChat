@@ -6,7 +6,7 @@ class UserState {
   final user = User().obs;
   final uid = 0.obs;
   final friendUserList = <User>[].obs;
-  String deviceName = "";
+  final joinGroupList = <Group>[].obs; String deviceName = "";
   UserState() {
     ///Initialize variables
   }

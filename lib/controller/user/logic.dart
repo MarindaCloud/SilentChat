@@ -109,7 +109,27 @@ class UserLogic extends GetxController {
     Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/9/9 14:53
+   * @description 初始化加入的群聊
+   */
+  initGroupsList() async{
+    List<GroupUserInfo> groupUserInfoList = await GroupAPI.selectUserGroups();
+    List<Group> groupList = [];
 
+    for(GroupUserInfo groupUserInfo in groupUserInfoList){
+      int gid = groupUserInfo.gid ?? 0;
+      Group group = await GroupAPI.selectById(gid);
+      if(group == null){
+        continue;
+      }
+      await systemLogic.loadGlobalImageCache(group);
+      groupList.add(group);
+    }
+    state.joinGroupList.value = groupList.toSet().toList();
+    Log.i("用户加入的群聊列表信息: ${groupList.map((e) => e.toJson()).toList()}");
+  }
 
   /*
    * @author Marinda

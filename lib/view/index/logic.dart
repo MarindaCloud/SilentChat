@@ -1,22 +1,18 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
-import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
-import 'package:silentchat/network/api/friends_api.dart';
-import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/contact/view.dart';
 import 'package:silentchat/view/dynamic/view.dart';
 import 'package:silentchat/view/message/logic.dart';
 import 'package:silentchat/view/message/view.dart';
-
+import 'package:bot_toast/bot_toast.dart';
 import 'state.dart';
 
 class IndexLogic extends GetxController {
@@ -28,14 +24,17 @@ class IndexLogic extends GetxController {
   final systemState = Get.find<SystemLogic>().state;
 
   @override
-  void onInit() {
-    changeNavView(0);
+  void onInit() async{
+    BotToast.showLoading();
+    await systemLogic.initImageCache();
+    await initInfo();
     ever(userState.user, (target){
       Log.i("修改前User头像: ${userState.user.value.portrait}，修改后User：${target.portrait}");
       userState.user.value = target;
     });
     initSocket();
-    initInfo();
+    changeNavView(0);
+    BotToast.closeAllLoading();
     // TODO: implement onInit
     super.onInit();
   }
@@ -46,8 +45,14 @@ class IndexLogic extends GetxController {
     super.dispose();
   }
 
-  void initInfo() async{
+  /*
+   * @author Marinda
+   * @date 2023/9/9 15:28
+   * @description 初始化相关信息
+   */
+  initInfo() async{
     await userLogic.initFriendsList();
+    await userLogic.initGroupsList();
   }
 
   /*

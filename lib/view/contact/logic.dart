@@ -104,18 +104,15 @@ class ContactLogic extends GetxController {
    * @description 初始化群组信息
    */
   void initGroupsInfo() async{
-    List<GroupUserInfo> userGroupInfoList = await GroupAPI.selectUserGroups();
+    List<Group> joinGroupList = userState.joinGroupList;
     Map<String,List<FriendsViewInfo>> cacheFriendUserMap = {};
     List<FriendsViewInfo> friendsViewInfoList = [];
-    for(var groupInfo in userGroupInfoList){
-      int groupId = groupInfo.gid ?? -1;
-      Group group = await GroupAPI.selectById(groupId);
+    for(Group group in joinGroupList){
       FriendsViewInfo friendsViewInfo = FriendsViewInfo(element: group);
       String groupName = group.name ?? "";
       String letter = PinyinHelper.getShortPinyin(groupName.substring(0,1)).toUpperCase();
       friendsViewInfo.letter = letter;
       friendsViewInfoList.add(friendsViewInfo);
-      await CacheImageHandle.downloadImage(group.portrait ?? "");
     }
     List<FriendsViewInfo> filterList = friendsViewInfoList.toSet().toList();
     Log.i("群组信息列表：${filterList}");
@@ -267,7 +264,7 @@ class ContactLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: Image.network(group.portrait ?? "")
+                        image: userLogic.buildPortraitWidget(1,group.portrait ?? "")
                             .image,
                         fit: BoxFit.fill
                     )

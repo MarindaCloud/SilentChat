@@ -27,9 +27,13 @@ class UserInfoLogic extends GetxController {
     //处理头像变更更新
     ever(userState.user, (element) {
       userState.user.value = element;
+      state.user.value = element;
     });
-    var uid = Get.arguments;
-    loadUserInfo(uid);
+    if(Get.arguments != null){
+      var uid = Get.arguments;
+      loadUserInfo(uid);
+    }
+
   }
 
   /*

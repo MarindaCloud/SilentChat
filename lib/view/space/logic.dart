@@ -97,8 +97,7 @@ class SpaceLogic extends GetxController {
                                 borderRadius:
                                 BorderRadius.circular(10000),
                                 image: DecorationImage(
-                                    image: Image.network(
-                                        "${user.portrait}")
+                                    image: userLogic.buildPortraitWidget(1,user.portrait ?? "")
                                         .image,
                                     fit: BoxFit.fill)),
                             margin: EdgeInsets.only(right: 50.rpx),
@@ -266,7 +265,7 @@ class SpaceLogic extends GetxController {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10000),
                           image: DecorationImage(
-                              image: Image.network("http://175.24.177.189:8080/assets/cb7936ec-a02d-48ac-ad46-f1782d53d4e1.png").image,
+                              image: userLogic.buildPortraitWidget().image,
                               fit: BoxFit.fill
                           )
                       ),
@@ -410,9 +409,8 @@ class SpaceLogic extends GetxController {
               child: Container(
                 margin: EdgeInsets.only(right: i == 0 ? 10.rpx : 0),
                 height: 700.rpx,
-                child: Image.network(
+                child: userLogic.buildPortraitWidget(1,
                   "${imgElement}",
-                  fit: BoxFit.fill,
                 ),
               ),
             );

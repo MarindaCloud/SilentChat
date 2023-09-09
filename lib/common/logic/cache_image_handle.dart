@@ -69,6 +69,21 @@ class CacheImageHandle{
 
   /*
    * @author Marinda
+   * @date 2023/9/9 15:23
+   * @description 直接覆盖或更新目标图像缓存数据
+   */
+  static putImageCache(String url,dynamic element,[int type = 1]){
+    switch(type){
+      case 1:
+        _fileCacheImageMap[url] = element;
+        break;
+      case 2:
+        break;
+    }
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/9/7 15:36
    * @description 添加至图像缓存
    */
@@ -170,10 +185,10 @@ class CacheImageHandle{
     Widget? widget;
     switch(type){
       case 1:
-        widget = Image.file(getImageValue(url,1));
+        widget = Image.file(getImageValue(url,1),fit: BoxFit.fill,);
         break;
       case 2:
-        widget = Image.memory(getImageValue(url,2));
+        widget = Image.memory(getImageValue(url,2),fit: BoxFit.fill);
         break;
     }
     return widget ?? Container();

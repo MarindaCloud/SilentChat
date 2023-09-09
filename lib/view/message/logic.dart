@@ -312,7 +312,7 @@ class MessageLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: Image.network(portrait).image,
+                        image: userLogic.buildPortraitWidget(1,portrait).image,
                         fit: BoxFit.fill
                     )
                 ),

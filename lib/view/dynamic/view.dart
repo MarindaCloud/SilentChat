@@ -83,7 +83,7 @@ class DynamicPage extends StatelessWidget {
                                         child: Text(state.dynamicList.isEmpty
                                             ? "暂无动态"
                                             : "${state.dynamicList
-                                            .length}人新发表", style: TextStyle(
+                                            .length}条好友动态", style: TextStyle(
                                             color: Colors.grey, fontSize: 14),),
                                       ),
                                       ...logic.buildDynamicUserView()

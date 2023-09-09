@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
 import 'package:silentchat/entity/user.dart';
@@ -12,6 +18,10 @@ import 'state.dart';
 
 class DynamicLogic extends GetxController {
   final DynamicState state = DynamicState();
+  final SystemLogic systemLogic = Get.find<SystemLogic>();
+  final SystemState systemState = Get.find<SystemLogic>().state;
+  final UserLogic userLogic = Get.find<UserLogic>();
+  final UserState userState = Get.find<UserLogic>().state;
 
   @override
   void onInit() {
@@ -26,8 +36,10 @@ class DynamicLogic extends GetxController {
    */
   buildDynamicUserView(){
     List<Widget> list = [];
+    List<int> cacheUserId = [];
     for(var dynamicId in state.dynamicUserMap.keys){
       User user = state.dynamicUserMap[dynamicId] ?? User();
+      int uid = user.id ?? -1;
       String portrait = user.portrait ?? "";
       Widget widget = Container(
         child: Container(
@@ -36,13 +48,17 @@ class DynamicLogic extends GetxController {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(1000),
             image: DecorationImage(
-                image: Image.network("${portrait}").image,
+                image: userLogic.buildPortraitWidget(1,portrait).image,
                 fit: BoxFit.fill
             ),
           ),
         ),
       );
+      if(cacheUserId.contains(uid)){
+        continue;
+      }
       list.add(widget);
+      cacheUserId.add(uid);
     }
     return list;
   }
@@ -59,13 +75,31 @@ class DynamicLogic extends GetxController {
     if(spaceDynamicList.isEmpty){
       return [];
     }
+    for(var element in spaceDynamicList){
+      int uid = element.uid ?? -1;
+      int dynamicId = element.id ?? -1;
+      User user = await UserAPI.selectByUid(uid);
+      if(spaceDynamicList.length >= 0 && spaceDynamicList.length <=2){
+        dynamicUserMap[dynamicId] = user;
+      }
+      if(element.type == 2){
+        var result = json.decode(element.content ?? "");
+        if(result is List){
+          for(var src in result){
+            await systemLogic.loadGlobalImageCache(user,src);
+          }
+          Log.i("动态图片预加载开始缓存，长度为：${result.length}");
+        }
+
+
+      }
+    }
     //长度>=2
     if(spaceDynamicList.length >=0 && spaceDynamicList.length<=2){
       for(var element in spaceDynamicList){
         int uid = element.uid ?? -1;
         int dynamicId = element.id ?? -1;
-        User user = await UserAPI.selectByUid(uid);
-        dynamicUserMap[dynamicId] = user;
+
       }
     }
     state.dynamicList.value = spaceDynamicList;

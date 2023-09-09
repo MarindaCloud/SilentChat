@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/state.dart';
@@ -28,10 +27,37 @@ class SystemLogic extends GetxController {
 
   /*
    * @author Marinda
+   * @date 2023/9/9 15:20
+   * @description 初始化图像缓存
+   */
+  initImageCache() async{
+    final db = DBManager();
+    List<GlobalImageCacheData> list = await GlobalImageCacheDao(db).queryList();
+    List<GlobalImageCacheData> removeList = [];
+    for(var element in list){
+      String key = element.key;
+      String value = element.value;
+      File file = File(value);
+      if(file.existsSync()){
+        await CacheImageHandle.putImageCache(key,File(value));
+      }else{
+      //  如果不存在的移除drift缓存
+        removeList.add(element);
+      }
+    }
+    for(var element in removeList){
+      await GlobalImageCacheDao(db).deleteImageCache(element.id);
+      Log.i("移除不存在的文件缓存：${element.id}");
+    }
+    Log.i("初始化已有图像文件缓存数据完毕，长度：${list.length}");
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/9/8 14:31
    * @description 加载全局缓存
    */
-  loadGlobalImageCache(SilentChatEntity silentChatEntity) async{
+  loadGlobalImageCache(SilentChatEntity silentChatEntity,[String imgSrc = ""]) async{
     int ownerId = 0;
     String portrait = "";
     if(silentChatEntity is User){
@@ -44,14 +70,13 @@ class SystemLogic extends GetxController {
     }
     var db = DBManager();
     List<GlobalImageCacheData> list = await GlobalImageCacheDao(db).selectImageCacheOwner(ownerId);
-
+    //如果目标src不为空
+    if(imgSrc != ""){
+      _insertGlobalImageCache(ownerId, imgSrc);
+    }
     //添加头像信息至缓存
     if(list.isEmpty){
-      await CacheImageHandle.addImageCache(portrait);
-      var file = await CacheImageHandle.getImageValue(portrait);
-      var companion = _buildGlobalImageCacheCompanion(portrait, file.path, ownerId);
-      var result = await GlobalImageCacheDao(db).insertImageCache(companion);
-      Log.i("插入图片缓存结果：${result}");
+      _insertGlobalImageCache(ownerId, portrait);
     }else{
       //  全局缓存中已有数据
       var element = list.firstWhereOrNull((element) => element.key == portrait);
@@ -69,11 +94,7 @@ class SystemLogic extends GetxController {
         Log.i("已存在这条数据");
         return;
       }else{
-        await CacheImageHandle.addImageCache(portrait);
-        var file = await CacheImageHandle.getImageValue(portrait);
-        var companion = _buildGlobalImageCacheCompanion(portrait, file.path, ownerId);
-        var result = await GlobalImageCacheDao(db).insertImageCache(companion);
-        Log.i("插入图片缓存结果：${result}");
+        _insertGlobalImageCache(ownerId, portrait);
       }
 
     }
@@ -94,4 +115,16 @@ class SystemLogic extends GetxController {
     );
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/9/9 16:49
+   * @description 插入图片缓存
+   */
+  _insertGlobalImageCache(int ownerId,String src) async{
+    await CacheImageHandle.addImageCache(src);
+    var file = await CacheImageHandle.getImageValue(src);
+    var companion = _buildGlobalImageCacheCompanion(src, file.path, ownerId);
+    var result = await GlobalImageCacheDao(DBManager()).insertImageCache(companion);
+    Log.i("插入图片缓存结果：${result}");
+  }
 }
