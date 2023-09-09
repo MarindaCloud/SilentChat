@@ -267,7 +267,7 @@ class ContactLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: userLogic.buildPortraitWidget()
+                        image: Image.network(group.portrait ?? "")
                             .image,
                         fit: BoxFit.fill
                     )
@@ -326,7 +326,7 @@ class ContactLogic extends GetxController {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10000),
                     image: DecorationImage(
-                        image: userLogic.buildPortraitWidget()
+                        image: Image.network(user.portrait ?? "")
                             .image,
                         fit: BoxFit.fill
                     )

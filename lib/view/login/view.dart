@@ -15,19 +15,19 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          color: Colors.white,
-          child: SafeArea(
-            child: Stack(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Obx(() {
+            return Stack(
               children: [
                 Container(
                   child: Column(
                     children: [
                       Container(
-                        height: GetPlatform.isDesktop ?  50.rpx : 400.rpx,
+                        height: GetPlatform.isDesktop ? 50.rpx : 400.rpx,
                       ),
                       //头部
                       Container(
@@ -41,7 +41,8 @@ class LoginPage extends StatelessWidget {
                             Expanded(
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
                                     children: [
                                       Container(
                                         child: SizedBox(
@@ -49,12 +50,16 @@ class LoginPage extends StatelessWidget {
                                           // height: 210.rpx,
                                           width: 300.rpx,
                                           height: 210.rpx,
-                                          child: Image.asset("assets/logo2.png",fit: BoxFit.fill,width: 100,height: 200,),
+                                          child: Image.asset("assets/logo2.png",
+                                            fit: BoxFit.fill,
+                                            width: 100,
+                                            height: 200,),
                                         ),
                                       ),
                                       Container(
                                           child: Text("", style: TextStyle(
-                                              color: Colors.black, fontSize: 35),
+                                              color: Colors.black,
+                                              fontSize: 35),
                                           ))
                                     ]
                                 )),
@@ -63,7 +68,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 200.rpx,right: 200.rpx),
+                        margin: EdgeInsets.only(top: 200.rpx, right: 200.rpx),
                         padding: EdgeInsets.only(left: 200.rpx, right: 0.rpx),
                         child: Column(
                           children: [
@@ -87,10 +92,12 @@ class LoginPage extends StatelessWidget {
                                         width: 200.rpx,
                                         height: 200.rpx,
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(1000),
+                                            borderRadius: BorderRadius.circular(
+                                                1000),
                                             image: DecorationImage(
                                                 image: Image
-                                                    .asset("assets/user/portait.png")
+                                                    .asset(
+                                                    "assets/user/portait.png")
                                                     .image,
                                                 fit: BoxFit.fill
                                             )
@@ -111,12 +118,14 @@ class LoginPage extends StatelessWidget {
                                             decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide.none,
-                                                borderRadius: BorderRadius.circular(
+                                                borderRadius: BorderRadius
+                                                    .circular(
                                                     1000),
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                   borderSide: BorderSide.none,
-                                                  borderRadius: BorderRadius.circular(
+                                                  borderRadius: BorderRadius
+                                                      .circular(
                                                       1000)
                                               ),
                                             ),
@@ -128,14 +137,18 @@ class LoginPage extends StatelessWidget {
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
                                                   image: Image
-                                                      .asset("assets/icon/zhankai1.png",color: Color.fromRGBO(150, 150, 150, 1))
+                                                      .asset(
+                                                      "assets/icon/zhankai1.png",
+                                                      color: Color.fromRGBO(
+                                                          150, 150, 150, 1))
                                                       .image,
                                                   fit: BoxFit.fill
                                               )
                                           ),
                                         ),
-                                        onTap: (){
-                                          logic.state.showHistory.value = !logic.state.showHistory.value;
+                                        onTap: () {
+                                          logic.systemState.showHistory.value =
+                                          !logic.systemState.showHistory.value;
                                         },
                                       ),
                                     ],
@@ -181,7 +194,8 @@ class LoginPage extends StatelessWidget {
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide.none,
-                                              borderRadius: BorderRadius.circular(
+                                              borderRadius: BorderRadius
+                                                  .circular(
                                                   1000)
                                           ),
                                         ),
@@ -203,16 +217,19 @@ class LoginPage extends StatelessWidget {
                           children: [
                             Container(
                               width: 200.rpx,
-                              height: GetPlatform.isDesktop ?  100.rpx : 200.rpx,
+                              height: GetPlatform.isDesktop ? 100.rpx : 200.rpx,
                             ),
                             InkWell(
                               child: Container(
                                 width: 80.rpx,
                                 height: 80.rpx,
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey, width: 2),
+                                    border: Border.all(
+                                        color: Colors.grey, width: 2),
                                     borderRadius: BorderRadius.circular(10000),
-                                    color: state.accept.value ?Colors.blue:Colors.white
+                                    color: state.accept.value
+                                        ? Colors.blue
+                                        : Colors.white
                                 ),
                               ),
                               onTap: () {
@@ -224,18 +241,24 @@ class LoginPage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Container(
-                                        child: Text("已阅读并同意",style: TextStyle(fontSize: 12,color: Colors.grey))),
+                                        child: Text("已阅读并同意",
+                                            style: TextStyle(fontSize: 12,
+                                                color: Colors.grey))),
                                     InkWell(
-                                      child: Text("服务协议",style: TextStyle(fontSize: 12,color: Colors.blue)
+                                      child: Text("服务协议", style: TextStyle(
+                                          fontSize: 12, color: Colors.blue)
                                       ),
-                                      onTap: (){
+                                      onTap: () {
                                         print("服务协议");
                                       },
                                     ),
-                                    Text("和",style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                    Text("和", style: TextStyle(
+                                        fontSize: 12, color: Colors.grey)),
                                     InkWell(
-                                      child: Text("默讯隐私保护指引",style: TextStyle(fontSize: 12,color: Colors.blue)),
-                                      onTap: (){
+                                      child: Text("默讯隐私保护指引",
+                                          style: TextStyle(fontSize: 12,
+                                              color: Colors.blue)),
+                                      onTap: () {
                                         print("默讯协议保护");
                                       },
                                     )
@@ -247,7 +270,7 @@ class LoginPage extends StatelessWidget {
                       ),
 
                       SizedBox(
-                        height: GetPlatform.isDesktop ?  50.rpx : 250.rpx,
+                        height: GetPlatform.isDesktop ? 50.rpx : 250.rpx,
                       ),
                       //  登入按钮
                       Center(
@@ -260,8 +283,8 @@ class LoginPage extends StatelessWidget {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      Color.fromRGBO(89,192,247,1),
-                                      Color.fromRGBO(68,153,235,1),
+                                      Color.fromRGBO(89, 192, 247, 1),
+                                      Color.fromRGBO(68, 153, 235, 1),
                                     ]
                                 ),
                                 borderRadius: BorderRadius.circular(10000)
@@ -270,17 +293,18 @@ class LoginPage extends StatelessWidget {
                               child: SizedBox(
                                 width: 150.rpx,
                                 height: 150.rpx,
-                                child: Image.asset("assets/icon/denglu.png",color: Colors.white,),
+                                child: Image.asset("assets/icon/denglu.png",
+                                  color: Colors.white,),
                               ),
                             ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             logic.login();
                           },
                         ),
                       ),
                       GetPlatform.isDesktop ?
-                          Container(height: 300.rpx)
+                      Container(height: 300.rpx)
                           : Expanded(child: SizedBox()),
                       Container(
                         margin: EdgeInsets.only(bottom: 100.rpx),
@@ -292,10 +316,15 @@ class LoginPage extends StatelessWidget {
                                 child: Container(
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      border: Border(right: BorderSide(color: Color.fromRGBO(230,230,230,1),width: 2))
+                                      border: Border(right: BorderSide(
+                                          color: Color.fromRGBO(
+                                              230, 230, 230, 1), width: 2))
                                   ),
                                   child: Container(
-                                    child: Text("忘记密码",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 13)),
+                                    child: Text("忘记密码", style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13)),
                                   ),
                                 )
                             ),
@@ -304,12 +333,16 @@ class LoginPage extends StatelessWidget {
                                   child: Container(
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                        border: Border(right: BorderSide(color: Color.fromRGBO(230,230,230,1),width: 2))                            ),
+                                        border: Border(right: BorderSide(
+                                            color: Color.fromRGBO(
+                                                230, 230, 230, 1), width: 2))),
                                     child: Container(
-                                      child: Text("新用户注册",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                      child: Text("新用户注册",
+                                          style: TextStyle(color: Colors.black,
+                                              fontWeight: FontWeight.bold)),
                                     ),
                                   ),
-                                  onTap: (){
+                                  onTap: () {
                                     Get.toNamed(AppPage.register);
                                   },
                                 )
@@ -318,7 +351,9 @@ class LoginPage extends StatelessWidget {
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: Container(
-                                    child: Text("帮助",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                                    child: Text("帮助", style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold)),
                                   ),
                                 )
                             ),
@@ -330,10 +365,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 logic.buildHistoryWidget()
               ],
-            ),
-          ),
+            );
+          }),
         ),
-      );
-    });
+      ),
+    );
   }
 }

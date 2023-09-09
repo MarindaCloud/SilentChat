@@ -38,7 +38,14 @@ class LoginLogic extends GetxController {
     // TODO: implement onInit
     super.onInit();
   }
-  
+
+
+  @override
+  void dispose() {
+    systemState.showHistory.value = false;
+    super.dispose();
+  }
+
   test() async{
     // var result =  await CacheImageHandle.downloadImage("assets/9301b88f-a42b-4377-8d06-e014d32d923d.png");
     // print('结果：${result}');
@@ -68,7 +75,7 @@ class LoginLogic extends GetxController {
    * @description 跳转至index页
    */
   void toIndex(){
-    Get.toNamed(AppPage.index,arguments: MessagePage());
+    Get.offNamed(AppPage.index);
   }
 
   /*
@@ -88,7 +95,6 @@ class LoginLogic extends GetxController {
     }
     userState.deviceName = deviceName;
     Log.i("设备名称: ${deviceName}");
-
   }
 
   /*
@@ -109,7 +115,6 @@ class LoginLogic extends GetxController {
         Log.i("移除账号：${accountHistory.username}历史记录");
       }
       state.accountHistoryList.refresh();
-
     }
   }
 
@@ -126,8 +131,8 @@ class LoginLogic extends GetxController {
     return Positioned(
       left: left,
       top: top + 330.rpx,
-      child: Offstage(
-        offstage: state.showHistory.value,
+      child: Visibility(
+          visible: systemState.showHistory.value,
           child: Container(
             padding: EdgeInsets.only(left: 30.rpx,
                 right: 0.rpx,

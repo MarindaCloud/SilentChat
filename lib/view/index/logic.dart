@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/user.dart';
@@ -23,9 +24,12 @@ class IndexLogic extends GetxController {
   final socketHandle = Get.find<SocketHandle>();
   final userLogic = Get.find<UserLogic>();
   final userState = Get.find<UserLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
+
   @override
   void onInit() {
-    state.contentWidget = Get.arguments;
+    changeNavView(0);
     ever(userState.user, (target){
       Log.i("修改前User头像: ${userState.user.value.portrait}，修改后User：${target.portrait}");
       userState.user.value = target;
@@ -65,7 +69,16 @@ class IndexLogic extends GetxController {
 
   }
 
-
+  /*
+   * @author Marinda
+   * @date 2023/9/9 11:09
+   * @description 退出登录
+   */
+  exitLogin(){
+    systemState.showHistory.value = false;
+    Get.offAllNamed(AppPage.login);
+    Log.i("退出登录！");
+  }
 
   /*
    * @author Marinda

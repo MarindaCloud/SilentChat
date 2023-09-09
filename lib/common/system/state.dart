@@ -9,4 +9,5 @@ import 'package:get/get.dart';
  */
 class SystemState{
   Color bodyColor = Color.fromRGBO(247, 247, 247, 1);
+  final showHistory = false.obs;
 }

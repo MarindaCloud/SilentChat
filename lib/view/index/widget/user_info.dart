@@ -168,12 +168,7 @@ class UserInfoState extends State<UserInfoWidget> {
                 ],
               ),
             ),
-            onTap: (){
-              //暂时当退出用
-              Get.back();
-              Get.find<SocketHandle>().close();
-              Log.i("退出至根目录");
-            },
+            onTap: widget.indexLogic.exitLogin
           )
         ],
       ),

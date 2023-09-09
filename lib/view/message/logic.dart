@@ -45,6 +45,13 @@ class MessageLogic extends GetxController {
     initRecordMessage();
   }
 
+  @override
+  void dispose() {
+    state.messageViewMap.value = {};
+    // TODO: implement dispose
+    super.dispose();
+  }
+
 
   /*
    * @author Marinda
