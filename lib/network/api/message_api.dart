@@ -157,4 +157,26 @@ class MessageAPI {
     return message;
   }
 
+
+  /*
+   * @author Marinda
+   * @date 2023/9/11 16:37
+   * @description 查询消息列表
+   */
+  static selectMessageList(int id,int type) async{
+    Log.i("查询消息列表：id: ${id}、type: ${type}");
+    var data = {
+      "id": id,
+      "type": type
+    };
+    APIResult result = await BaseProvider.sendRequest("message/selectMessageList", HttpMethods.POST.value,data ,header: Request.header);
+    if(result.data == null){return false;}
+    if(result.data is List){
+      List list = result.data;
+      List<Message> messageList = list.map((e) => Message.fromJson(e)).toList();
+      return messageList;
+    }
+    return [];
+  }
+
 }

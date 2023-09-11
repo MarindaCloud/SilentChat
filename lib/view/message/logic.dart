@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/db/dao/cache_record_message_dao.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/chat_message.dart';
@@ -41,9 +42,11 @@ class MessageLogic extends GetxController {
 
   @override
   void onInit() {
+    initCacheViewMessage();
     Log.i("消息页初始化！");
     initRecordMessage();
   }
+
 
   @override
   void dispose() {
@@ -52,6 +55,16 @@ class MessageLogic extends GetxController {
     super.dispose();
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/9/11 15:02
+   * @description 初始化消息视图缓存 主要用来处理已读消息和未读消息
+   */
+  initCacheViewMessage() async{
+    final db = DBManager();
+    List<CacheViewMessageData> list = await CacheViewMessageDao(db).queryList();
+    state.cacheViewList.value = list;
+  }
 
   /*
    * @author Marinda
@@ -159,6 +172,8 @@ class MessageLogic extends GetxController {
     }
     sortRecordMessage();
   }
+
+
 
   /*
    * @author Marinda
@@ -274,6 +289,7 @@ class MessageLogic extends GetxController {
     List<Widget> list = [];
     for(SilentChatEntity target in state.messageViewMap.keys){
       Message? message = state.messageViewMap[target];
+      int mid = message?.id ?? 0;
       int type = 0;
       if(target is User){
         type = 1;
@@ -349,13 +365,36 @@ class MessageLogic extends GetxController {
                         //最新消息
                         Container(
                           alignment: Alignment.topLeft,
-                          child: Text(
-                            message.type != 1 ? resultContent : content,
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                overflow: TextOverflow.ellipsis
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //left
+                              Container(
+                                child: Text(
+                                  message.type != 1 ? resultContent : content,
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                      overflow: TextOverflow.ellipsis
+                                  ),
+                                ),
+                              ),
+                              //未读消息
+                              Container(
+                                width: 80.rpx,
+                                height: 80.rpx ,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10000)
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "1",
+                                    style: TextStyle(color: Colors.white,fontSize: 16),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       ],
@@ -368,13 +407,14 @@ class MessageLogic extends GetxController {
         onTap: () {
           var key = type == 1 ? (target as User).id : (target as Group).id;
           print("当前选择的id: ${key}");
-          toChat(key ?? -1,type);
+          toChat(target,type,mid);
         },
       );
       list.add(child);
     }
     return list;
   }
+
 
 
   /*
@@ -403,7 +443,16 @@ class MessageLogic extends GetxController {
    * @date 2023/5/26 10:55
    * @description 前往Chat页 携带参数 id & type
    */
-  void toChat(int id,int type) async{
+  void toChat(dynamic element,int type,int mid) async{
+    int id = element.id;
+    final db = DBManager();
+    var data = CacheViewMessageCompanion(
+      time: drift.Value(DateTime.now()),
+      mid: drift.Value(mid),
+      element: drift.Value(json.encode(element))
+    );
+    CacheViewMessageData cacheViewMessageData = await CacheViewMessageDao(db).insertReturning(data);
+    Log.i("插入结果: ${cacheViewMessageData}");
     Map<String,int> args = {
       "id": id,
       "type": type

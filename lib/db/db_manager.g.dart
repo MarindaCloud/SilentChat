@@ -544,18 +544,272 @@ class $GlobalImageCacheTable extends GlobalImageCache
   }
 }
 
+class CacheViewMessageData extends DataClass
+    implements Insertable<CacheViewMessageData> {
+  final int id;
+  final DateTime time;
+  final int mid;
+  final String element;
+  CacheViewMessageData(
+      {required this.id,
+      required this.time,
+      required this.mid,
+      required this.element});
+  factory CacheViewMessageData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return CacheViewMessageData(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      time: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}time'])!,
+      mid: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}mid'])!,
+      element: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}element'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['time'] = Variable<DateTime>(time);
+    map['mid'] = Variable<int>(mid);
+    map['element'] = Variable<String>(element);
+    return map;
+  }
+
+  CacheViewMessageCompanion toCompanion(bool nullToAbsent) {
+    return CacheViewMessageCompanion(
+      id: Value(id),
+      time: Value(time),
+      mid: Value(mid),
+      element: Value(element),
+    );
+  }
+
+  factory CacheViewMessageData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CacheViewMessageData(
+      id: serializer.fromJson<int>(json['id']),
+      time: serializer.fromJson<DateTime>(json['time']),
+      mid: serializer.fromJson<int>(json['mid']),
+      element: serializer.fromJson<String>(json['element']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'time': serializer.toJson<DateTime>(time),
+      'mid': serializer.toJson<int>(mid),
+      'element': serializer.toJson<String>(element),
+    };
+  }
+
+  CacheViewMessageData copyWith(
+          {int? id, DateTime? time, int? mid, String? element}) =>
+      CacheViewMessageData(
+        id: id ?? this.id,
+        time: time ?? this.time,
+        mid: mid ?? this.mid,
+        element: element ?? this.element,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CacheViewMessageData(')
+          ..write('id: $id, ')
+          ..write('time: $time, ')
+          ..write('mid: $mid, ')
+          ..write('element: $element')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, time, mid, element);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CacheViewMessageData &&
+          other.id == this.id &&
+          other.time == this.time &&
+          other.mid == this.mid &&
+          other.element == this.element);
+}
+
+class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
+  final Value<int> id;
+  final Value<DateTime> time;
+  final Value<int> mid;
+  final Value<String> element;
+  const CacheViewMessageCompanion({
+    this.id = const Value.absent(),
+    this.time = const Value.absent(),
+    this.mid = const Value.absent(),
+    this.element = const Value.absent(),
+  });
+  CacheViewMessageCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime time,
+    required int mid,
+    required String element,
+  })  : time = Value(time),
+        mid = Value(mid),
+        element = Value(element);
+  static Insertable<CacheViewMessageData> custom({
+    Expression<int>? id,
+    Expression<DateTime>? time,
+    Expression<int>? mid,
+    Expression<String>? element,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (time != null) 'time': time,
+      if (mid != null) 'mid': mid,
+      if (element != null) 'element': element,
+    });
+  }
+
+  CacheViewMessageCompanion copyWith(
+      {Value<int>? id,
+      Value<DateTime>? time,
+      Value<int>? mid,
+      Value<String>? element}) {
+    return CacheViewMessageCompanion(
+      id: id ?? this.id,
+      time: time ?? this.time,
+      mid: mid ?? this.mid,
+      element: element ?? this.element,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (time.present) {
+      map['time'] = Variable<DateTime>(time.value);
+    }
+    if (mid.present) {
+      map['mid'] = Variable<int>(mid.value);
+    }
+    if (element.present) {
+      map['element'] = Variable<String>(element.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CacheViewMessageCompanion(')
+          ..write('id: $id, ')
+          ..write('time: $time, ')
+          ..write('mid: $mid, ')
+          ..write('element: $element')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CacheViewMessageTable extends CacheViewMessage
+    with TableInfo<$CacheViewMessageTable, CacheViewMessageData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CacheViewMessageTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _timeMeta = const VerificationMeta('time');
+  @override
+  late final GeneratedColumn<DateTime?> time = GeneratedColumn<DateTime?>(
+      'time', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _midMeta = const VerificationMeta('mid');
+  @override
+  late final GeneratedColumn<int?> mid = GeneratedColumn<int?>(
+      'mid', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _elementMeta = const VerificationMeta('element');
+  @override
+  late final GeneratedColumn<String?> element = GeneratedColumn<String?>(
+      'element', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, time, mid, element];
+  @override
+  String get aliasedName => _alias ?? 'cache_view_message';
+  @override
+  String get actualTableName => 'cache_view_message';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<CacheViewMessageData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('time')) {
+      context.handle(
+          _timeMeta, time.isAcceptableOrUnknown(data['time']!, _timeMeta));
+    } else if (isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (data.containsKey('mid')) {
+      context.handle(
+          _midMeta, mid.isAcceptableOrUnknown(data['mid']!, _midMeta));
+    } else if (isInserting) {
+      context.missing(_midMeta);
+    }
+    if (data.containsKey('element')) {
+      context.handle(_elementMeta,
+          element.isAcceptableOrUnknown(data['element']!, _elementMeta));
+    } else if (isInserting) {
+      context.missing(_elementMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CacheViewMessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return CacheViewMessageData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $CacheViewMessageTable createAlias(String alias) {
+    return $CacheViewMessageTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$DBManager extends GeneratedDatabase {
   _$DBManager(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $RecordMessageTable recordMessage = $RecordMessageTable(this);
   late final $GlobalImageCacheTable globalImageCache =
       $GlobalImageCacheTable(this);
+  late final $CacheViewMessageTable cacheViewMessage =
+      $CacheViewMessageTable(this);
   late final RecordMessageDao recordMessageDao =
       RecordMessageDao(this as DBManager);
   late final GlobalImageCacheDao globalImageCacheDao =
       GlobalImageCacheDao(this as DBManager);
+  late final CacheViewMessageDao cacheViewMessageDao =
+      CacheViewMessageDao(this as DBManager);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [recordMessage, globalImageCache];
+      [recordMessage, globalImageCache, cacheViewMessage];
 }

@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:silentchat/db/dao/cache_record_message_dao.dart';
 import 'package:silentchat/db/dao/global_image_cache_dao.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
+import 'package:silentchat/db/table/cache_view_message.dart';
 import 'package:silentchat/db/table/global_image_cache.dart';
 import 'package:silentchat/db/table/record_message.dart';
 import 'package:drift/native.dart';
@@ -24,7 +26,7 @@ LazyDatabase _openConnection(){
   } );
 }
 
-@DriftDatabase(tables: [RecordMessage,GlobalImageCache],daos: [RecordMessageDao,GlobalImageCacheDao])
+@DriftDatabase(tables: [RecordMessage,GlobalImageCache,CacheViewMessage],daos: [RecordMessageDao,GlobalImageCacheDao,CacheViewMessageDao])
 class DBManager extends _$DBManager{
 
   static DBManager? dbManager;

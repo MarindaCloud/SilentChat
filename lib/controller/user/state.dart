@@ -1,5 +1,7 @@
 import 'package:silentchat/entity/friends_view_info.dart';
 import 'package:silentchat/entity/group.dart';
+import 'package:silentchat/entity/message.dart';
+import 'package:silentchat/entity/silent_chat_entity.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:get/get.dart';
 class UserState {
@@ -7,6 +9,8 @@ class UserState {
   final uid = 0.obs;
   final friendUserList = <User>[].obs;
   final joinGroupList = <Group>[].obs; String deviceName = "";
+  //未读消息map
+  RxMap<SilentChatEntity,List<Message>> messageMap = RxMap();
   UserState() {
     ///Initialize variables
   }
