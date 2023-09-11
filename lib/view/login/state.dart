@@ -8,6 +8,7 @@ class LoginState {
   final accept = false.obs;
   final accountHistoryList = <AccountHistory>[].obs;
   final showHistory = false.obs;
+  final type = 0.obs;
   RenderAfterLayout? layout;
   LoginState() {
     ///Initialize variables

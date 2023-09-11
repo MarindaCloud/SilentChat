@@ -46,8 +46,6 @@ class LoginPage extends StatelessWidget {
                                     children: [
                                       Container(
                                         child: SizedBox(
-                                          // width: 250.rpx,
-                                          // height: 210.rpx,
                                           width: 300.rpx,
                                           height: 210.rpx,
                                           child: Image.asset("assets/logo2.png",
@@ -95,10 +93,7 @@ class LoginPage extends StatelessWidget {
                                             borderRadius: BorderRadius.circular(
                                                 1000),
                                             image: DecorationImage(
-                                                image: Image
-                                                    .asset(
-                                                    "assets/user/portait.png")
-                                                    .image,
+                                                image: logic.buildPortrait().image,
                                                 fit: BoxFit.fill
                                             )
                                         ),
@@ -109,6 +104,7 @@ class LoginPage extends StatelessWidget {
                                       Expanded(
                                           child: TextField(
                                             controller: state.userName,
+                                            onChanged: logic.onTextUpdate,
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 24
@@ -138,7 +134,7 @@ class LoginPage extends StatelessWidget {
                                               image: DecorationImage(
                                                   image: Image
                                                       .asset(
-                                                      "assets/icon/zhankai1.png",
+                                                      logic.systemState.showHistory.value ? "assets/icon/zhankai1.png" : "assets/icon/zhankai.png",
                                                       color: Color.fromRGBO(
                                                           150, 150, 150, 1))
                                                       .image,

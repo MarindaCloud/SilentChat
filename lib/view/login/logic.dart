@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
@@ -31,10 +32,12 @@ class LoginLogic extends GetxController {
   final storage = GetStorage();
 
   @override
-  void onInit() {
+  void onInit() async{
     test();
     getDeviceName();
+    await systemLogic.initImageCache();
     initAccountHistory();
+    initPortraitType();
     // TODO: implement onInit
     super.onInit();
   }
@@ -47,8 +50,60 @@ class LoginLogic extends GetxController {
   }
 
   test() async{
+    // await storage.erase();
+    // Log.i("清空后的Key： ${storage.getKeys()}");
     // var result =  await CacheImageHandle.downloadImage("assets/9301b88f-a42b-4377-8d06-e014d32d923d.png");
     // print('结果：${result}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/11 10:59
+   * @description 初始化
+   */
+  initPortraitType(){
+    String userName = state.userName.text;
+    var historyList = state.accountHistoryList;
+    var element = historyList.firstWhereOrNull((element) =>
+    element.username == userName);
+    if (element != null) {
+        String portrait = element.portrait ?? "";
+        if (CacheImageHandle.containsImageCache(portrait)) {
+          state.type.value = 1;
+        }
+    }else{
+      state.type.value = 0;
+    }
+    Log.i("type: ${state.type.value}");
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/11 10:36
+   * @description 构建头像
+   */
+  buildPortrait(){
+    String userName = state.userName.text;
+    var historyList = state.accountHistoryList;
+    if(state.type.value == 1) {
+      var element = historyList.firstWhereOrNull((element) =>
+      element.username == userName);
+      if (element != null) {
+        String portrait = element.portrait ?? "";
+        return userLogic.buildPortraitWidget(1,portrait);
+      }
+    }else{
+      return Image.asset("assets/user/portait.png");
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/11 10:48
+   * @description 文本修改控制器
+   */
+  onTextUpdate(String value){
+    initPortraitType();
   }
 
   /*
@@ -176,6 +231,7 @@ class LoginLogic extends GetxController {
                   state.userName.text = element.username??"";
                   state.passWord.text = element.password ?? "";
                   Log.i("已切换：${element.username}账号信息");
+                  state.type.refresh();
                 },
               );
             },shrinkWrap: true,itemCount: state.accountHistoryList.length),
@@ -210,7 +266,7 @@ class LoginLogic extends GetxController {
     userState.uid.value = user?.id ?? -1;
     userState.user.value = user;
     List<AccountHistory> accountList = [];
-    AccountHistory accountHistory = AccountHistory(username: userName,password: passWord);
+    AccountHistory accountHistory = AccountHistory(username: userName,password: passWord,portrait: user.portrait ?? "");
     if(storage.read("account") == null){
       accountList.add(accountHistory);
     }else{

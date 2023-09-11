@@ -26,7 +26,6 @@ class IndexLogic extends GetxController {
   @override
   void onInit() async{
     BotToast.showLoading();
-    await systemLogic.initImageCache();
     await initInfo();
     ever(userState.user, (target){
       Log.i("修改前User头像: ${userState.user.value.portrait}，修改后User：${target.portrait}");
