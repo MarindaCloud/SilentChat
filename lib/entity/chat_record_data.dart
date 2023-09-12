@@ -14,6 +14,7 @@ class ChatRecordData {
   DateTime? _time;
   //这个字段是为了区分是作为接受者还是发送者
   int? _sendId;
+  String? _expandAddress;
 
   ChatRecordData(
       {int? targetId,
@@ -21,7 +22,8 @@ class ChatRecordData {
         MessageType? messageType,
         String? portrait,
         DateTime? time,
-        int? sendId}) {
+        int? sendId,
+        String? expandAddress}) {
     if (targetId != null) {
       this._targetId = targetId;
     }
@@ -40,6 +42,9 @@ class ChatRecordData {
     if (sendId != null) {
       this._sendId = sendId;
     }
+    if(expandAddress != null){
+      this._expandAddress = expandAddress;
+    }
   }
 
   int? get sendId => _sendId;
@@ -55,6 +60,13 @@ class ChatRecordData {
   set portrait(String? portrait) => _portrait = portrait;
   DateTime? get time => _time;
   set time(DateTime? time) => _time = time;
+
+
+  String? get expandAddress => _expandAddress;
+
+  set expandAddress(String? value) {
+    _expandAddress = value;
+  }
 
   ChatRecordData.fromJson(Map<String, dynamic> json) {
     if(json["target_id"] != null){
@@ -76,6 +88,9 @@ class ChatRecordData {
       var targetDateTime = DateTime.parse(json["time"]);
       _time = targetDateTime;
     }
+    if(json["expandAddress"] != null){
+      _portrait = json["expandAddress"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -86,6 +101,7 @@ class ChatRecordData {
     data['message_type'] = this._messageType?.type;
     data['portrait'] = this._portrait;
     data['time'] = this._time.toString();
+    data['expandAddress'] = this._expandAddress;
     return data;
   }
 }

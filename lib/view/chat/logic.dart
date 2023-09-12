@@ -42,6 +42,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   final userState = Get.find<UserLogic>().state;
   AnimationController? imageOpacity;
   Animation<double>? imageOpacityTween;
+
   @override
   void onInit() async{
     imageOpacity = AnimationController(vsync: this,duration: Duration(seconds: 1));
@@ -238,10 +239,10 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         User user = await UserAPI.selectByUid(chatInfo.sendId ?? -1);
         DateTime dt = message.time!;
         int type = message.type!;
-        String portait = user.portrait ?? "";
+        String portrait = user.portrait ?? "";
         String content = message.content ?? "";
         MessageType messageType = MessageType.getMessageType(type)!;
-        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portait,message: content);
+        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content,expandAddress: message.expandAddress);
         list.add(chatRecordData);
       }
     }else{
@@ -373,12 +374,27 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    */
   void openImagePicker() async{
     final XFile? image = await state.picker!.pickImage(source: ImageSource.gallery);
+    User user = userState.user.value;
+    int uid = user.id ?? -1;
     if(image != null){
       String path = image!.path;
       File file = File(path);
-      Message message = Message(content: "",type: MessageType.IMAGE.type,expandAddress: path,time: DateTime.now());
-      await MessageAPI.insertMessage(message);
-      Log.i("图片文件：${file}");
+      //上传图片至云端
+      var uploadPath = await UserAPI.uploadPortrait(file, userState.user.value);
+      Message message = Message(content: "",type: MessageType.IMAGE.type,expandAddress: uploadPath,time: DateTime.now());
+
+      APIResult apiResult = await MessageAPI.insertMessage(message);
+
+      int mid = apiResult.data;
+      await MessageAPI.insertChatInfo(ChatInfo(sendId: uid,mid:mid,receiverId: state.receiverId.value,type: state.type.value));
+      await syncInsertMessage(ChatMessage(uid: uid,mid: mid,receiverType: ReceiverType.CONTACT,receiverId: state.receiverId.value),MessageType.IMAGE,uploadPath);
+      ChatMessage chatMessage = ChatMessage(uid: uid,mid: mid,receiverId: state.receiverId.value,receiverType: ReceiverType.getMessageType(state.type.value));
+      Packet packet = Packet(type: 2,object: chatMessage);
+      Log.i("发包详情：${packet.toJson()}");
+      String packetJSON = json.encode(packet);
+      Log.i("packetJson: ${packetJSON}");
+      state.socketHandle?.write(packetJSON);
+      Log.i("图片文件地址：${path}");
     }
   }
 
@@ -443,7 +459,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @date 2023/6/16 17:22
    * @description 通过异步socket插入Message
    */
-   syncInsertMessage(ChatMessage chatMessage) async{
+   syncInsertMessage(ChatMessage chatMessage,[MessageType? msgType,String? expandAddress]) async{
     int targetId = userState.user.value.id ?? -1;
     Message msg = await MessageAPI.selectMessageById(chatMessage.mid ?? -1);
     String message = msg.content ?? "";
@@ -451,9 +467,14 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
 
     int sendId = chatMessage.receiverId!;
     User user = await userLogic.selectByUid(sendId);
-    String portait = user.portrait!;
-    MessageType messageType = MessageType.TEXT;
-    ChatRecordData chatRecordData = ChatRecordData(portrait: portait,targetId: targetId,message: message,messageType: messageType,time: dt,sendId: sendId);
+    String portrait = user.portrait!;
+    MessageType messageType;
+    if(msgType != null){
+      messageType = msgType;
+    }else{
+      messageType = MessageType.getMessageType(msg.type ?? -1)!;
+    }
+    ChatRecordData chatRecordData = ChatRecordData(portrait: portrait,targetId: targetId,message: message,messageType: messageType,time: dt,sendId: sendId,expandAddress: expandAddress);
     state.chatRecordList.add(chatRecordData);
     initChatRecordDataList();
   }
@@ -490,7 +511,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description 构建聊天信息
    */
   List<Widget> buildChatMessage(){
-
     List<Widget> list = [];
     print('记录Map总长度: ${state.recordMap.length}');
     //遍历记录列表
@@ -555,19 +575,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       list.add(widget);
     }
     return list;
-    // for(int i = 0;i<num;i++){
-    //   Widget widget = Container(
-    //     margin: EdgeInsets.only(bottom: 100.rpx),
-    //     child: Row(
-    //       mainAxisAlignment: type == 2 ? MainAxisAlignment.start : MainAxisAlignment.end,
-    //       children: [
-    //         ...buildChatItem(type)
-    //       ],
-    //     ),
-    //   );
-    //   list.add(widget);
-    // }
-
   }
 
   /*
@@ -634,7 +641,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
                 minWidth: 200.rpx
             ),
             child: Text(
-                "${chatRecordData.message}",
+                "${message}",
                 style: TextStyle(color: sendId == uid ? Colors.white : Colors.black,fontSize: 14)
             ),
           ),
@@ -652,8 +659,8 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
           child: SizedBox(
             width: 600.rpx,
             height: 500.rpx,
-            child: Image.file(
-                File(message),
+            child: Image.network(
+                chatRecordData.expandAddress ?? "",
                 filterQuality: FilterQuality.high,
                 fit: BoxFit.fill),
         )

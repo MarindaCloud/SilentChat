@@ -61,7 +61,7 @@ class Message {
     _content = json['content'];
     _type = json['type'];
     _id = json['id'];
-    _expandAddress = json['expand_address'];
+    _expandAddress = json['expandAddress'];
     _time = DateTime.parse(json["time"]);
   }
 
@@ -70,7 +70,7 @@ class Message {
     data['content'] = this._content;
     data['type'] = this._type;
     data['id'] = this._id;
-    data['expand_address'] = this._expandAddress;
+    data['expandAddress'] = this._expandAddress;
     String time = DateTimeUtil.formatDateTime(this._time!,format: DateTimeUtil.ymdhns);
     data["time"] = time;
     return data;
