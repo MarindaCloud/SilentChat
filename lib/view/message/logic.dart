@@ -332,7 +332,7 @@ class MessageLogic extends GetxController {
         type = 2;
       }
       if(message == null){ continue;}
-      String time = DateTimeUtil.formatToDayDateTime(message!.time!);
+      String time = DateTimeUtil.formatToDayDateTime(message.time ?? DateTime.now());
       String content = message.content ?? "";
       String resultContent = "";
       if(message.type != 1){
@@ -349,104 +349,195 @@ class MessageLogic extends GetxController {
         }
       }
       var portrait = type == 1 ? (target as User).portrait ?? "" : (target as Group).portrait ?? "";
-      Widget child = InkWell(
-        child: Container(
-          padding: EdgeInsets.only(right: 40.rpx, top: 30.rpx,left: 40.rpx),
-          margin: EdgeInsets.only(bottom: 80.rpx),
-          child: Row(
-            children: [
-              //头像
-              Container(
-                margin: EdgeInsets.only(right: 40.rpx),
-                width: 200.rpx,
-                height: 200.rpx,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10000),
-                    image: DecorationImage(
-                        image: userLogic.buildPortraitWidget(1,portrait).image,
-                        fit: BoxFit.fill
-                    )
+      Widget child = GestureDetector(
+        onHorizontalDragUpdate: (val){
+          var delta = val.delta;
+          if(delta.dx < 0){
+            state.onHorizontalDragMessageList.add(message);
+          }else{
+            state.onHorizontalDragMessageList.remove(message);
+          }
+        },
+        child: InkWell(
+          child: Container(
+            padding: EdgeInsets.only(right: 40.rpx, top: 30.rpx,left: 40.rpx),
+            margin: EdgeInsets.only(bottom: 80.rpx),
+            child: Row(
+              children: [
+                //头像
+                Container(
+                  margin: EdgeInsets.only(right: 40.rpx),
+                  width: 200.rpx,
+                  height: 200.rpx,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10000),
+                      image: DecorationImage(
+                          image: userLogic.buildPortraitWidget(1,portrait).image,
+                          fit: BoxFit.fill
+                      )
+                  ),
                 ),
-              ),
-              //名称 & 最新消息
-              Expanded(
-                  child: Container(
-                    child: Column(
-                      children: [
-                        //名称
-                        Container(
-                          child: Row(
-                            children: [
-                              //  名称
-                              Text(
-                               type == 1 ? (target as User).username ?? "" : (target as Group).name ?? "",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    overflow: TextOverflow.ellipsis
+                //名称 & 最新消息
+                Expanded(
+                    child: state.onHorizontalDragMessageList.contains(message) ?
+                    Container(
+                      child: Row(
+                        children: [
+                        //  左边详情
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //名称
+                                Container(
+                                  child: Text(
+                                    type == 1 ? (target as User).username ?? "" : (target as Group).name ?? "",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Expanded(child: SizedBox()),
-                              //时间
-                              Container(
-                                child: Text("${time}",style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                ),),
-                              )
-                            ],
+                                //left
+                                Container(
+                                  child: Text(
+                                    message.type != 1 ? resultContent : content,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                        overflow: TextOverflow.ellipsis
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        //最新消息
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              //left
-                              Container(
-                                child: Text(
-                                  message.type != 1 ? resultContent : content,
+                          Expanded(child: SizedBox()),
+                          //操作栏
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                //置顶
+                                InkWell(
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 10.rpx),
+                                    width: 250.rpx,
+                                    height: 150.rpx,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey  ,
+                                        borderRadius: BorderRadius.circular(5.rpx)
+                                    ),
+                                    child: Center(
+                                        child: Text("置顶",style: TextStyle(color: Colors.white,fontSize: 16),)
+                                    ),
+                                  ),
+                                  onTap: (){
+                                    //置顶功能待定，没想好怎么实现
+                                    print("置顶");
+                                  },
+                                ),
+                                //移除
+                                InkWell(
+                                  child: Container(
+                                    width: 250.rpx,
+                                    height: 150.rpx,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5.rpx)
+                                    ),
+                                    child: Center(
+                                        child: Text("移除",style: TextStyle(color: Colors.white,fontSize: 16),)
+                                    ),
+                                  ),
+                                  onTap: (){
+                                   state.messageViewMap.remove(target);
+                                  },
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ) :Container(
+                      child: Column(
+                        children: [
+                          //名称
+                          Container(
+                            child: Row(
+                              children: [
+                                //  名称
+                                Text(
+                                 type == 1 ? (target as User).username ?? "" : (target as Group).name ?? "",
                                   style: TextStyle(
-                                      color: Colors.grey,
+                                      color: Colors.black,
                                       fontSize: 14,
                                       overflow: TextOverflow.ellipsis
                                   ),
                                 ),
-                              ),
-                              //未读消息
-                              Visibility(
-                                visible: userState.messageMap[target]?.isNotEmpty ?? false,
-                                child: Container(
-                                  width: 80.rpx,
-                                  height: 80.rpx ,
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(10000)
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "${userState.messageMap[target]?.length}",
-                                      style: TextStyle(color: Colors.white,fontSize: 16),
+                                Expanded(child: SizedBox()),
+                                //时间
+                                Container(
+                                  child: Text("${time}",style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),),
+                                )
+                              ],
+                            ),
+                          ),
+                          //最新消息
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                //left
+                                Container(
+                                  child: Text(
+                                    message.type != 1 ? resultContent : content,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                        overflow: TextOverflow.ellipsis
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-              )
-            ],
+                                //未读消息
+                                Visibility(
+                                  visible: userState.messageMap[target]?.isNotEmpty ?? false,
+                                  child: Container(
+                                    width: 80.rpx,
+                                    height: 80.rpx ,
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10000)
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "${userState.messageMap[target]?.length}",
+                                        style: TextStyle(color: Colors.white,fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                )
+              ],
+            ),
           ),
+          onTap: () {
+            var key = type == 1 ? (target as User).id : (target as Group).id;
+            print("当前选择的id: ${key}");
+            toChat(target,type,mid);
+          },
         ),
-        onTap: () {
-          var key = type == 1 ? (target as User).id : (target as Group).id;
-          print("当前选择的id: ${key}");
-          toChat(target,type,mid);
-        },
       );
       list.add(child);
     }

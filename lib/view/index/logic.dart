@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/common/system/logic.dart';
@@ -97,10 +98,6 @@ class IndexLogic extends GetxController {
       //消息
       case 0:
         state.contentWidget = MessagePage();
-        var messageLogic = Get.find<MessageLogic>();
-        if(messageLogic.state.messageViewMap.isNotEmpty){
-          messageLogic.initRecordMessage();
-        }
         break;
       //  联系人
       case 1:
