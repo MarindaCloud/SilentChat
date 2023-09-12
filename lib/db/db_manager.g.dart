@@ -9,15 +9,17 @@ part of 'db_manager.dart';
 // ignore_for_file: type=lint
 class RecordMessageData extends DataClass
     implements Insertable<RecordMessageData> {
-  final int? id;
+  final int id;
   final int receiverId;
   final String message;
-  RecordMessageData({this.id, required this.receiverId, required this.message});
+  RecordMessageData(
+      {required this.id, required this.receiverId, required this.message});
   factory RecordMessageData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return RecordMessageData(
-      id: const IntType().mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       receiverId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}receiver_id'])!,
       message: const StringType()
@@ -27,9 +29,7 @@ class RecordMessageData extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int?>(id);
-    }
+    map['id'] = Variable<int>(id);
     map['receiver_id'] = Variable<int>(receiverId);
     map['message'] = Variable<String>(message);
     return map;
@@ -37,7 +37,7 @@ class RecordMessageData extends DataClass
 
   RecordMessageCompanion toCompanion(bool nullToAbsent) {
     return RecordMessageCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       receiverId: Value(receiverId),
       message: Value(message),
     );
@@ -47,7 +47,7 @@ class RecordMessageData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RecordMessageData(
-      id: serializer.fromJson<int?>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       receiverId: serializer.fromJson<int>(json['receiverId']),
       message: serializer.fromJson<String>(json['message']),
     );
@@ -56,7 +56,7 @@ class RecordMessageData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int?>(id),
+      'id': serializer.toJson<int>(id),
       'receiverId': serializer.toJson<int>(receiverId),
       'message': serializer.toJson<String>(message),
     };
@@ -90,7 +90,7 @@ class RecordMessageData extends DataClass
 }
 
 class RecordMessageCompanion extends UpdateCompanion<RecordMessageData> {
-  final Value<int?> id;
+  final Value<int> id;
   final Value<int> receiverId;
   final Value<String> message;
   const RecordMessageCompanion({
@@ -105,7 +105,7 @@ class RecordMessageCompanion extends UpdateCompanion<RecordMessageData> {
   })  : receiverId = Value(receiverId),
         message = Value(message);
   static Insertable<RecordMessageData> custom({
-    Expression<int?>? id,
+    Expression<int>? id,
     Expression<int>? receiverId,
     Expression<String>? message,
   }) {
@@ -117,7 +117,7 @@ class RecordMessageCompanion extends UpdateCompanion<RecordMessageData> {
   }
 
   RecordMessageCompanion copyWith(
-      {Value<int?>? id, Value<int>? receiverId, Value<String>? message}) {
+      {Value<int>? id, Value<int>? receiverId, Value<String>? message}) {
     return RecordMessageCompanion(
       id: id ?? this.id,
       receiverId: receiverId ?? this.receiverId,
@@ -129,7 +129,7 @@ class RecordMessageCompanion extends UpdateCompanion<RecordMessageData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int?>(id.value);
+      map['id'] = Variable<int>(id.value);
     }
     if (receiverId.present) {
       map['receiver_id'] = Variable<int>(receiverId.value);
@@ -160,7 +160,7 @@ class $RecordMessageTable extends RecordMessage
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
-      'id', aliasedName, true,
+      'id', aliasedName, false,
       type: const IntType(),
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');

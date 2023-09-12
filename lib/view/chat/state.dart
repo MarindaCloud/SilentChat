@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
+import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,7 @@ class ChatState {
   final existsContentFlag = false.obs;
   FlutterSoundPlayer flutterSoundPlayer = FlutterSoundPlayer();
   FlutterSoundRecorder recordSound = FlutterSoundRecorder();
+  final messageList = <Message>[].obs;
   ChatState() {
     ///Initialize variables
   }

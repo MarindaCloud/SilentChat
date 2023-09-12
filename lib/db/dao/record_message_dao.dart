@@ -25,6 +25,14 @@ class RecordMessageDao extends DatabaseAccessor<DBManager> with _$RecordMessageD
 
   /*
    * @author Marinda
+   * @date 2023/9/12 16:40
+   * @description 通过接受者id获取历史聊天记录
+   */
+  Future? selectReceiverRecordMessageList(int receiverId) =>
+      (select(recordMessage)..where((tbl) => tbl.receiverId.equals(receiverId))).getSingleOrNull();
+
+  /*
+   * @author Marinda
    * @date 2023/6/13 14:14
    * @description 获取所有最近聊天数据
    */
@@ -46,7 +54,6 @@ class RecordMessageDao extends DatabaseAccessor<DBManager> with _$RecordMessageD
       (update(recordMessage)..where((tbl) => tbl.id.equals(data.id)))
           .write(
           RecordMessageCompanion(
-        id: Value(data.id),
         receiverId: Value(data.receiverId),
         message: Value(data.message)));
 }

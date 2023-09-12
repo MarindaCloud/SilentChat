@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/db/dao/record_message_dao.dart';
+import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/api_result.dart';
@@ -33,6 +35,9 @@ import "package:permission_handler/permission_handler.dart";
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:drift/drift.dart' as drift;
+
+
 
 class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   final ChatState state = ChatState();
@@ -54,7 +59,9 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     int id = args["id"] ?? -1;
     state.receiverId.value = id;
     state.type.value = type;
+    await initMessageList();
     getTitle(id, type);
+    await initRecordHistory();
     initChatRecordDataList();
     state.socketHandle = Get.find<SocketHandle>();
     final ImagePicker picker = ImagePicker();
@@ -73,6 +80,67 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     await state.flutterSoundPlayer.openPlayer();
     await state.recordSound.openRecorder();
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/12 17:51
+   * @description
+   */
+  initMessageList() async{
+    state.messageList.value = await MessageAPI.selectUserMessageList(userState.uid.value, state.receiverId.value);
+  }
+  /*
+   * @author Marinda
+   * @date 2023/9/12 16:44
+   * @description 初始化记录历史
+   */
+  initRecordHistory() async{
+    final db = DBManager();
+    RecordMessageDao dao = RecordMessageDao(db);
+    RecordMessageData? history = await dao.selectReceiverRecordMessageList(state.receiverId.value);
+    Log.i("history: ${history}");
+    if(history == null && state.messageList.isNotEmpty){
+        //第一次打开初始化加入所有消息记录
+        RecordMessageCompanion recordMessageCompanion = RecordMessageCompanion(
+          receiverId: drift.Value(state.receiverId.value),
+          message: drift.Value(json.encode(state.messageList)));
+          await dao.insertRecordMessage(recordMessageCompanion);
+     }
+    //储存缓存中未存在的消息列表
+    List<Message> cloneMessageList = [];
+    //都不为空
+    if(history != null && state.messageList.isNotEmpty){
+      List messageElement = json.decode(history.message);
+      List<Message> messageList = messageElement.map((e) => Message.fromJson(e)).toList();
+      cloneMessageList.addAll(messageList);
+      for(Message element in state.messageList){
+          if(validMessageContainsList(element, messageList)){
+            continue;
+          }
+          cloneMessageList.add(element);
+        }
+      var jsonMap = history.toJson();
+      jsonMap["message"] = json.encode(cloneMessageList);
+      RecordMessageData newRecordMessageData = RecordMessageData.fromJson(jsonMap);
+      await dao.updateRecordMessage(newRecordMessageData);
+      Log.i("修改完毕！");
+      }
+
+    }
+
+    /*
+     * @author Marinda
+     * @date 2023/9/12 17:26
+     * @description 查询消息列表
+     */
+    bool validMessageContainsList(Message message,List<Message> messageList){
+      for(var element in messageList){
+        if(element.id == message.id){
+          return true;
+        }
+      }
+      return false;
+    }
 
   /*
    * @author Marinda
