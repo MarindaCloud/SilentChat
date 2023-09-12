@@ -42,7 +42,6 @@ class MessageLogic extends GetxController {
 
   @override
   void onInit() {
-    initCacheViewMessage();
     Log.i("消息页初始化！");
     initRecordMessage();
   }
@@ -54,17 +53,7 @@ class MessageLogic extends GetxController {
     // TODO: implement dispose
     super.dispose();
   }
-
-  /*
-   * @author Marinda
-   * @date 2023/9/11 15:02
-   * @description 初始化消息视图缓存 主要用来处理已读消息和未读消息
-   */
-  initCacheViewMessage() async{
-    final db = DBManager();
-    List<CacheViewMessageData> list = await CacheViewMessageDao(db).queryList();
-    state.cacheViewList.value = list;
-  }
+  
 
   /*
    * @author Marinda
@@ -73,6 +62,9 @@ class MessageLogic extends GetxController {
    */
   void initRecordMessage() async{
     int uid = userState.user.value.id ?? 0;
+    final db = DBManager();
+    //未读已读消息缓存
+    List<CacheViewMessageData> list = await CacheViewMessageDao(db).queryList();
     //获取用户聊天记录详情
     UserReceiver userReceiver = UserReceiver();
     GroupReceiver groupReceiver = GroupReceiver();
@@ -81,29 +73,56 @@ class MessageLogic extends GetxController {
     //获取群组接收者id列表
     List<int> groupReceiverIdList = await groupReceiver.getReceiverList();
     Map<SilentChatEntity,Message> cacheReceiverMap = {};
+    Map<SilentChatEntity,List<Message>> cacheMap = {};
     //接受者总长度
     int receiverLength = receiverIdList.length;
     Log.i("接受者id长度: ${receiverLength}");
     Log.i("接受者id列表：userReceiverIdList: ${receiverIdList},groupReceiverIdList: ${groupReceiverIdList}");
     for(var element in receiverIdList){
+
+    //  获取当前用户所有的聊天列表
+      List<Message> selectUserMessageList = await MessageAPI.selectUserMessageList(userState.user.value.id ?? 0, element);
+      List<Message> msgList = [];
+      if(list.isNotEmpty){
+        var filterMsgList = filterMessageList(list.last.time, selectUserMessageList);
+        msgList.addAll(filterMsgList);
+      }
+
     //  遍历用户接受者数据
       Message? message = await userReceiver.getNewMessage(id: userState.user.value.id,receiverId: element);
       if(message == null){
         continue;
       }
       User user = await userLogic.selectByUid(element);
+      Log.i("符合条件的列表共有：${msgList.map((e) => e.toJson()).toList()}");
+      if(msgList.isNotEmpty){
+        cacheMap[user] = msgList.toSet().toList();
+      }
       cacheReceiverMap[user] = message;
     }
     for(var element in groupReceiverIdList){
+
+      //  获取当前用户所有的聊天列表
+      List<Message> selectUserMessageList = await MessageAPI.selectGroupMessageList(element);
+      List<Message> msgList = [];
+      if(list.isNotEmpty){
+        var filterMsgList = filterMessageList(list.last.time, selectUserMessageList);
+        msgList.addAll(filterMsgList);
+      }
+
       //  遍历用户接受者数据
       Message? message = await groupReceiver.getNewMessage(id: userState.user.value.id,receiverId: element);
       if(message == null){
         continue;
       }
       Group group = await GroupAPI.selectById(element);
+      if(msgList.isNotEmpty){
+        cacheMap[group] = msgList.toSet().toList();
+      }
       cacheReceiverMap[group] = message;
     }
     state.messageViewMap.value = cacheReceiverMap;
+    userState.messageMap.value = cacheMap;
     //排序处理，时间最近的优先排序
     sortRecordMessage();
   }
@@ -124,6 +143,22 @@ class MessageLogic extends GetxController {
     };
     state.messageViewMap.value = sortedMap;
     print('涉及到的视图map详情: ${sortedMap}');
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/12 14:02
+   * @description 过滤消息列表
+   */
+  List<Message> filterMessageList(DateTime dt,List<Message> list){
+    List<Message> msgList = [];
+    for(var element in list){
+      var msgDateTime = element.time!;
+      if(msgDateTime.isAfter(dt)){
+        msgList.add(element);
+      }
+    }
+    return msgList;
   }
 
   /*
@@ -380,17 +415,20 @@ class MessageLogic extends GetxController {
                                 ),
                               ),
                               //未读消息
-                              Container(
-                                width: 80.rpx,
-                                height: 80.rpx ,
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10000)
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "1",
-                                    style: TextStyle(color: Colors.white,fontSize: 16),
+                              Visibility(
+                                visible: userState.messageMap[target]?.isNotEmpty ?? false,
+                                child: Container(
+                                  width: 80.rpx,
+                                  height: 80.rpx ,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(10000)
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "${userState.messageMap[target]?.length}",
+                                      style: TextStyle(color: Colors.white,fontSize: 16),
+                                    ),
                                   ),
                                 ),
                               )
@@ -449,6 +487,7 @@ class MessageLogic extends GetxController {
     var data = CacheViewMessageCompanion(
       time: drift.Value(DateTime.now()),
       mid: drift.Value(mid),
+      ownerId: drift.Value(id),
       element: drift.Value(json.encode(element))
     );
     CacheViewMessageData cacheViewMessageData = await CacheViewMessageDao(db).insertReturning(data);

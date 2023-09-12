@@ -15,6 +15,9 @@ class CacheViewMessage extends Table{
   // 消息id
   IntColumn get mid => integer()();
 
+  //涉及目标id
+  IntColumn get ownerId => integer().nullable()();
+
   // 目标
   TextColumn get element => text()();
 }

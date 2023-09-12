@@ -22,13 +22,16 @@ class CacheViewMessageDao extends DatabaseAccessor<DBManager> with _$CacheViewMe
   Future selectByMid(int mid) =>
       (select(cacheViewMessage)..where((tbl) => tbl.mid.equals(mid))).getSingle();
 
+  Future selectByOwnerId(int ownerId) =>
+      (select(cacheViewMessage)..where((tbl) => tbl.ownerId.equals(ownerId))).get();
+
   Future queryList() =>
       (select(cacheViewMessage)).get();
 
   Future insertReturning(CacheViewMessageCompanion cacheViewMessageCompanion) =>
       into(cacheViewMessage).insertReturning(cacheViewMessageCompanion);
 
-  Future deleteById(CacheViewMessageData cacheViewMessageData) =>
-      (delete(cacheViewMessage)..where((tbl) => tbl.id.equals(cacheViewMessageData.id))).go();
+  Future deleteById(int id) =>
+      (delete(cacheViewMessage)..where((tbl) => tbl.id.equals(id))).go();
 
 }

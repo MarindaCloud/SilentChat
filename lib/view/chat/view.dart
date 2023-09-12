@@ -44,24 +44,27 @@ class ChatPage extends StatelessWidget {
                                         //返回按钮
                                         BackButtonComponent(onClick: logic.back),
                                         //未读消息数
-                                        Transform.translate(
-                                          offset: Offset(-5, 0),
-                                          child: Container(
-                                            margin: EdgeInsets.only(
-                                                right: 0.rpx),
-                                            padding: EdgeInsets.all(5.rpx),
-                                            width: 120.rpx,
-                                            // height: 120.rpx,
-                                            decoration: BoxDecoration(
-                                                color: Color.fromRGBO(76,175,80,1),
-                                                borderRadius: BorderRadius
-                                                    .circular(15000)
-                                            ),
-                                            child: Center(
-                                              child: Text("17",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 18)),
+                                        Visibility(
+                                          visible: logic.userState.messageMap.values.isNotEmpty,
+                                          child: Transform.translate(
+                                            offset: Offset(-5, 0),
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  right: 0.rpx),
+                                              padding: EdgeInsets.all(5.rpx),
+                                              width: 120.rpx,
+                                              // height: 120.rpx,
+                                              decoration: BoxDecoration(
+                                                  color: Color.fromRGBO(76,175,80,1),
+                                                  borderRadius: BorderRadius
+                                                      .circular(15000)
+                                              ),
+                                              child: Center(
+                                                child: Text("${logic.userState.messageMap.values.length}",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 18)),
+                                              ),
                                             ),
                                           ),
                                         ),

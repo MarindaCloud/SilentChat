@@ -163,13 +163,33 @@ class MessageAPI {
    * @date 2023/9/11 16:37
    * @description 查询消息列表
    */
-  static selectMessageList(int id,int type) async{
-    Log.i("查询消息列表：id: ${id}、type: ${type}");
+  static selectUserMessageList(int sendId,int receiverId) async{
+    Log.i("查询${sendId},${receiverId}消息列表");
     var data = {
-      "id": id,
-      "type": type
+      "sendId": sendId,
+      "receiverId": receiverId
     };
-    APIResult result = await BaseProvider.sendRequest("message/selectMessageList", HttpMethods.POST.value,data ,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/selectUserMessageList", HttpMethods.POST.value,data ,header: Request.header);
+    if(result.data == null){return false;}
+    if(result.data is List){
+      List list = result.data;
+      List<Message> messageList = list.map((e) => Message.fromJson(e)).toList();
+      return messageList;
+    }
+    return [];
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/12 11:03
+   * @description 查询群组消息列表
+   */
+  static selectGroupMessageList(int groupId) async{
+    Log.i("查询群组id：${groupId}的消息列表");
+    var data = {
+      "groupId": groupId
+    };
+    APIResult result = await BaseProvider.sendRequest("message/selectGroupMessageList", HttpMethods.POST.value,data ,header: Request.header);
     if(result.data == null){return false;}
     if(result.data is List){
       List list = result.data;

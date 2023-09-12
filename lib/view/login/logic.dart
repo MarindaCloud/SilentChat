@@ -7,6 +7,8 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/db/dao/cache_record_message_dao.dart';
+import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/account_history.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/app_page.dart';
@@ -33,7 +35,7 @@ class LoginLogic extends GetxController {
 
   @override
   void onInit() async{
-    test();
+    await test();
     getDeviceName();
     await systemLogic.initImageCache();
     initAccountHistory();
@@ -50,6 +52,15 @@ class LoginLogic extends GetxController {
   }
 
   test() async{
+    // final db = DBManager();
+    // CacheViewMessageDao dao = CacheViewMessageDao(db);
+    // var list = await CacheViewMessageDao(db).queryList();
+    //
+    // for(var element in list){
+    //   int id = element.id;
+    //   await dao.deleteById(id);
+    // }
+    // Log.i("当前缓存长度：${list}");
     // await storage.erase();
     // Log.i("清空后的Key： ${storage.getKeys()}");
     // var result =  await CacheImageHandle.downloadImage("assets/9301b88f-a42b-4377-8d06-e014d32d923d.png");

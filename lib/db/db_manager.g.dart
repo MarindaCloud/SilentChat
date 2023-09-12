@@ -549,11 +549,13 @@ class CacheViewMessageData extends DataClass
   final int id;
   final DateTime time;
   final int mid;
+  final int? ownerId;
   final String element;
   CacheViewMessageData(
       {required this.id,
       required this.time,
       required this.mid,
+      this.ownerId,
       required this.element});
   factory CacheViewMessageData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
@@ -565,6 +567,8 @@ class CacheViewMessageData extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}time'])!,
       mid: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}mid'])!,
+      ownerId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner_id']),
       element: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}element'])!,
     );
@@ -575,6 +579,9 @@ class CacheViewMessageData extends DataClass
     map['id'] = Variable<int>(id);
     map['time'] = Variable<DateTime>(time);
     map['mid'] = Variable<int>(mid);
+    if (!nullToAbsent || ownerId != null) {
+      map['owner_id'] = Variable<int?>(ownerId);
+    }
     map['element'] = Variable<String>(element);
     return map;
   }
@@ -584,6 +591,9 @@ class CacheViewMessageData extends DataClass
       id: Value(id),
       time: Value(time),
       mid: Value(mid),
+      ownerId: ownerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ownerId),
       element: Value(element),
     );
   }
@@ -595,6 +605,7 @@ class CacheViewMessageData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       time: serializer.fromJson<DateTime>(json['time']),
       mid: serializer.fromJson<int>(json['mid']),
+      ownerId: serializer.fromJson<int?>(json['ownerId']),
       element: serializer.fromJson<String>(json['element']),
     );
   }
@@ -605,16 +616,18 @@ class CacheViewMessageData extends DataClass
       'id': serializer.toJson<int>(id),
       'time': serializer.toJson<DateTime>(time),
       'mid': serializer.toJson<int>(mid),
+      'ownerId': serializer.toJson<int?>(ownerId),
       'element': serializer.toJson<String>(element),
     };
   }
 
   CacheViewMessageData copyWith(
-          {int? id, DateTime? time, int? mid, String? element}) =>
+          {int? id, DateTime? time, int? mid, int? ownerId, String? element}) =>
       CacheViewMessageData(
         id: id ?? this.id,
         time: time ?? this.time,
         mid: mid ?? this.mid,
+        ownerId: ownerId ?? this.ownerId,
         element: element ?? this.element,
       );
   @override
@@ -623,13 +636,14 @@ class CacheViewMessageData extends DataClass
           ..write('id: $id, ')
           ..write('time: $time, ')
           ..write('mid: $mid, ')
+          ..write('ownerId: $ownerId, ')
           ..write('element: $element')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, time, mid, element);
+  int get hashCode => Object.hash(id, time, mid, ownerId, element);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -637,6 +651,7 @@ class CacheViewMessageData extends DataClass
           other.id == this.id &&
           other.time == this.time &&
           other.mid == this.mid &&
+          other.ownerId == this.ownerId &&
           other.element == this.element);
 }
 
@@ -644,17 +659,20 @@ class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
   final Value<int> id;
   final Value<DateTime> time;
   final Value<int> mid;
+  final Value<int?> ownerId;
   final Value<String> element;
   const CacheViewMessageCompanion({
     this.id = const Value.absent(),
     this.time = const Value.absent(),
     this.mid = const Value.absent(),
+    this.ownerId = const Value.absent(),
     this.element = const Value.absent(),
   });
   CacheViewMessageCompanion.insert({
     this.id = const Value.absent(),
     required DateTime time,
     required int mid,
+    this.ownerId = const Value.absent(),
     required String element,
   })  : time = Value(time),
         mid = Value(mid),
@@ -663,12 +681,14 @@ class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
     Expression<int>? id,
     Expression<DateTime>? time,
     Expression<int>? mid,
+    Expression<int?>? ownerId,
     Expression<String>? element,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (time != null) 'time': time,
       if (mid != null) 'mid': mid,
+      if (ownerId != null) 'owner_id': ownerId,
       if (element != null) 'element': element,
     });
   }
@@ -677,11 +697,13 @@ class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
       {Value<int>? id,
       Value<DateTime>? time,
       Value<int>? mid,
+      Value<int?>? ownerId,
       Value<String>? element}) {
     return CacheViewMessageCompanion(
       id: id ?? this.id,
       time: time ?? this.time,
       mid: mid ?? this.mid,
+      ownerId: ownerId ?? this.ownerId,
       element: element ?? this.element,
     );
   }
@@ -698,6 +720,9 @@ class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
     if (mid.present) {
       map['mid'] = Variable<int>(mid.value);
     }
+    if (ownerId.present) {
+      map['owner_id'] = Variable<int?>(ownerId.value);
+    }
     if (element.present) {
       map['element'] = Variable<String>(element.value);
     }
@@ -710,6 +735,7 @@ class CacheViewMessageCompanion extends UpdateCompanion<CacheViewMessageData> {
           ..write('id: $id, ')
           ..write('time: $time, ')
           ..write('mid: $mid, ')
+          ..write('ownerId: $ownerId, ')
           ..write('element: $element')
           ..write(')'))
         .toString();
@@ -739,13 +765,18 @@ class $CacheViewMessageTable extends CacheViewMessage
   late final GeneratedColumn<int?> mid = GeneratedColumn<int?>(
       'mid', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _ownerIdMeta = const VerificationMeta('ownerId');
+  @override
+  late final GeneratedColumn<int?> ownerId = GeneratedColumn<int?>(
+      'owner_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _elementMeta = const VerificationMeta('element');
   @override
   late final GeneratedColumn<String?> element = GeneratedColumn<String?>(
       'element', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, time, mid, element];
+  List<GeneratedColumn> get $columns => [id, time, mid, ownerId, element];
   @override
   String get aliasedName => _alias ?? 'cache_view_message';
   @override
@@ -770,6 +801,10 @@ class $CacheViewMessageTable extends CacheViewMessage
           _midMeta, mid.isAcceptableOrUnknown(data['mid']!, _midMeta));
     } else if (isInserting) {
       context.missing(_midMeta);
+    }
+    if (data.containsKey('owner_id')) {
+      context.handle(_ownerIdMeta,
+          ownerId.isAcceptableOrUnknown(data['owner_id']!, _ownerIdMeta));
     }
     if (data.containsKey('element')) {
       context.handle(_elementMeta,

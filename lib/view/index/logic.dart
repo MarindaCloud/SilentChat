@@ -98,7 +98,9 @@ class IndexLogic extends GetxController {
       case 0:
         state.contentWidget = MessagePage();
         var messageLogic = Get.find<MessageLogic>();
-        messageLogic.initRecordMessage();
+        if(messageLogic.state.messageViewMap.isNotEmpty){
+          messageLogic.initRecordMessage();
+        }
         break;
       //  联系人
       case 1:
