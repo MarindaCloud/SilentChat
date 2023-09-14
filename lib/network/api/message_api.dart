@@ -176,7 +176,7 @@ class MessageAPI {
       List<Message> messageList = list.map((e) => Message.fromJson(e)).toList();
       return messageList;
     }
-    return [];
+    return <Message>[];
   }
 
   /*

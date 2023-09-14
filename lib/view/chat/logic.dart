@@ -88,13 +88,21 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
   initMessageList() async{
     List<Message> messageList = [];
     if(state.type.value == 1){
-      messageList = await MessageAPI.selectUserMessageList(userState.uid.value, state.receiverId.value);
+      List msgList = await MessageAPI.selectUserMessageList(userState.uid.value, state.receiverId.value);
+        if(msgList.isEmpty){
+          messageList = [];
+        }else{
+          messageList = msgList as List<Message>;
+        }
     }else{
-      messageList = await MessageAPI.selectGroupMessageList(state.receiverId.value);
+      List msgList = await MessageAPI.selectGroupMessageList(state.receiverId.value);
+      if(msgList.isEmpty){
+        messageList = [];
+      }else{
+        messageList = msgList as List<Message>;
+      }
     }
-    if(messageList.isNotEmpty){
-      state.messageList.value = messageList;
-    }
+    state.messageList.value = messageList;
   }
   /*
    * @author Marinda

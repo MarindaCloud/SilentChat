@@ -325,6 +325,7 @@ class MessageLogic extends GetxController {
     for(SilentChatEntity target in state.messageViewMap.keys){
       Message? message = state.messageViewMap[target];
       int mid = message?.id ?? 0;
+      DateTime dt = message?.time ?? DateTime.now();
       int type = 0;
       if(target is User){
         type = 1;
@@ -332,7 +333,13 @@ class MessageLogic extends GetxController {
         type = 2;
       }
       if(message == null){ continue;}
-      String time = DateTimeUtil.formatToDayDateTime(message.time ?? DateTime.now());
+      String time = "";
+      //如果最近消息超过7天则显示日月
+      if(DateTime.now().difference(dt).inDays >=7){
+        time = DateTimeUtil.formatDateTime(dt,format: DateTimeUtil.md);
+      }else{
+        time = DateTimeUtil.formatToDayDateTime(dt);
+      }
       String content = message.content ?? "";
       String resultContent = "";
       if(message.type != 1){
