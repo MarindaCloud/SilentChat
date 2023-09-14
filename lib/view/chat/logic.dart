@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' as foundation;
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
@@ -87,7 +86,15 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description
    */
   initMessageList() async{
-    state.messageList.value = await MessageAPI.selectUserMessageList(userState.uid.value, state.receiverId.value);
+    List<Message> messageList = [];
+    if(state.type.value == 1){
+      messageList = await MessageAPI.selectUserMessageList(userState.uid.value, state.receiverId.value);
+    }else{
+      messageList = await MessageAPI.selectGroupMessageList(state.receiverId.value);
+    }
+    if(messageList.isNotEmpty){
+      state.messageList.value = messageList;
+    }
   }
   /*
    * @author Marinda
@@ -99,12 +106,15 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     RecordMessageDao dao = RecordMessageDao(db);
     RecordMessageData? history = await dao.selectReceiverRecordMessageList(state.receiverId.value);
     Log.i("history: ${history}");
-    if(history == null && state.messageList.isNotEmpty){
+    if(history == null){
+      //和该目标的消息列表不为空
+      if(state.messageList.isNotEmpty){
         //第一次打开初始化加入所有消息记录
         RecordMessageCompanion recordMessageCompanion = RecordMessageCompanion(
-          receiverId: drift.Value(state.receiverId.value),
-          message: drift.Value(json.encode(state.messageList)));
-          await dao.insertRecordMessage(recordMessageCompanion);
+            receiverId: drift.Value(state.receiverId.value),
+            message: drift.Value(json.encode(state.messageList)));
+        await dao.insertRecordMessage(recordMessageCompanion);
+      }
      }
     //储存缓存中未存在的消息列表
     List<Message> cloneMessageList = [];
@@ -125,7 +135,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       await dao.updateRecordMessage(newRecordMessageData);
       Log.i("修改完毕！");
       }
-
     }
 
     /*
@@ -291,44 +300,78 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description 初始化聊天记录信息列表
    */
   initChatRecordDataList() async{
+    final db = DBManager();
+    RecordMessageDao dao = RecordMessageDao(db);
+    //缓存记录消息列表
+    var cacheRecordMessage = await dao.selectReceiverRecordMessageList(state.receiverId.value);
+    List<Message> messageList = [];
+
+    if(cacheRecordMessage != null){
+      List messageCacheList = json.decode(cacheRecordMessage.message) as List;
+      //消息列表
+      messageList = messageCacheList.map((e) => Message.fromJson(e)).toList();
+    }
+
     List<ChatRecordData> list = [];
     int id = state.receiverId.value;
     int type = state.type.value;
     int uid = userState.user.value.id ?? 0;
     Log.i("当前聊天id: ${id},类型: ${type}");
+    //用户缓存列表
+    List<User> cacheUserList = [];
+    //用户
     if(type == 1){
+      //获取聊天详情
       List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
       List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id && element.type == 1 || element.sendId == id && element.receiverId == uid && element.type == 1).toList();
-      Log.i("信息id：${filterTargetChatInfoList.map((e) => e.mid).toList()}");
-      for(ChatInfo chatInfo in filterTargetChatInfoList){
-        int sendId = chatInfo.sendId ?? 0;
-        int mid = chatInfo.mid ?? 0;
-        Message message = await MessageAPI.selectMessageById(mid);
-        User user = await UserAPI.selectByUid(chatInfo.sendId ?? -1);
-        DateTime dt = message.time!;
-        int type = message.type!;
-        String portrait = user.portrait ?? "";
-        String content = message.content ?? "";
-        MessageType messageType = MessageType.getMessageType(type)!;
-        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content,expandAddress: message.expandAddress);
-        list.add(chatRecordData);
+      for(var message in messageList){
+          int mid = message.id ?? -1;
+          ChatInfo chatInfo = filterTargetChatInfoList.firstWhere((element) => element.mid == mid);
+          int sendId = chatInfo.sendId ?? -1;
+          User user = User();
+          String portrait = "";
+          var cacheUser = cacheUserList.firstWhereOrNull((element) => element.id == sendId);
+          if(cacheUser != null){
+            portrait = cacheUser?.portrait ?? "";
+          }else{
+            user = await UserAPI.selectByUid(sendId);
+            portrait = user.portrait ?? "";
+          }
+          DateTime dt = message.time!;
+          int type = message.type!;
+          String content = message.content ?? "";
+          MessageType messageType = MessageType.getMessageType(type)!;
+          ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content,expandAddress: message.expandAddress);
+          list.add(chatRecordData);
+          cacheUserList.add(user);
       }
     }else{
+      //群聊
       int groupId = state.receiverId.value;
       List<ChatInfo> chatInfoList = await MessageAPI.selectGroupChatInfo(groupId);
-      for(ChatInfo chatInfo in chatInfoList){
-        int sendId = chatInfo.sendId ?? 0;
-        int mid = chatInfo.mid ?? 0;
-        Message message = await MessageAPI.selectMessageById(mid);
-        Group group = await GroupAPI.selectById(chatInfo.receiverId ?? -1);
-        DateTime dt = message.time!;
-        int type = message.type!;
-        User user = await UserAPI.selectByUid(sendId);
-        String portrait = user.portrait ?? "";
-        String content = message.content ?? "";
-        MessageType messageType = MessageType.getMessageType(type)!;
-        ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content);
-        list.add(chatRecordData);
+      Group group = await GroupAPI.selectById(groupId);
+      for(var message in messageList){
+        ChatInfo? chatInfo = chatInfoList.firstWhereOrNull((element) => element.mid == message.id);
+        if(chatInfo != null){
+          int sendId = chatInfo.sendId ?? 0;
+          int mid = message.id ?? 0;
+          DateTime dt = message.time!;
+          int type = message.type!;
+          String portrait = "";
+          var cacheUser = cacheUserList.firstWhereOrNull((element) => element.id == sendId);
+          if(cacheUser != null){
+            portrait = cacheUser?.portrait ?? "";
+          }else{
+            cacheUser = await UserAPI.selectByUid(sendId);
+            portrait = cacheUser?.portrait ?? "";
+          }
+          String content = message.content ?? "";
+          MessageType messageType = MessageType.getMessageType(type)!;
+          ChatRecordData chatRecordData = ChatRecordData(sendId: sendId,targetId: mid,time: dt,messageType: messageType,portrait: portrait,message: content);
+          list.add(chatRecordData);
+          cacheUserList.add(cacheUser ?? User());
+        }
+
       }
     }
     state.chatRecordList.value = list;

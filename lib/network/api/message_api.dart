@@ -170,7 +170,7 @@ class MessageAPI {
       "receiverId": receiverId
     };
     APIResult result = await BaseProvider.sendRequest("message/selectUserMessageList", HttpMethods.POST.value,data ,header: Request.header);
-    if(result.data == null){return false;}
+    if(result.data == null){return [];}
     if(result.data is List){
       List list = result.data;
       List<Message> messageList = list.map((e) => Message.fromJson(e)).toList();
