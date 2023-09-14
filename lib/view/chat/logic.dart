@@ -431,17 +431,26 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         timeMap[startTime] = timeList;
       }
     }
+
+    // 首次排序Time位置
+    List<MapEntry<DateTime, List<DateTime>>> sortedEntries = timeMap.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    Map<DateTime,List<DateTime>> sortTime = Map.fromEntries(sortedEntries);
+
     List<ChatRecordData> cacheList = [];
     Log.i("时间Map缓存数据：${timeMap}");
-  //  遍历所有聊天列表数据
+    Log.i("排序后的时间缓存：${sortTime.keys.toList()}");
+
+    Map<DateTime,List<ChatRecordData>> timeCacheMap = {};
+    //  遍历所有聊天列表数据
     for(ChatRecordData recordData in state.chatRecordList){
       DateTime targetTime = recordData.time!;
       //校验日期缓存的map中是否存在这个时间
-      if(timeMap.containsKey(targetTime)){
-        String chatRecordWeekDataString = DateTimeUtil.formatWeekDateTime(targetTime);
+      if(sortTime.containsKey(targetTime)){
+        // String chatRecordWeekDataString = DateTimeUtil.formatWeekDateTime(targetTime);
         //符合该条聊天记录区间的所有聊天信息
         List<ChatRecordData> subChatRecordList = state.chatRecordList.where((element){
-          List<DateTime> timeList = timeMap[targetTime] ?? [];
+          List<DateTime> timeList = sortTime[targetTime] ?? [];
           return timeList.contains(element.time);
         }).toList();
 
@@ -454,11 +463,27 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
           tempList.add(ele);
         }
         cacheList.addAll(tempList);
-        recordMap[chatRecordWeekDataString] = tempList;
+        timeCacheMap[targetTime] = tempList;
       }
     }
+    // 转化为视图对象后再次排序Time
+    List<MapEntry<DateTime, List<ChatRecordData>>> sortedTimeCache = timeCacheMap.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    Map<DateTime,List<ChatRecordData>> sortCacheTime = Map.fromEntries(sortedTimeCache);
+    //转化
+    sortCacheTime.forEach((key, value) {
+      String formatKey = "";
+      //如果超过七天则显示全日期
+      if(DateTime.now().difference(key).inDays >=7){
+        formatKey = DateTimeUtil.formatDateTime(key,format: DateTimeUtil.ymdhn);
+      }else{
+        formatKey = DateTimeUtil.formatWeekDateTime(key);
+      }
+      recordMap[formatKey] = value;
+    });
+
     state.recordMap.value = recordMap;
-    Log.i("聊天记录Map数据: ${recordMap}");
+    Log.i("聊天记录Map数据: ${recordMap.keys.toList()}");
   }
 
   /*
