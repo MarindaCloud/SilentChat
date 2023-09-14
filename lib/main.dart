@@ -62,7 +62,7 @@ class MainState extends State<MainApp> with WidgetsBindingObserver{
       navigatorKey: MainApp.navigatorKey,
       //移除一下Debug图标
       debugShowCheckedModeBanner: false,
-      title: "IM通讯",
+      title: "默讯",
       color: Colors.white,
       smartManagement: SmartManagement.full,
       // 全局设置默认字体

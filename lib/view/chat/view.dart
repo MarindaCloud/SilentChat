@@ -78,13 +78,16 @@ class ChatPage extends StatelessWidget {
                                     ),
                                   )
                               ),
-                              Container(
-                                child: SizedBox(
-                                  width: 80.rpx,
-                                  height: 80.rpx,
-                                  child: Image.asset("assets/icon/liebiao2.png",
-                                    color: Colors.black,),
+                              InkWell(
+                                child: Container(
+                                  child: SizedBox(
+                                    width: 80.rpx,
+                                    height: 80.rpx,
+                                    child: Image.asset("assets/icon/liebiao2.png",
+                                      color: Colors.black,fit: BoxFit.fill,),
+                                  ),
                                 ),
+                                onTap: logic.toEditFriendsInfo,
                               )
                             ],
                           ),

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/emoji.dart';
@@ -8,6 +7,7 @@ import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/api_result.dart';
@@ -202,6 +202,16 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
 
   /*
    * @author Marinda
+   * @date 2023/9/14 18:02
+   * @description 修改好友信息
+   */
+
+  toEditFriendsInfo(){
+     Get.toNamed(AppPage.editFriendsInfo);
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/6/14 18:33
    * @description 获取title
    */
@@ -332,6 +342,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       //获取聊天详情
       List<ChatInfo> chatInfoList = await MessageAPI.selectUserChatInfo();
       List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id && element.type == 1 || element.sendId == id && element.receiverId == uid && element.type == 1).toList();
+
       for(var message in messageList){
           int mid = message.id ?? -1;
           ChatInfo chatInfo = filterTargetChatInfoList.firstWhere((element) => element.mid == mid);

@@ -98,6 +98,8 @@ class IndexLogic extends GetxController {
       //消息
       case 0:
         state.contentWidget = MessagePage();
+        var messageLogic = Get.find<MessageLogic>();
+        messageLogic.initRecordMessage();
         break;
       //  联系人
       case 1:
