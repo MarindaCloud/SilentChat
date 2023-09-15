@@ -122,6 +122,7 @@ class EditFriendsInfoPage extends StatelessWidget {
                                   ),
                                   onTap: (){
                                     print("删除好友");
+                                    logic.removeFriend();
                                   },
                                 ),
                               ),

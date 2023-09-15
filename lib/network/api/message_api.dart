@@ -198,4 +198,58 @@ class MessageAPI {
     return [];
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/9/15 15:41
+   * @description 获取两个用户的所有聊天详情
+   */
+  static selectChatInfoByInUser(int sendId,int receiverId) async{
+    var data = {
+      "sendId" : sendId,
+      "receiverId": receiverId
+    };
+    Log.i("获取: ${sendId},${receiverId}聊天的详情列表");
+    APIResult result = await BaseProvider.sendRequest("chatInfo/selectChatInfoByInUser", HttpMethods.POST.value, data,header: Request.header);
+    if(result.data == null){
+      return null;
+    }
+    List list = result.data;
+    List<ChatInfo> chatInfoList = list.map((e) => ChatInfo.fromJson(e)).toList();
+    return chatInfoList;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 15:44
+   * @description 删除聊天详情
+   */
+  static removeChatInfo(int id) async{
+    var data = {
+      "id": id
+    };
+    Log.i("删除${id}的聊天详情");
+    APIResult result = await BaseProvider.sendRequest("chatInfo/remove", HttpMethods.POST.value, data,header: Request.header);
+    if(result.data == null){
+      return null;
+    }
+    return result.data;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 16:21
+   * @description 移除消息id
+   */
+  static removeMessage(int id) async{
+    var data = {
+      "id": id
+    };
+    Log.i("删除${id}的消息记录");
+    APIResult result = await BaseProvider.sendRequest("message/remove", HttpMethods.POST.value, data,header: Request.header);
+    if(result.data == null){
+      return null;
+    }
+    return result.data;
+  }
 }

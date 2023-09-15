@@ -65,4 +65,19 @@ class FriendsAPI {
     List<Friend> friendList = list.map((e){return Friend.fromJson(e);}).toList();
     return friendList;
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 15:29
+   * @description 通过id删除好友
+   */
+  static removeById(int id) async{
+    var data = {
+      "id": id
+    };
+    Log.i("删除用户：${id}的好友");
+    APIResult apiResult = await BaseProvider.sendRequest("friends/remove", HttpMethods.POST.value, data,header: Request.header);
+    int result = apiResult.data;
+    return result;
+  }
 }
