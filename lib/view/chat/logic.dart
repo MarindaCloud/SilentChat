@@ -213,7 +213,6 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       await Get.toNamed(AppPage.editFriendsInfo,arguments: user);
       state.title.value = userState.notesMap[state.receiverId.value] ?? "";
       userState.notesMap.refresh();
-
     }
 
   }

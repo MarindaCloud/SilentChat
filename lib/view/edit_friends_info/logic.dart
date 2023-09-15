@@ -17,6 +17,7 @@ import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/overlay_manager.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:silentchat/view/chat/logic.dart';
 import 'package:silentchat/view/contact/logic.dart';
 import 'package:silentchat/view/message/logic.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -160,12 +161,21 @@ class EditFriendsInfoLogic extends GetxController {
 
     //更新主页视图
     var messageLogic = Get.find<MessageLogic>();
-    messageLogic.state.messageViewMap[state.user.value] = Message();
+    messageLogic.initRecordMessage();
     var contactLogic = Get.find<ContactLogic>();
     contactLogic.initFriendsInfo();
-
-    Get.offNamed(AppPage.index);
+    state.isRemove.value = true;
     BotToast.showText(text: "删除好友完毕！");
     Log.i("删除好友完毕！");
+  }
+
+  toBack(){
+    if(state.isRemove.value){
+      //这里需要清空一下聊天页，不然这个生命周期始终存活
+      Get.delete<ChatLogic>();
+      Get.offNamed(AppPage.index);
+    }else{
+      Get.back();
+    }
   }
 }

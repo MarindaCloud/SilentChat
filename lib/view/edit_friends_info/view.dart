@@ -30,7 +30,7 @@ class EditFriendsInfoPage extends StatelessWidget {
                   children: [
                     Transform.translate(
                         offset: Offset(130.rpx,0),
-                        child: IconButtonComponent("back", Colors.black)
+                        child: IconButtonComponent.build("back", color: Colors.black,onClick: logic.toBack,)
                     ),
                     Container(
                       child: Text("好友管理",style: TextStyle(fontSize: 16)),
