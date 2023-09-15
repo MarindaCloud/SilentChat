@@ -78,6 +78,7 @@ class EditFriendsInfoPage extends StatelessWidget {
                                     ),
                                   ),
                                   onTap: (){
+                                    logic.showUpdateNote();
                                     print("更改备注");
                                   },
                                 ),

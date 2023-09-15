@@ -829,6 +829,254 @@ class $CacheViewMessageTable extends CacheViewMessage
   }
 }
 
+class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
+  final int id;
+  final int uid;
+  final String username;
+  final String nickName;
+  FriendsNoteData(
+      {required this.id,
+      required this.uid,
+      required this.username,
+      required this.nickName});
+  factory FriendsNoteData.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return FriendsNoteData(
+      id: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      uid: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
+      username: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}username'])!,
+      nickName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}nick_name'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['uid'] = Variable<int>(uid);
+    map['username'] = Variable<String>(username);
+    map['nick_name'] = Variable<String>(nickName);
+    return map;
+  }
+
+  FriendsNoteCompanion toCompanion(bool nullToAbsent) {
+    return FriendsNoteCompanion(
+      id: Value(id),
+      uid: Value(uid),
+      username: Value(username),
+      nickName: Value(nickName),
+    );
+  }
+
+  factory FriendsNoteData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FriendsNoteData(
+      id: serializer.fromJson<int>(json['id']),
+      uid: serializer.fromJson<int>(json['uid']),
+      username: serializer.fromJson<String>(json['username']),
+      nickName: serializer.fromJson<String>(json['nickName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'uid': serializer.toJson<int>(uid),
+      'username': serializer.toJson<String>(username),
+      'nickName': serializer.toJson<String>(nickName),
+    };
+  }
+
+  FriendsNoteData copyWith(
+          {int? id, int? uid, String? username, String? nickName}) =>
+      FriendsNoteData(
+        id: id ?? this.id,
+        uid: uid ?? this.uid,
+        username: username ?? this.username,
+        nickName: nickName ?? this.nickName,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('FriendsNoteData(')
+          ..write('id: $id, ')
+          ..write('uid: $uid, ')
+          ..write('username: $username, ')
+          ..write('nickName: $nickName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, uid, username, nickName);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FriendsNoteData &&
+          other.id == this.id &&
+          other.uid == this.uid &&
+          other.username == this.username &&
+          other.nickName == this.nickName);
+}
+
+class FriendsNoteCompanion extends UpdateCompanion<FriendsNoteData> {
+  final Value<int> id;
+  final Value<int> uid;
+  final Value<String> username;
+  final Value<String> nickName;
+  const FriendsNoteCompanion({
+    this.id = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.username = const Value.absent(),
+    this.nickName = const Value.absent(),
+  });
+  FriendsNoteCompanion.insert({
+    this.id = const Value.absent(),
+    required int uid,
+    required String username,
+    required String nickName,
+  })  : uid = Value(uid),
+        username = Value(username),
+        nickName = Value(nickName);
+  static Insertable<FriendsNoteData> custom({
+    Expression<int>? id,
+    Expression<int>? uid,
+    Expression<String>? username,
+    Expression<String>? nickName,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uid != null) 'uid': uid,
+      if (username != null) 'username': username,
+      if (nickName != null) 'nick_name': nickName,
+    });
+  }
+
+  FriendsNoteCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? uid,
+      Value<String>? username,
+      Value<String>? nickName}) {
+    return FriendsNoteCompanion(
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      username: username ?? this.username,
+      nickName: nickName ?? this.nickName,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uid.present) {
+      map['uid'] = Variable<int>(uid.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (nickName.present) {
+      map['nick_name'] = Variable<String>(nickName.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FriendsNoteCompanion(')
+          ..write('id: $id, ')
+          ..write('uid: $uid, ')
+          ..write('username: $username, ')
+          ..write('nickName: $nickName')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FriendsNoteTable extends FriendsNote
+    with TableInfo<$FriendsNoteTable, FriendsNoteData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FriendsNoteTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  @override
+  late final GeneratedColumn<int?> uid = GeneratedColumn<int?>(
+      'uid', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _usernameMeta = const VerificationMeta('username');
+  @override
+  late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
+      'username', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _nickNameMeta = const VerificationMeta('nickName');
+  @override
+  late final GeneratedColumn<String?> nickName = GeneratedColumn<String?>(
+      'nick_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, uid, username, nickName];
+  @override
+  String get aliasedName => _alias ?? 'friends_note';
+  @override
+  String get actualTableName => 'friends_note';
+  @override
+  VerificationContext validateIntegrity(Insertable<FriendsNoteData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(_usernameMeta,
+          username.isAcceptableOrUnknown(data['username']!, _usernameMeta));
+    } else if (isInserting) {
+      context.missing(_usernameMeta);
+    }
+    if (data.containsKey('nick_name')) {
+      context.handle(_nickNameMeta,
+          nickName.isAcceptableOrUnknown(data['nick_name']!, _nickNameMeta));
+    } else if (isInserting) {
+      context.missing(_nickNameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FriendsNoteData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return FriendsNoteData.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $FriendsNoteTable createAlias(String alias) {
+    return $FriendsNoteTable(attachedDatabase, alias);
+  }
+}
+
 abstract class _$DBManager extends GeneratedDatabase {
   _$DBManager(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $RecordMessageTable recordMessage = $RecordMessageTable(this);
@@ -836,15 +1084,17 @@ abstract class _$DBManager extends GeneratedDatabase {
       $GlobalImageCacheTable(this);
   late final $CacheViewMessageTable cacheViewMessage =
       $CacheViewMessageTable(this);
+  late final $FriendsNoteTable friendsNote = $FriendsNoteTable(this);
   late final RecordMessageDao recordMessageDao =
       RecordMessageDao(this as DBManager);
   late final GlobalImageCacheDao globalImageCacheDao =
       GlobalImageCacheDao(this as DBManager);
   late final CacheViewMessageDao cacheViewMessageDao =
       CacheViewMessageDao(this as DBManager);
+  late final FriendsNoteDao friendsNoteDao = FriendsNoteDao(this as DBManager);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [recordMessage, globalImageCache, cacheViewMessage];
+      [recordMessage, globalImageCache, cacheViewMessage, friendsNote];
 }
