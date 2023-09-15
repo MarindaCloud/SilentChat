@@ -26,6 +26,14 @@ class EditFriendsInfoLogic extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    OverlayManager().removeOverlay("inputBox");
+    // TODO: implement onClose
+    super.onClose();
+
+  }
+
   /*
    * @author Marinda
    * @date 2023/9/15 11:26
@@ -81,5 +89,14 @@ class EditFriendsInfoLogic extends GetxController {
     userState.notesMap[uid] = text;
     Log.i("当前备注文本为：${text}");
     OverlayManager().removeOverlay("inputBox");
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 14:40
+   * @description 删除好友
+   */
+  removeFriend() async{
+
   }
 }
