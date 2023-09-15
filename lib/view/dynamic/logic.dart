@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/app_page.dart';
@@ -18,8 +17,8 @@ import 'state.dart';
 
 class DynamicLogic extends GetxController {
   final DynamicState state = DynamicState();
-  final SystemLogic systemLogic = Get.find<SystemLogic>();
-  final SystemState systemState = Get.find<SystemLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
 

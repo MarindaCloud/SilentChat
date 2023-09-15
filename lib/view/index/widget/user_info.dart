@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/socket/socket_handle.dart';

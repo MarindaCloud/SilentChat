@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/cache_record_message_dao.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
@@ -26,7 +26,6 @@ import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:drift/drift.dart' as drift;
 import 'state.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 /**
  * @author Marinda
  * @date 2023/6/9 17:30
@@ -320,15 +319,17 @@ class MessageLogic extends GetxController {
    * @date 2023/5/25 15:51
    * @description 构建聊天记录
    */
-   buildRecordList(){
+   buildRecordList() {
     List<Widget> list = [];
     for(SilentChatEntity target in state.messageViewMap.keys){
       Message? message = state.messageViewMap[target];
       int mid = message?.id ?? 0;
       DateTime dt = message?.time ?? DateTime.now();
       int type = 0;
+      String nickName = "";
       if(target is User){
         type = 1;
+        nickName = userState.notesMap[target.id ?? -1] ?? target.username ?? "";
       }else{
         type = 2;
       }
@@ -398,7 +399,7 @@ class MessageLogic extends GetxController {
                                 //名称
                                 Container(
                                   child: Text(
-                                    type == 1 ? (target as User).username ?? "" : (target as Group).name ?? "",
+                                    type == 1 ? nickName : (target as Group).name ?? "",
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 14,
@@ -476,7 +477,7 @@ class MessageLogic extends GetxController {
                               children: [
                                 //  名称
                                 Text(
-                                 type == 1 ? (target as User).username ?? "" : (target as Group).name ?? "",
+                                 type == 1 ? nickName : (target as Group).name ?? "",
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,

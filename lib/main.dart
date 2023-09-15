@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/enum/global_page.dart';

@@ -7,5 +7,5 @@ class FriendsNote extends Table{
 
   TextColumn get username => text()();
 
-  TextColumn get nickName => text()();
+  TextColumn get nickname => text()();
 }

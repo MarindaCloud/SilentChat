@@ -33,7 +33,7 @@ class FriendsNoteDao extends DatabaseAccessor<DBManager> with _$FriendsNoteDaoMi
   Future updateNote(FriendsNoteData data) =>
       (update(friendsNote)..where((tbl) =>tbl.id.equals(data.id))).write(
           FriendsNoteCompanion(
-            nickName: Value(data.nickName),
+            nickname: Value(data.nickname),
             username: Value(data.username),
             uid: Value(data.uid)
           )

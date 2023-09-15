@@ -833,12 +833,12 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
   final int id;
   final int uid;
   final String username;
-  final String nickName;
+  final String nickname;
   FriendsNoteData(
       {required this.id,
       required this.uid,
       required this.username,
-      required this.nickName});
+      required this.nickname});
   factory FriendsNoteData.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -849,8 +849,8 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
       username: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}username'])!,
-      nickName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}nick_name'])!,
+      nickname: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}nickname'])!,
     );
   }
   @override
@@ -859,7 +859,7 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
     map['id'] = Variable<int>(id);
     map['uid'] = Variable<int>(uid);
     map['username'] = Variable<String>(username);
-    map['nick_name'] = Variable<String>(nickName);
+    map['nickname'] = Variable<String>(nickname);
     return map;
   }
 
@@ -868,7 +868,7 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
       id: Value(id),
       uid: Value(uid),
       username: Value(username),
-      nickName: Value(nickName),
+      nickname: Value(nickname),
     );
   }
 
@@ -879,7 +879,7 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
       id: serializer.fromJson<int>(json['id']),
       uid: serializer.fromJson<int>(json['uid']),
       username: serializer.fromJson<String>(json['username']),
-      nickName: serializer.fromJson<String>(json['nickName']),
+      nickname: serializer.fromJson<String>(json['nickname']),
     );
   }
   @override
@@ -889,17 +889,17 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
       'id': serializer.toJson<int>(id),
       'uid': serializer.toJson<int>(uid),
       'username': serializer.toJson<String>(username),
-      'nickName': serializer.toJson<String>(nickName),
+      'nickname': serializer.toJson<String>(nickname),
     };
   }
 
   FriendsNoteData copyWith(
-          {int? id, int? uid, String? username, String? nickName}) =>
+          {int? id, int? uid, String? username, String? nickname}) =>
       FriendsNoteData(
         id: id ?? this.id,
         uid: uid ?? this.uid,
         username: username ?? this.username,
-        nickName: nickName ?? this.nickName,
+        nickname: nickname ?? this.nickname,
       );
   @override
   String toString() {
@@ -907,13 +907,13 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
           ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('username: $username, ')
-          ..write('nickName: $nickName')
+          ..write('nickname: $nickname')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uid, username, nickName);
+  int get hashCode => Object.hash(id, uid, username, nickname);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -921,39 +921,39 @@ class FriendsNoteData extends DataClass implements Insertable<FriendsNoteData> {
           other.id == this.id &&
           other.uid == this.uid &&
           other.username == this.username &&
-          other.nickName == this.nickName);
+          other.nickname == this.nickname);
 }
 
 class FriendsNoteCompanion extends UpdateCompanion<FriendsNoteData> {
   final Value<int> id;
   final Value<int> uid;
   final Value<String> username;
-  final Value<String> nickName;
+  final Value<String> nickname;
   const FriendsNoteCompanion({
     this.id = const Value.absent(),
     this.uid = const Value.absent(),
     this.username = const Value.absent(),
-    this.nickName = const Value.absent(),
+    this.nickname = const Value.absent(),
   });
   FriendsNoteCompanion.insert({
     this.id = const Value.absent(),
     required int uid,
     required String username,
-    required String nickName,
+    required String nickname,
   })  : uid = Value(uid),
         username = Value(username),
-        nickName = Value(nickName);
+        nickname = Value(nickname);
   static Insertable<FriendsNoteData> custom({
     Expression<int>? id,
     Expression<int>? uid,
     Expression<String>? username,
-    Expression<String>? nickName,
+    Expression<String>? nickname,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
       if (username != null) 'username': username,
-      if (nickName != null) 'nick_name': nickName,
+      if (nickname != null) 'nickname': nickname,
     });
   }
 
@@ -961,12 +961,12 @@ class FriendsNoteCompanion extends UpdateCompanion<FriendsNoteData> {
       {Value<int>? id,
       Value<int>? uid,
       Value<String>? username,
-      Value<String>? nickName}) {
+      Value<String>? nickname}) {
     return FriendsNoteCompanion(
       id: id ?? this.id,
       uid: uid ?? this.uid,
       username: username ?? this.username,
-      nickName: nickName ?? this.nickName,
+      nickname: nickname ?? this.nickname,
     );
   }
 
@@ -982,8 +982,8 @@ class FriendsNoteCompanion extends UpdateCompanion<FriendsNoteData> {
     if (username.present) {
       map['username'] = Variable<String>(username.value);
     }
-    if (nickName.present) {
-      map['nick_name'] = Variable<String>(nickName.value);
+    if (nickname.present) {
+      map['nickname'] = Variable<String>(nickname.value);
     }
     return map;
   }
@@ -994,7 +994,7 @@ class FriendsNoteCompanion extends UpdateCompanion<FriendsNoteData> {
           ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('username: $username, ')
-          ..write('nickName: $nickName')
+          ..write('nickname: $nickname')
           ..write(')'))
         .toString();
   }
@@ -1023,13 +1023,13 @@ class $FriendsNoteTable extends FriendsNote
   late final GeneratedColumn<String?> username = GeneratedColumn<String?>(
       'username', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _nickNameMeta = const VerificationMeta('nickName');
+  final VerificationMeta _nicknameMeta = const VerificationMeta('nickname');
   @override
-  late final GeneratedColumn<String?> nickName = GeneratedColumn<String?>(
-      'nick_name', aliasedName, false,
+  late final GeneratedColumn<String?> nickname = GeneratedColumn<String?>(
+      'nickname', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, uid, username, nickName];
+  List<GeneratedColumn> get $columns => [id, uid, username, nickname];
   @override
   String get aliasedName => _alias ?? 'friends_note';
   @override
@@ -1054,11 +1054,11 @@ class $FriendsNoteTable extends FriendsNote
     } else if (isInserting) {
       context.missing(_usernameMeta);
     }
-    if (data.containsKey('nick_name')) {
-      context.handle(_nickNameMeta,
-          nickName.isAcceptableOrUnknown(data['nick_name']!, _nickNameMeta));
+    if (data.containsKey('nickname')) {
+      context.handle(_nicknameMeta,
+          nickname.isAcceptableOrUnknown(data['nickname']!, _nicknameMeta));
     } else if (isInserting) {
-      context.missing(_nickNameMeta);
+      context.missing(_nicknameMeta);
     }
     return context;
   }

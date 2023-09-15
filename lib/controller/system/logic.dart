@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/state.dart';
 import 'package:silentchat/db/dao/global_image_cache_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/group.dart';

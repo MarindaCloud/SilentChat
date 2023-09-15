@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';

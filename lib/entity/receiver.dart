@@ -1,4 +1,3 @@
-import 'package:silentchat/common/system/logic.dart';
 import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/silent_chat_entity.dart';

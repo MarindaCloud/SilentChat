@@ -11,6 +11,8 @@ class UserState {
   final joinGroupList = <Group>[].obs; String deviceName = "";
   //未读消息map
   RxMap<SilentChatEntity,List<Message>> messageMap = RxMap();
+  //备注名称Map
+  RxMap<int,String> notesMap = RxMap();
   UserState() {
     ///Initialize variables
   }

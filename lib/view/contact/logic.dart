@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/friend.dart';
@@ -26,8 +25,8 @@ import 'state.dart';
  */
 class ContactLogic extends GetxController {
   final ContactState state = ContactState();
-  final SystemLogic systemLogic = Get.find<SystemLogic>();
-  final SystemState systemState = Get.find<SystemLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
   final userLogic = Get.find<UserLogic>();
   final userState = Get.find<UserLogic>().state;
 

@@ -1,6 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/message.dart';

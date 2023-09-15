@@ -1,8 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/util.dart';
@@ -12,8 +11,8 @@ import 'package:bot_toast/bot_toast.dart';
 
 class QrLogic extends GetxController  {
   final QrState state = QrState();
-  final SystemLogic systemLogic = Get.find<SystemLogic>();
-  final SystemState systemState = Get.find<SystemLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
 
 
 

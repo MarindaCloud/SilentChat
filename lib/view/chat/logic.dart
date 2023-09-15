@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/emoji.dart';
-import 'package:silentchat/common/system/logic.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
@@ -206,8 +206,16 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description 修改好友信息
    */
 
-  toEditFriendsInfo(){
-     Get.toNamed(AppPage.editFriendsInfo);
+  toEditFriendsInfo() async{
+    //用户
+    if(state.type.value == 1){
+      User user = await UserAPI.selectByUid(state.receiverId.value);
+      await Get.toNamed(AppPage.editFriendsInfo,arguments: user);
+      state.title.value = userState.notesMap[state.receiverId.value] ?? "";
+      userState.notesMap.refresh();
+
+    }
+
   }
 
   /*
@@ -220,8 +228,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     switch(type){
       case 1:
         //  用户
-        User user =  await UserAPI.selectByUid(id);
-        String username = user.username ?? "";
+        String username = userState.notesMap[id] ?? "";
         title = username;
         break;
       case 2:

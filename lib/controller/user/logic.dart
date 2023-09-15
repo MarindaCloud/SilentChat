@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
+import 'package:silentchat/controller/system/state.dart';
+import 'package:silentchat/db/dao/friends_note_dao.dart';
+import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/friend.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
@@ -28,6 +30,25 @@ class UserLogic extends GetxController {
   String getSex(){
     int sex = state.user.value.sex ?? -1;
     return sex == 1 ? "男" : "女";
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 14:16
+   * @description 从缓存备注中获取备注名称
+   */
+  getNotesName(User user) async{
+    String nickName = "";
+    int uid = user.id ?? -1;
+    FriendsNoteDao dao = FriendsNoteDao(DBManager());
+    FriendsNoteData? data = await dao.selectByUid(uid);
+    if(data != null){
+      nickName = data!.nickname;
+    }else{
+      nickName = user.username ?? "";
+    }
+    Log.i("用户：${user.username ?? ""}的备注为：${nickName}");
+    return nickName;
   }
 
   /*
@@ -98,14 +119,19 @@ class UserLogic extends GetxController {
    */
   initFriendsList() async{
     List<Friend> friendList = await FriendsAPI.selectByUid();
+    Map<int,String> notesMap = {};
     List<User> userList = [];
     for(Friend friend in friendList){
       int friendId = friend?.fid ?? -1;
       User user  = await UserAPI.selectByUid(friendId);
       await systemLogic.loadGlobalImageCache(user);
+      int uid = user.id ?? -1;
+      String nickName = await getNotesName(user);
+      notesMap[uid] = nickName;
       userList.add(user);
     }
     state.friendUserList.value = userList.toSet().toList();
+    state.notesMap.value = notesMap;
     Log.i("朋友用户详情列表List: ${userList.map((e) => e.toJson()).toList()}");
   }
 

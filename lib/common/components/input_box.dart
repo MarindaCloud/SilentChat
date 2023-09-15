@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/overlay_manager.dart';
+import 'package:get/get.dart';
 
 /**
  * @author Marinda
@@ -9,9 +10,22 @@ import 'package:silentchat/util/overlay_manager.dart';
  */
 class InputBoxComponent extends StatelessWidget{
   final String title;
+  final String value;
   final Function onFn;
   TextEditingController controller = TextEditingController(text: "");
-  InputBoxComponent(this.title,this.onFn,{super.key});
+
+  InputBoxComponent(this.title,this.value,this.onFn,{super.key}){
+    controller = TextEditingController(text: value);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/9/15 13:48
+   * @description 关闭
+   */
+  void close(){
+    OverlayManager().removeOverlay("inputBox");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,9 +122,7 @@ class InputBoxComponent extends StatelessWidget{
                                     ),
                                   ),
                                 ),
-                                onTap: (){
-                                  OverlayManager().removeOverlay("inputBox");
-                                },
+                                onTap: ()=>close(),
                               ),
                             ],
                           ),

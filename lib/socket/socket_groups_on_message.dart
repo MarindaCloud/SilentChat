@@ -1,7 +1,6 @@
 import 'dart:convert';
-
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
+import 'package:silentchat/controller/system/state.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:get/get.dart';

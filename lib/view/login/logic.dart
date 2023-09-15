@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
+import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/db/dao/cache_record_message_dao.dart';
@@ -28,8 +27,8 @@ class LoginLogic extends GetxController {
   final LoginState state = LoginState();
   final UserLogic userLogic = Get.find<UserLogic>();
   final UserState userState = Get.find<UserLogic>().state;
-  final SystemLogic systemLogic = Get.find<SystemLogic>();
-  final SystemState systemState = Get.find<SystemLogic>().state;
+  final systemLogic = Get.find<SystemLogic>();
+  final systemState = Get.find<SystemLogic>().state;
 
   final storage = GetStorage();
 

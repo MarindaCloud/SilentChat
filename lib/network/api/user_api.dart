@@ -1,12 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:silentchat/common/system/logic.dart';
-import 'package:silentchat/common/system/state.dart';
-import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/user.dart';
-import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/util/log.dart';
 import '../request.dart';
 import 'package:get/get.dart';
