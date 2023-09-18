@@ -7,6 +7,7 @@ import 'package:silentchat/entity/silent_chat_entity.dart';
  */
 class Group extends SilentChatEntity{
   int? _id;
+  int? _number;
   String? _name;
   String? _portrait;
   String? _description;
@@ -16,6 +17,7 @@ class Group extends SilentChatEntity{
 
   Group(
       {int? id,
+        int? number,
         String? name,
         String? portrait,
         String? description,
@@ -24,6 +26,9 @@ class Group extends SilentChatEntity{
         int? rank}) {
     if (id != null) {
       this._id = id;
+    }
+    if (number != null) {
+      this._number = number;
     }
     if (name != null) {
       this._name = name;
@@ -47,6 +52,8 @@ class Group extends SilentChatEntity{
 
   int? get id => _id;
   set id(int? id) => _id = id;
+  int? get number => _number;
+  set number(int? number) => _number = number;
   String? get name => _name;
   set name(String? name) => _name = name;
   String? get portrait => _portrait;
@@ -62,6 +69,7 @@ class Group extends SilentChatEntity{
 
   Group.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
+    _number = json['number'];
     _name = json['name'];
     _portrait = json['portrait'];
     _description = json['description'];
@@ -73,6 +81,7 @@ class Group extends SilentChatEntity{
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
+    data['number'] = this._number;
     data['name'] = this._name;
     data['portrait'] = this._portrait;
     data['description'] = this._description;

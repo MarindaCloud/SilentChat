@@ -337,7 +337,7 @@ class ContactLogic extends GetxController {
                       Container(
                         alignment: Alignment.topLeft,
                         child: Container(
-                            child: Text("${user.username ?? ""}", style: TextStyle(
+                            child: Text("${userState.notesMap[user.id ?? -1]}", style: TextStyle(
                                 color: Colors.black, fontSize: 14),
                               overflow: TextOverflow.ellipsis,)
                         ),
