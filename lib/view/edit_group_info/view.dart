@@ -5,6 +5,7 @@ import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:flukit/flukit.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'logic.dart';
 
 class EditGroupInfoPage extends StatelessWidget {
@@ -146,70 +147,130 @@ class EditGroupInfoPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Expanded(
-                      child: AfterLayout(
-                        callback: logic.onLayout,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              top: 100.rpx, bottom: 100.rpx),
-                          padding: EdgeInsets.only(left: 50.rpx, right: 50.rpx),
-                          child: Column(
-                            children: [
-                              ...logic.buildGroupInfoList(),
-                              //群成员
-                              InkWell(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 100.rpx),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
+                  Container(
+                    margin: EdgeInsets.only(
+                        top: 100.rpx, bottom: 100.rpx),
+                    padding: EdgeInsets.only(left: 50.rpx, right: 50.rpx),
+                    child: Column(
+                      children: [
+                        ...logic.buildGroupInfoList(),
+                        //群成员
+                        InkWell(
+                          child: Container(
+                            margin: EdgeInsets.only(top: 100.rpx),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 50.rpx),
+                                  child: Row(
                                     children: [
+                                      //详情
                                       Container(
-                                        margin: EdgeInsets.only(bottom: 50.rpx),
-                                        child: Row(
-                                          children: [
-                                            //详情
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  right: 50.rpx),
-                                              child: SizedBox(
-                                                width: 80.rpx,
-                                                height: 80.rpx,
-                                                child: Image.asset(
-                                                  "assets/icon/groupstaff.png",
-                                                  fit: BoxFit.fill,
-                                                  color: Colors.black,),
-                                              ),
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                "群成员（15）",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            )
-                                          ],
+                                        margin: EdgeInsets.only(
+                                            right: 50.rpx),
+                                        child: SizedBox(
+                                          width: 80.rpx,
+                                          height: 80.rpx,
+                                          child: Image.asset(
+                                            "assets/icon/groupstaff.png",
+                                            fit: BoxFit.fill,
+                                            color: Colors.black,),
                                         ),
                                       ),
-                                      //群员头像
                                       Container(
-                                        child: Row(
-                                          children: logic.buildGroupStaff(),
+                                        child: Text(
+                                          "群成员（15）",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
-                                onTap: () {
-                                  print("群成员");
-                                },
-                              )
-                            ],
+                                //群员头像
+                                Container(
+                                  child: Row(
+                                    children: logic.buildGroupStaff(),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
+                          onTap: () {
+                            print("群成员");
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                      child: BarChart(
+                        BarChartData(
+                          maxY: 10,
+                          minY: 0,
+                          gridData:  FlGridData(show: false),
+                          titlesData: FlTitlesData(
+                            show: true,
+                            topTitles: AxisTitles(
+                            ),
+                            rightTitles: AxisTitles(
+                            ),
+                            leftTitles: AxisTitles(
+                            ),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                // reservedSize: ,
+                                getTitlesWidget: (value,meta){
+                                  String text = "";
+                                  switch(value.toInt()){
+                                    case 0:
+                                      text = "管理员";
+                                      break;
+                                  }
+                                  return SideTitleWidget(
+                                      child: Text(
+                                          text,
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 14
+                                        ),
+                                      ),
+                                      axisSide: meta.axisSide,
+                                    space: 4,
+                                  );
+                                }
+                              )
+                            )
+                          ),
+                          backgroundColor: Color.fromRGBO(46,66,97,1),
+                          barGroups: [
+                            BarChartGroupData(
+                                x: 0,
+                                barsSpace: 2,
+                                barRods: [
+                                  BarChartRodData(
+                                    fromY: 0,
+                                      toY: 5,
+                                    color: Colors.blue
+                                  ),
+                                  BarChartRodData(
+                                      fromY: 0,
+                                      toY: 10,
+                                      color: Colors.blue
+                                  )
+                                ]),
+                            // BarChartGroupData(x: 70)
+                          ]
                         ),
-                      ))
+                        swapAnimationCurve: Curves.linear,
+                        swapAnimationDuration: Duration(milliseconds: 150),
+                      )
+                  )
                 ],
               ),
             ),

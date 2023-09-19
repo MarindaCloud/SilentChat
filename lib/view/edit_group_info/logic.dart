@@ -59,15 +59,6 @@ class EditGroupInfoLogic extends GetxController {
 
   /*
    * @author Marinda
-   * @date 2023/9/18 16:01
-   * @description 回调
-   */
-  onLayout(RenderAfterLayout ral){
-    state.size.value = ral.size;
-  }
-
-  /*
-   * @author Marinda
    * @date 2023/9/18 15:43
    * @description 构建群组信息列表
    */
