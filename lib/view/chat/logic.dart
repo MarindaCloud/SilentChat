@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
 import 'package:silentchat/entity/receiver.dart';
+import 'package:intl/intl.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/enum/receiver_type.dart';
@@ -180,15 +182,28 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @date 2023/6/26 15:31
    * @description 录音
    */
-  void recordSound() async{
+   recordSound() async{
     PermissionStatus status = await Permission.microphone.request();
+    int time = 0;
     //权限校验
     if (status != PermissionStatus.granted) throw RecordingPermissionException("麦克风权限未授权！");
-    var dir = await getApplicationDocumentsDirectory();
+    var dir = await getExternalStorageDirectory();
     Uuid uuid = Uuid();
-    String filePath = p.join(dir.path,uuid.v4());
+    String filePath = p.join(dir?.path ?? "",uuid.v4()+".mp4");
+    File file = File(filePath);
+    file.openWrite();
     Log.i("录音保存的位置：${filePath}");
-    await state.recordSound.startRecorder(toFile: filePath,codec: Codec.mp3);
+    await state.recordSound.startRecorder(
+        toFile: filePath,
+        codec: Codec.aacMP4,
+        bitRate: 8000,
+        numChannels: 1
+    );
+    state.recordFlag.value = true;
+    state.recordTimer = Timer.periodic(Duration(seconds: 1), (_) {
+      time++;
+      state.timeString.value = time.toString();
+    });
   }
 
   /*
@@ -196,8 +211,16 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @date 2023/6/26 15:33
    * @description
    */
-  void stopRecordSound() async{
-    await state.recordSound.closeRecorder();
+  stopRecordSound() async{
+    await state.recordSound.stopRecorder();
+    if(state.recordTimer!.isActive){
+      state.recordTimer!.cancel();
+      state.recordTimer = null;
+    }
+    Log.i("停止录制！");
+    state.timeString.value = "";
+    state.recordFlag.value = false;
+    // await state.recordSound.closeRecorder();
   }
 
   /*
@@ -266,17 +289,22 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
                     height: 50.rpx,
                   ),
                   Container(
-                    child: Text("按住说话",
+                    child: Text(
+                      "${state.recordFlag.value ? state.timeString.value : "按住说话"}",
                       style: TextStyle(
                           color: Colors.grey),),
                   ),
                   SizedBox(
                     height: 100.rpx,
                   ),
-                  InkWell(
-                    onLongPress: (){
+                  GestureDetector(
+                    onLongPressUp: () async{
+                      print("长按结束");
+                      await stopRecordSound();
+                    },
+                    onLongPress: () async{
                       Log.i("录音中");
-                      recordSound();
+                      await recordSound();
                     },
                     child: Container(
                         decoration: BoxDecoration(

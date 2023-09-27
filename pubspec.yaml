@@ -80,6 +80,7 @@ dev_dependencies:
   flukit: ^3.0.1
   #录音
   flutter_sound: ^9.2.13
+  intl: ^0.17.0
   #  SM2 加密
   sm2cipher: ^0.0.7
   #  sm4 加密

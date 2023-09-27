@@ -42,10 +42,12 @@ class ChatPage extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         //返回按钮
-                                        BackButtonComponent(onClick: logic.back),
+                                        BackButtonComponent(
+                                            onClick: logic.back),
                                         //未读消息数
                                         Visibility(
-                                          visible: logic.userState.messageMap.values.isNotEmpty,
+                                          visible: logic.userState.messageMap
+                                              .values.isNotEmpty,
                                           child: Transform.translate(
                                             offset: Offset(-5, 0),
                                             child: Container(
@@ -55,12 +57,14 @@ class ChatPage extends StatelessWidget {
                                               width: 120.rpx,
                                               // height: 120.rpx,
                                               decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(76,175,80,1),
+                                                  color: Color.fromRGBO(
+                                                      76, 175, 80, 1),
                                                   borderRadius: BorderRadius
                                                       .circular(15000)
                                               ),
                                               child: Center(
-                                                child: Text("${logic.userState.messageMap.values.length}",
+                                                child: Text("${logic.userState
+                                                    .messageMap.values.length}",
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 18)),
@@ -83,8 +87,9 @@ class ChatPage extends StatelessWidget {
                                   child: SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/icon/liebiao2.png",
-                                      color: Colors.black,fit: BoxFit.fill,),
+                                    child: Image.asset(
+                                      "assets/icon/liebiao2.png",
+                                      color: Colors.black, fit: BoxFit.fill,),
                                   ),
                                 ),
                                 onTap: logic.toEditFriendsInfo,
@@ -133,11 +138,14 @@ class ChatPage extends StatelessWidget {
                                       maxLength: null,
                                       maxLines: null,
                                       style: TextStyle(
-                                        fontSize: 16
+                                          fontSize: 16
                                       ),
                                       controller: state.messageController,
-                                      onChanged: (val){
-                                        if(val.isEmpty){state.existsContentFlag.value = false;return;}
+                                      onChanged: (val) {
+                                        if (val.isEmpty) {
+                                          state.existsContentFlag.value = false;
+                                          return;
+                                        }
                                         state.existsContentFlag.value = true;
                                       },
                                       decoration: InputDecoration(
@@ -167,7 +175,10 @@ class ChatPage extends StatelessWidget {
                                     child: InkWell(
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            color: state.existsContentFlag.value ? Colors.blue : Color.fromRGBO(182,182,182,1),
+                                            color: state.existsContentFlag.value
+                                                ? Colors.blue
+                                                : Color.fromRGBO(
+                                                182, 182, 182, 1),
                                             borderRadius: BorderRadius
                                                 .circular(5)
                                         ),
@@ -199,7 +210,9 @@ class ChatPage extends StatelessWidget {
                                         height: 150.rpx,
                                         child: Image.asset(
                                           "assets/icon/luyin.png",
-                                          color: state.subChildType.value == "luyin" ? Colors.blue :Colors.black,
+                                          color: state.subChildType.value ==
+                                              "luyin" ? Colors.blue : Colors
+                                              .black,
                                           // color: Colors.black,
                                           fit: BoxFit.cover,),
                                       ),
@@ -244,7 +257,9 @@ class ChatPage extends StatelessWidget {
                                         height: 150.rpx,
                                         child: Image.asset(
                                           "assets/icon/biaoqing.png",
-                                          color: state.subChildType.value == "emote" ? Colors.blue :Colors.black,),
+                                          color: state.subChildType.value ==
+                                              "emote" ? Colors.blue : Colors
+                                              .black,),
                                       ),
                                       onTap: () {
                                         logic.chooseSubChild("emote");
@@ -269,14 +284,16 @@ class ChatPage extends StatelessWidget {
                               ),
                             ),
                             // 子组件
-                            FadeTransition(
-                              opacity: state.fadeValue!,
-                              child: Visibility(
-                                visible: state.chooseSubChild.value,
-                                child: logic.buildSubWidget(),
-                                // child: logic.buildEmojiWidget(),
-                              ),
-                            ),
+                            Obx(() {
+                              return FadeTransition(
+                                opacity: state.fadeValue!,
+                                child: Visibility(
+                                  visible: state.chooseSubChild.value,
+                                  child: logic.buildSubWidget(),
+                                  // child: logic.buildEmojiWidget(),
+                                ),
+                              );
+                            }),
                             Container(
                               height: 50.rpx,
                               color: Color.fromRGBO(247, 247, 247, 1),

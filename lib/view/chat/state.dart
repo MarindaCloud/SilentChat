@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -31,6 +32,9 @@ class ChatState {
   FlutterSoundPlayer flutterSoundPlayer = FlutterSoundPlayer();
   FlutterSoundRecorder recordSound = FlutterSoundRecorder();
   final messageList = <Message>[].obs;
+  final timeString = "".obs;
+  final recordFlag = false.obs;
+  Timer? recordTimer;
   ChatState() {
     ///Initialize variables
   }
