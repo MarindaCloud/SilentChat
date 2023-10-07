@@ -146,7 +146,7 @@ class CacheImageHandle{
    * @description 下载图像
    */
    static downloadImage(String url) async{
-     dio.ResponseBody responseBody = await Request.requestImage(url,method: HttpMethods.GET.value);
+     dio.ResponseBody responseBody = await Request.requestStream(url,method: HttpMethods.GET.value);
      final Completer<Uint8List> completer = Completer<Uint8List>.sync();
      final List<List<int>> chunks = <List<int>>[];
      int contentLength = 0;

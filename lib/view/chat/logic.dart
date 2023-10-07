@@ -1,30 +1,34 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/emoji.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/db/dao/record_message_dao.dart';
 import 'package:silentchat/db/db_manager.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';
-import 'package:silentchat/entity/user_receiver.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/chat_info.dart';
 import 'package:silentchat/entity/chat_message.dart';
 import 'package:silentchat/entity/chat_record_data.dart';
 import 'package:silentchat/entity/message.dart';
 import 'package:silentchat/entity/packet.dart';
-import 'package:silentchat/entity/receiver.dart';
-import 'package:intl/intl.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/enum/message_type.dart';
 import 'package:silentchat/enum/receiver_type.dart';
+import 'package:silentchat/network/api/common_api.dart';
 import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/message_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
+import 'package:silentchat/network/request.dart';
 import 'package:silentchat/socket/socket_handle.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -192,6 +196,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     String filePath = p.join(dir?.path ?? "",uuid.v4()+".mp4");
     File file = File(filePath);
     file.openWrite();
+    state.voicePath.value = filePath;
     Log.i("录音保存的位置：${filePath}");
     await state.recordSound.startRecorder(
         toFile: filePath,
@@ -217,9 +222,11 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       state.recordTimer!.cancel();
       state.recordTimer = null;
     }
+    await sendVoiceMessage(state.voicePath.value, int.parse(state.timeString.value));
     Log.i("停止录制！");
     state.timeString.value = "";
     state.recordFlag.value = false;
+    state.voicePath.value = "";
     // await state.recordSound.closeRecorder();
   }
 
@@ -266,6 +273,27 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     state.title.value = title;
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/9/27 17:19
+   * @description 构建语音控件
+   */
+  Widget buildVoiceWidget(){
+    return Container(
+      width: 200.rpx,
+      height: 50.rpx,
+      color: Colors.grey,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 50.rpx,
+            height: 50.rpx,
+            child: Image.asset("yuyin.gif".icon,fit: BoxFit.fill,color: Colors.white,),
+          )
+        ],
+      ),
+    );
+  }
 
   /*
    * @author Marinda
@@ -318,7 +346,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
                           width: 200.rpx,
                           height: 200.rpx,
                           child: Image.asset(
-                            "assets/icon/luyin.png",
+                            "luyin.png".icon,
                             color: Colors.white,
                             fit: BoxFit.cover,),
                         ),)
@@ -593,6 +621,45 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
 
   /*
    * @author Marinda
+   * @date 2023/9/28 11:08
+   * @description 发送语音消息
+   */
+   sendVoiceMessage(String url,int second) async{
+    Log.i("发送语音消息：(url: ${url},second: ${second}}");
+    if(second >60){
+      BotToast.showText(text: "超出最大限制语音时长");
+      return;
+    }
+    //上传至远程服务器
+    var remoteUrl = await CommonAPI.uploadFile(File(url), "voice");
+    Message message = Message(content: "${second}",type: MessageType.VOICE.type,expandAddress: remoteUrl,time: DateTime.now());
+    APIResult apiResult = await MessageAPI.insertMessage(message);
+    int messageId = apiResult.data;
+    User user = userState.user.value;
+    int uid = user.id ?? -1;
+    await MessageAPI.insertChatInfo(ChatInfo(sendId: uid,mid:messageId,receiverId: state.receiverId.value,type: state.type.value));
+    ChatRecordData recordData = ChatRecordData(sendId: uid,targetId: messageId,message: "${second}",time: DateTime.now(),messageType: MessageType.VOICE,portrait: user.portrait ?? "",expandAddress: remoteUrl);
+    state.chatRecordList.add(recordData);
+    sortRecordInfo();
+    ChatMessage chatMessage = ChatMessage(uid: uid,mid: messageId,receiverId: state.receiverId.value,receiverType: ReceiverType.getMessageType(state.type.value));
+    Packet packet = Packet(type: 2,object: chatMessage);
+    Log.i("发包详情：${packet.toJson()}");
+    String packetJSON = json.encode(packet);
+    Log.i("packetJson: ${packetJSON}");
+    state.socketHandle?.write(packetJSON);
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/10/7 15:54
+   * @description 插入缓存语音文件
+   */
+  insertCacheVoiceFile(String ) async{
+    Log.i("插入缓存语音文件详情");
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/6/3 11:35
    * @description 打开视频 模拟器没相机不好测试
    */
@@ -653,7 +720,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
    * @description 通过异步socket插入Message
    */
    syncInsertMessage(ChatMessage chatMessage,[MessageType? msgType,String? expandAddress]) async{
-    int targetId = userState.user.value.id ?? -1;
+    int targetId = chatMessage.uid ?? -1;
     Message msg = await MessageAPI.selectMessageById(chatMessage.mid ?? -1);
     String message = msg.content ?? "";
     DateTime dt = DateTime.now();
@@ -667,9 +734,14 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     }else{
       messageType = MessageType.getMessageType(msg.type ?? -1)!;
     }
-    ChatRecordData chatRecordData = ChatRecordData(portrait: portrait,targetId: targetId,message: message,messageType: messageType,time: dt,sendId: sendId,expandAddress: expandAddress);
+    ChatRecordData chatRecordData = ChatRecordData(portrait: portrait,targetId: sendId,message: message,messageType: messageType,time: dt,sendId: targetId);
+    if(expandAddress != null){
+      chatRecordData.expandAddress = expandAddress;
+    }else{
+      chatRecordData.expandAddress = msg.expandAddress;
+    }
     state.chatRecordList.add(chatRecordData);
-    initChatRecordDataList();
+    sortRecordInfo();
   }
 
   /*
@@ -859,8 +931,98 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
         )
         );
         break;
+      case MessageType.VOICE:
+        String randomTag = "voice-${chatRecordData.time}";
+        Log.i("语音类型");
+        widget = InkWell(
+          child: Container(
+            padding: EdgeInsets.all(40.rpx),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: sendId == uid ? Colors.blue : Colors.white
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxWidth: 500.rpx,
+                  minWidth: 150.rpx
+              ),
+              child: Row(
+                children: [
+                  //图标
+                  Container(
+                    margin: EdgeInsets.only(right: 30.rpx),
+                    child: SizedBox(
+                      width: 50.rpx,
+                      height: 50.rpx,
+                      child: state.voicePlayList.contains(randomTag) ?
+                        Image.asset("${sendId == uid ? "yuyin" : "yuyin2"}.gif".icon,fit: BoxFit.fill,color: sendId == uid ? Colors.white :  Colors.black)
+                      : Image.asset("${sendId == uid ? "yuyin-left" : "yuyin-right"}.png".icon,fit: BoxFit.fill,color: sendId == uid ? Colors.white :  Colors.black),
+                    ),
+                  ),
+                  //秒数
+                  Container(
+                    child: Text(
+                        "${message + '"'}",
+                        style: TextStyle(color: sendId == uid ? Colors.white : Colors.black,fontSize: 14)
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          onTap: (){
+            playVoice(randomTag,chatRecordData);
+          } ,
+        );
+        break;
     }
     return widget;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/10/7 14:28
+   * @description 播放语音信息 目前先做本地语音缓存处理
+   */
+  playVoice(String tag,ChatRecordData data) async{
+    String voiceUrl = data.expandAddress ?? "";
+    Log.i("目标语音文件: ${voiceUrl}");
+    Uint8List uint8list = Uint8List(0);
+    //视为网络http
+    if(voiceUrl.startsWith("http")){
+      uint8list = await CacheImageHandle.downloadImage(voiceUrl);
+    }else{
+      File voiceFile = File(voiceUrl);
+      //如果不存在
+      if(!voiceFile.existsSync()){
+        BotToast.showText(text: "语音播放失败");
+        return;
+      }
+      uint8list  = await voiceFile.readAsBytes();
+    }
+
+    //如果存在则进行移除播放
+    if(state.voicePlayList.contains(tag)){
+      state.voicePlayList.remove(tag);
+      await state.flutterSoundPlayer.stopPlayer();
+      return;
+    }
+    //加入语音信息队列
+    state.voicePlayList.add(tag);
+    Log.i("添加播放：${tag}");
+
+    await state.flutterSoundPlayer.startPlayer(
+      fromURI: data.expandAddress,
+      fromDataBuffer: uint8list,
+      codec: Codec.aacMP4,
+      sampleRate: 8000,
+        numChannels: 1,
+      whenFinished: (){
+      //  播放完毕
+        state.voicePlayList.remove(tag);
+      }
+    );
   }
 
 

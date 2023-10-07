@@ -35,6 +35,9 @@ class ChatState {
   final timeString = "".obs;
   final recordFlag = false.obs;
   Timer? recordTimer;
+  final voicePath = "".obs;
+  //用来控制语音播放列表
+  final voicePlayList = <String>[].obs;
   ChatState() {
     ///Initialize variables
   }

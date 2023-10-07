@@ -110,7 +110,9 @@ class ChatPage extends StatelessWidget {
                                   // color: Colors.red,
                                   child: SingleChildScrollView(
                                     child: Column(
-                                      children: logic.buildChatMessage(),
+                                      children: [
+                                        ...logic.buildChatMessage()
+                                      ],
                                     ),
                                   ),
                                 ),

@@ -21,7 +21,7 @@ class Request{
    * @date 2023/6/8 15:53
    * @description 内置请求
    */
-  static dynamic requestImage(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
+  static dynamic requestStream(String path,{String method = "",dynamic data,Map<String,dynamic>? header}) async{
     Response? responseData;
     var dio = Dio();
     dio.options.responseType = ResponseType.stream;
