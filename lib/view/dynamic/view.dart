@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 
 import 'logic.dart';
@@ -61,7 +62,7 @@ class DynamicPage extends StatelessWidget {
                                     width: 80.rpx,
                                     height: 80.rpx,
                                     child: Image.asset(
-                                      "assets/icon/dynamic.png",
+                                      "dynamic.png".icon,
                                       color: Colors.orange,),
                                   ),
                                 ),
@@ -98,7 +99,7 @@ class DynamicPage extends StatelessWidget {
                                     width: 80.rpx,
                                     height: 80.rpx,
                                     child: Image.asset(
-                                        "assets/icon/qianwang.png"),
+                                        "qianwang.png".icon),
                                   ),
                                 ),
                               ],
@@ -131,7 +132,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/youxi.png"),
+                                            "youxi.png".icon),
                                       ),
                                     ),
                                     Container(
@@ -149,7 +150,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -175,7 +176,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                          "assets/icon/fujin.png",
+                                          "fujin.png".icon,
                                           color: Colors.green,),
                                       ),
                                     ),
@@ -194,7 +195,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -229,7 +230,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/yuedu.png"),
+                                            "yuedu.png".icon),
                                       ),
                                     ),
                                     Container(
@@ -247,7 +248,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -273,7 +274,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/shujiyuedu.png"),
+                                            "shujiyuedu.png".icon),
 
                                       ),
                                     ),
@@ -292,7 +293,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -318,7 +319,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                          "assets/icon/gouwuche.png",
+                                          "gouwuche.png".icon,
                                           color: Colors.red,),
                                       ),
                                     ),
@@ -337,7 +338,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -363,7 +364,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/yinle.png"),
+                                            "yinle.png".icon),
                                       ),
                                     ),
                                     Container(
@@ -381,7 +382,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],
@@ -407,7 +408,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/ziyuanxhdpi.png"),),
+                                            "ziyuanxhdpi.png".icon),),
                                     ),
                                     Container(
                                       child: Text("更多",
@@ -424,7 +425,7 @@ class DynamicPage extends StatelessWidget {
                                         width: 80.rpx,
                                         height: 80.rpx,
                                         child: Image.asset(
-                                            "assets/icon/qianwang.png"),
+                                            "qianwang.png".icon),
                                       ),
                                     ),
                                   ],

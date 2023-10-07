@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:flukit/flukit.dart';
@@ -134,7 +135,7 @@ class LoginPage extends StatelessWidget {
                                               image: DecorationImage(
                                                   image: Image
                                                       .asset(
-                                                      logic.systemState.showHistory.value ? "assets/icon/zhankai1.png" : "assets/icon/zhankai.png",
+                                                      logic.systemState.showHistory.value ? "zhankai1.png".icon : "zhankai.png".icon,
                                                       color: Color.fromRGBO(
                                                           150, 150, 150, 1))
                                                       .image,
@@ -289,7 +290,7 @@ class LoginPage extends StatelessWidget {
                               child: SizedBox(
                                 width: 150.rpx,
                                 height: 150.rpx,
-                                child: Image.asset("assets/icon/denglu.png",
+                                child: Image.asset("denglu.png".icon,
                                   color: Colors.white,),
                               ),
                             ),

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/icon_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 
 import 'logic.dart';
@@ -111,7 +112,7 @@ class SpacePage extends StatelessWidget {
                                         width: 120.rpx,
                                         height: 120.rpx,
                                         child: Image.asset(
-                                          "assets/icon/tuxiang.png",
+                                          "tuxiang.png".icon,
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -143,7 +144,7 @@ class SpacePage extends StatelessWidget {
                                         width: 130.rpx,
                                         height: 130.rpx,
                                         child: Image.asset(
-                                          "assets/icon/xiaoxiqipao.png",
+                                          "xiaoxiqipao.png".icon,
                                           fit: BoxFit.fill,
                                           color: Colors.black,
                                         ),
@@ -176,7 +177,7 @@ class SpacePage extends StatelessWidget {
                                         width: 130.rpx,
                                         height: 130.rpx,
                                         child: Image.asset(
-                                          "assets/icon/pifu.png",
+                                          "pifu.png".icon,
                                           fit: BoxFit.fill,
                                           color: Colors.black,
                                         ),
@@ -209,7 +210,7 @@ class SpacePage extends StatelessWidget {
                                         width: 130.rpx,
                                         height: 130.rpx,
                                         child: Image.asset(
-                                          "assets/icon/tuxiang.png",
+                                          "tuxiang.png".icon,
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -241,7 +242,7 @@ class SpacePage extends StatelessWidget {
                                         width: 130.rpx,
                                         height: 130.rpx,
                                         child: Image.asset(
-                                          "assets/icon/tuxiang.png",
+                                          "tuxiang.png".icon,
                                           fit: BoxFit.fill,
                                         ),
                                       ),

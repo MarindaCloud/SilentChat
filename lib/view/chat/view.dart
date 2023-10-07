@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
 import 'package:silentchat/common/emoji.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'logic.dart';
 
@@ -88,7 +89,7 @@ class ChatPage extends StatelessWidget {
                                     width: 80.rpx,
                                     height: 80.rpx,
                                     child: Image.asset(
-                                      "assets/icon/liebiao2.png",
+                                      "liebiao2.png".icon,
                                       color: Colors.black, fit: BoxFit.fill,),
                                   ),
                                 ),
@@ -211,7 +212,7 @@ class ChatPage extends StatelessWidget {
                                         width: 150.rpx,
                                         height: 150.rpx,
                                         child: Image.asset(
-                                          "assets/icon/luyin.png",
+                                          "luyin.png".icon,
                                           color: state.subChildType.value ==
                                               "luyin" ? Colors.blue : Colors
                                               .black,
@@ -229,7 +230,7 @@ class ChatPage extends StatelessWidget {
                                         width: 150.rpx,
                                         height: 150.rpx,
                                         child: Image.asset(
-                                          "assets/icon/tuxiang.png",
+                                          "tuxiang.png".icon,
                                           color: Colors.black,),
                                       ),
                                       onTap: () {
@@ -243,7 +244,7 @@ class ChatPage extends StatelessWidget {
                                         width: 150.rpx,
                                         height: 150.rpx,
                                         child: Image.asset(
-                                          "assets/icon/luzhishipin.png",
+                                          "luzhishipin.png".icon,
                                           color: Colors.black,),
                                       ),
                                       onTap: () {
@@ -258,7 +259,7 @@ class ChatPage extends StatelessWidget {
                                         width: 150.rpx,
                                         height: 150.rpx,
                                         child: Image.asset(
-                                          "assets/icon/biaoqing.png",
+                                          "biaoqing.png".icon,
                                           color: state.subChildType.value ==
                                               "emote" ? Colors.blue : Colors
                                               .black,),
@@ -274,7 +275,7 @@ class ChatPage extends StatelessWidget {
                                         width: 150.rpx,
                                         height: 150.rpx,
                                         child: Image.asset(
-                                          "assets/icon/jiahao.png",
+                                          "jiahao.png".icon,
                                           color: Colors.black,),
                                       ),
                                       onTap: () {

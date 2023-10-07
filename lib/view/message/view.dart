@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/index/logic.dart';
@@ -114,7 +115,7 @@ class MessagePage extends StatelessWidget {
                         width: 100.rpx,
                         height: 100.rpx,
                         child: Image
-                            .asset("assets/icon/jiahao_o.png",color: Colors.white,)
+                            .asset("jiahao_o.png".icon,color: Colors.white,)
                       ),
                       onTap: () {
                         state.showTools.value = !state.showTools.value;
@@ -145,7 +146,7 @@ class MessagePage extends StatelessWidget {
                               SizedBox(
                                   width: 80.rpx,
                                   height: 80.rpx,
-                                  child: Image.asset("assets/icon/sousuo.png")
+                                  child: Image.asset("sousuo.png".icon)
                               ),
                               SizedBox(width: 20.rpx),
                               //搜索

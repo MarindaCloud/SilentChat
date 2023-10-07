@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 
 import 'logic.dart';
@@ -50,7 +51,7 @@ class AppendPage extends StatelessWidget {
                                       width: 100.rpx,
                                       height: 100.rpx,
                                       child: Image.asset(
-                                        "assets/icon/sousuo.png",
+                                        "sousuo.png".icon,
                                         fit: BoxFit.cover, color: Colors.grey,)
                                   ),
                                   filled: true,
@@ -91,7 +92,7 @@ class AppendPage extends StatelessWidget {
                                       width: 100.rpx,
                                       height: 100.rpx,
                                       child: Image.asset(
-                                        "assets/icon/dynamic.png",
+                                        "dynamic.png".icon,
                                         fit: BoxFit.cover, color: Colors.grey,),
                                     ),
                                     SizedBox(

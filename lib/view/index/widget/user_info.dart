@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/socket/socket_handle.dart';
@@ -110,7 +111,7 @@ class UserInfoState extends State<UserInfoWidget> {
     List<Widget> list = [];
     List<String> navList = ["个人信息","我的钱包"];
     for(int i = 0;i<navList.length;i++){
-      String icon = i == navList.length - 1 ? "assets/icon/qianbao_o.png" : "assets/icon/gerenxinxi.png";
+      String icon = i == navList.length - 1 ? "qianbao_o.png".icon : "gerenxinxi.png".icon;
     //  构建五个选项信息
       Widget widget = Container(
         padding: EdgeInsets.symmetric(horizontal: 50.rpx),
@@ -160,7 +161,7 @@ class UserInfoState extends State<UserInfoWidget> {
                   SizedBox(
                     width: 100.rpx,
                     height: 100.rpx,
-                    child: Image.asset("assets/icon/shezhi.png",fit: BoxFit.fill),
+                    child: Image.asset("shezhi.png".icon,fit: BoxFit.fill),
                   ),
                   SizedBox(width: 10.rpx),
                   Text("设置",style: TextStyle(fontSize: 16,letterSpacing: 3.rpx))

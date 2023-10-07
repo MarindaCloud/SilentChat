@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
@@ -88,8 +89,8 @@ class AppendMessagePage extends StatelessWidget {
                                                   child: Image.asset(
                                                       logic.userLogic
                                                           .getSex() == "男"
-                                                          ? "assets/icon/man.png"
-                                                          : "assets/icon/woman.png",
+                                                          ? "man.png".icon
+                                                          : "woman.png".icon,
                                                       color: logic.userLogic
                                                           .getSex() == "男"
                                                           ? Colors.blue

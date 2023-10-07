@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/icon_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -174,7 +175,7 @@ class EditGroupInfoPage extends StatelessWidget {
                                           width: 80.rpx,
                                           height: 80.rpx,
                                           child: Image.asset(
-                                            "assets/icon/groupstaff.png",
+                                            "groupstaff.png".icon,
                                             fit: BoxFit.fill,
                                             color: Colors.black,),
                                         ),

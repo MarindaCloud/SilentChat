@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:silentchat/common/components/icon_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -119,7 +120,7 @@ class MainComponentState extends State<MainComponent> {
                               width: 80.rpx,
                               height: 80.rpx,
                               child: Image.asset(
-                                  getSex() == "男" ? "assets/icon/man.png" : "assets/icon/woman.png", color: getSex() == "男" ? Colors.blue : Colors.pink,
+                                  getSex() == "男" ? "man.png".icon : "woman.png".icon, color: getSex() == "男" ? Colors.blue : Colors.pink,
                                   fit: BoxFit.fill)
                           ),
                           SizedBox(width: 10.rpx),
@@ -221,7 +222,7 @@ class MainComponentState extends State<MainComponent> {
                                 width: 70.rpx,
                                 height: 70.rpx,
                                 child: Image.asset(
-                                  "assets/icon/dynamic.png", fit: BoxFit.fill,
+                                  "dynamic.png".icon, fit: BoxFit.fill,
                                   color: Colors.orange,),
                               ),
                               SizedBox(width: 30.rpx),

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
 import 'logic.dart';
@@ -50,7 +51,7 @@ class QrPage extends StatelessWidget {
                                 width: 150.rpx,
                                 height: 150.rpx,
                                 child: Image.asset(
-                                  "assets/icon/back.png", color: Colors.white,
+                                  "back.png".icon, color: Colors.white,
                                   fit: BoxFit.cover,),
                               ),
                               onTap: () {
@@ -79,7 +80,7 @@ class QrPage extends StatelessWidget {
                                     width: 150.rpx,
                                     height: 150.rpx,
                                     child: Image.asset(
-                                      "assets/icon/shoudiantong.png",
+                                      "shoudiantong.png".icon,
                                       color: state.showFlash.value
                                           ? Colors.grey
                                           : Colors.white, fit: BoxFit.fill,),
@@ -98,7 +99,7 @@ class QrPage extends StatelessWidget {
                                   return SizedBox(
                                     width: 150.rpx,
                                     height: 150.rpx,
-                                    child: Image.asset("assets/icon/qiehuan.png",
+                                    child: Image.asset("qiehuan.png".icon,
                                       color: state.viewType.value
                                           ? Colors.grey
                                           : Colors.white, fit: BoxFit.fill,),

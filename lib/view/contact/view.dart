@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/view/contact/state.dart';
@@ -74,7 +75,7 @@ class ContactPage extends StatelessWidget {
                       child: SizedBox(
                         width: 100.rpx,
                         height: 100.rpx,
-                        child: Image.asset("assets/icon/tianjiahaoyou.png",color: Colors.white,),
+                        child: Image.asset("tianjiahaoyou.png".icon,color: Colors.white,),
                       ),
                       onTap: () {
                         //跳转至添加好友
@@ -105,7 +106,7 @@ class ContactPage extends StatelessWidget {
                                 SizedBox(
                                     width: 80.rpx,
                                     height: 80.rpx,
-                                    child: Image.asset("assets/icon/sousuo.png")
+                                    child: Image.asset("sousuo.png".icon)
                                 ),
                                 SizedBox(width: 20.rpx),
                                 //搜索
@@ -148,7 +149,7 @@ class ContactPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                           image: DecorationImage(
                                               image: Image
-                                                  .asset("assets/icon/qianwang.png")
+                                                  .asset("qianwang.png".icon)
                                                   .image,
                                               fit: BoxFit.fill
                                           )
@@ -179,7 +180,7 @@ class ContactPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                           image: DecorationImage(
                                               image: Image
-                                                  .asset("assets/icon/qianwang.png")
+                                                  .asset("qianwang.png".icon)
                                                   .image,
                                               fit: BoxFit.fill
                                           )

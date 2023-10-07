@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/view/index/logic.dart';
 import 'package:get/get.dart';
@@ -105,7 +106,6 @@ class BottomNavState extends State<BottomNavWidget> {
    */
   String getNavAssets(int index) {
     String result = "";
-    String prefix = "assets/icon/";
     switch (index) {
       case 0:
         result = "xiaoxi";
@@ -117,7 +117,7 @@ class BottomNavState extends State<BottomNavWidget> {
         result = "dynamic";
         break;
     }
-    return "${prefix}${result}.png";
+    return "${result}.png".icon;
   }
 
 }

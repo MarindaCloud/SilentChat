@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_navigator.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/view/edit_image/state.dart';
 import 'logic.dart';
@@ -48,7 +49,7 @@ class EditImagePage extends StatelessWidget {
                                     width: 35,
                                     height: 35,
                                     child: Image.asset(
-                                      "assets/icon/tuxiang.png",
+                                      "tuxiang.png".icon,
                                       fit: BoxFit.fill,
                                       color: Colors.white,
                                     ),
