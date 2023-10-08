@@ -6,6 +6,7 @@ import 'package:silentchat/common/components/back_button.dart';
 import 'package:silentchat/common/emoji.dart';
 import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/util/font_rpx.dart';
+import 'package:silentchat/util/log.dart';
 import 'logic.dart';
 
 /**
@@ -145,6 +146,7 @@ class ChatPage extends StatelessWidget {
                                       ),
                                       controller: state.messageController,
                                       onChanged: (val) {
+
                                         if (val.isEmpty) {
                                           state.existsContentFlag.value = false;
                                           return;

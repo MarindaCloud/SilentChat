@@ -476,6 +476,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       state.messageController.text +=emote;
       TextSelection textSelection = TextSelection.collapsed(offset: emote.length);
       state.messageController.selection = textSelection;
+      state.existsContentFlag.value = state.messageController.text.isNotEmpty;
       return;
     }
     String newText = text.replaceRange(messageSelection.start, messageSelection.end, emote);
@@ -483,6 +484,7 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
     int endOffset = messageSelection.start + emote.length;
     TextSelection textSelection = TextSelection.collapsed(offset: endOffset);
     state.messageController.selection = textSelection;
+
     Log.i("当前光标位置：${endOffset}");
   }
 
