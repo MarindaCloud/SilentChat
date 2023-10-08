@@ -72,4 +72,25 @@ class GroupInfoAPI {
     }
     return groupUserInfoList;
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/10/8 11:18
+   * @description  查询群聊中所有群员详情
+   */
+
+  static selectByGid(int gid) async{
+    Log.i("查询id: ${gid}的群组用户详情数据");
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByGid", HttpMethods.POST.value, {"gid": gid},header: Request.header);
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return false;
+    }
+    List<GroupUserInfo> groupUserInfoList = [];
+    if(apiResult.data is List){
+      var list = apiResult.data as List;
+      groupUserInfoList = list.map((e) => GroupUserInfo.fromJson(e)).toList();
+    }
+    return groupUserInfoList;
+  }
 }

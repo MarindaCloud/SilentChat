@@ -7,8 +7,9 @@ class GroupUserInfo {
   int? _id;
   int? _uid;
   int? _gid;
+  String? _nickName;
 
-  GroupUserInfo({int? id, int? uid, int? gid}) {
+  GroupUserInfo({int? id, int? uid, int? gid, String? nickName}) {
     if (id != null) {
       this._id = id;
     }
@@ -18,6 +19,9 @@ class GroupUserInfo {
     if (gid != null) {
       this._gid = gid;
     }
+    if (nickName != null) {
+      this._nickName = nickName;
+    }
   }
 
   int? get id => _id;
@@ -26,11 +30,14 @@ class GroupUserInfo {
   set uid(int? uid) => _uid = uid;
   int? get gid => _gid;
   set gid(int? gid) => _gid = gid;
+  String? get nickName => _nickName;
+  set nickName(String? nickName) => _nickName = nickName;
 
   GroupUserInfo.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _uid = json['uid'];
     _gid = json['gid'];
+    _nickName = json['nickName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +45,7 @@ class GroupUserInfo {
     data['id'] = this._id;
     data['uid'] = this._uid;
     data['gid'] = this._gid;
+    data['nickName'] = this._nickName;
     return data;
   }
 }

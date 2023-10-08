@@ -182,7 +182,7 @@ class EditGroupInfoPage extends StatelessWidget {
                                       ),
                                       Container(
                                         child: Text(
-                                          "群成员（15）",
+                                          "群成员（${state.userList.length}）",
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -209,68 +209,55 @@ class EditGroupInfoPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                      child: BarChart(
-                        BarChartData(
-                          maxY: 10,
-                          minY: 0,
-                          gridData:  FlGridData(show: false),
-                          titlesData: FlTitlesData(
-                            show: true,
-                            topTitles: AxisTitles(
-                            ),
-                            rightTitles: AxisTitles(
-                            ),
-                            leftTitles: AxisTitles(
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                // reservedSize: ,
-                                getTitlesWidget: (value,meta){
-                                  String text = "";
-                                  switch(value.toInt()){
-                                    case 0:
-                                      text = "管理员";
-                                      break;
-                                  }
-                                  return SideTitleWidget(
-                                      child: Text(
-                                          text,
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 14
-                                        ),
-                                      ),
-                                      axisSide: meta.axisSide,
-                                    space: 4,
-                                  );
-                                }
+                      child: logic.buildGroupChart()
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 50.rpx),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50.rpx,
+                                height: 50.rpx,
+                                decoration: BoxDecoration(
+                                  color: Colors.orange,
+                                  borderRadius: BorderRadius.circular(1000)
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                  "男"
+                                ),
                               )
-                            )
+                            ],
                           ),
-                          backgroundColor: Color.fromRGBO(46,66,97,1),
-                          barGroups: [
-                            BarChartGroupData(
-                                x: 0,
-                                barsSpace: 2,
-                                barRods: [
-                                  BarChartRodData(
-                                    fromY: 0,
-                                      toY: 5,
-                                    color: Colors.blue
-                                  ),
-                                  BarChartRodData(
-                                      fromY: 0,
-                                      toY: 10,
-                                      color: Colors.blue
-                                  )
-                                ]),
-                            // BarChartGroupData(x: 70)
-                          ]
                         ),
-                        swapAnimationCurve: Curves.linear,
-                        swapAnimationDuration: Duration(milliseconds: 150),
-                      )
+                        Container(
+                          margin: EdgeInsets.only(right: 50.rpx),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50.rpx,
+                                height: 50.rpx,
+                                decoration: BoxDecoration(
+                                    color: Colors.pink,
+                                    borderRadius: BorderRadius.circular(1000)
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                    "女"
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
