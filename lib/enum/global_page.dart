@@ -20,6 +20,7 @@ enum GlobalPage {
   register("/register"),
   editImage("/editImage"),
   editFriendsInfo("/editFriendsInfo"),
+  groupAnnouncement("/groupAnnouncement"),
   editGroupsInfo("/editGroupInfo");
 
   final String router;

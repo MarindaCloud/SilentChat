@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/components/input_box.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_announcement.dart';
 import 'package:silentchat/entity/group_user_info.dart';
@@ -293,6 +294,7 @@ class EditGroupInfoLogic extends GetxController {
         OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群昵称",target.nickName!,(controller){handleCustomContent(key, controller.text);}));
         break;
       case "群公告":
+        toGroupAnnouncement();
         break;
       case "群名称":
         OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.name!,(controller){handleCustomContent(key, controller.text);}));
@@ -302,12 +304,24 @@ class EditGroupInfoLogic extends GetxController {
 
   /*
    * @author Marinda
+   * @date 2023/10/9 17:49
+   * @description 跳转至群公告
+   */
+  toGroupAnnouncement(){
+    Map<String,dynamic> args = {
+      "group": state.group.value,
+      "list": state.groupAnnouncementList.value
+    };
+    Get.toNamed(AppPage.groupAnnouncement,arguments: args);
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/10/9 14:35
    * @description 处理自定义内容
    */
   handleCustomContent(String key,String text) async{
     Group group = state.group.value;
-    int uid = userState.uid.value;
     int result = 0;
     switch(key){
       case "群简介":
@@ -320,8 +334,6 @@ class EditGroupInfoLogic extends GetxController {
         groupUserInfo.nickName = text;
         result = await GroupInfoAPI.update(groupUserInfo);
         BotToast.showText(text: "${result >0 ? "更改成功！": "更改失败！"}");
-        break;
-      case "群公告":
         break;
       case "群名称":
         group.name = text;
