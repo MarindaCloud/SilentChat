@@ -88,58 +88,61 @@ class EditGroupInfoPage extends StatelessWidget {
                                     ),
                                   ),
                                   //  群信息
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        //群名
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              bottom: 100.rpx),
-                                          child: Text(
-                                            "${state.group.value.name}",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20
+                                  InkWell(
+                                    child: Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          //群名
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                bottom: 100.rpx),
+                                            child: Text(
+                                              "${state.group.value.name}",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        //群号
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              bottom: 100.rpx),
-                                          child: Text(
-                                            "群号：${state.group.value.number}",
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    153, 153, 153, 1),
-                                                fontSize: 14
+                                          //群号
+                                          Container(
+                                            margin: EdgeInsets.only(
+                                                bottom: 100.rpx),
+                                            child: Text(
+                                              "群号：${state.group.value.number}",
+                                              style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      153, 153, 153, 1),
+                                                  fontSize: 14
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        //群号
-                                        Container(
-                                          child: Text.rich(
-                                            TextSpan(
-                                                children: [
-                                                  TextSpan(text: "群排行：",
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 14)),
-                                                  TextSpan(
-                                                      text: "${state.group.value
-                                                          .rank}",
-                                                      style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 14)),
-                                                ]
+                                          //群号
+                                          Container(
+                                            child: Text.rich(
+                                              TextSpan(
+                                                  children: [
+                                                    TextSpan(text: "群排行：",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 14)),
+                                                    TextSpan(
+                                                        text: "${state.group.value
+                                                            .rank}",
+                                                        style: TextStyle(
+                                                            color: Colors.red,
+                                                            fontSize: 14)),
+                                                  ]
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
                                     ),
+                                    onTap: ()=>logic.showHelperView("群名称"),
                                   )
                                 ],
                               ),

@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
-import 'package:silentchat/entity/friend.dart';
-import 'package:silentchat/entity/group.dart';
 import 'package:silentchat/entity/group_user_info.dart';
-import 'package:silentchat/entity/user.dart';
-import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/enum/http_method.dart';
 import 'package:silentchat/network/api/base_provider.dart';
 import 'package:silentchat/util/log.dart';
@@ -92,5 +88,13 @@ class GroupInfoAPI {
       groupUserInfoList = list.map((e) => GroupUserInfo.fromJson(e)).toList();
     }
     return groupUserInfoList;
+  }
+
+
+  static update(GroupUserInfo element) async{
+    Log.i("修改id为: ${element.id ?? -1},群用户详情");
+    var data = json.encode(element.toJson());
+    var response = await BaseProvider.sendRequest("groupUserInfo/update", HttpMethods.POST.value, data,header: Request.getHeader("json"));
+    return response.data;
   }
 }

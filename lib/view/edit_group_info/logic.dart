@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/input_box.dart';
-import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/group.dart';
@@ -13,11 +12,11 @@ import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/group_info_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
-import 'package:flukit/flukit.dart';
 import 'package:silentchat/util/log.dart';
 import 'package:silentchat/util/overlay_manager.dart';
 import 'state.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 /**
  * @author Marinda
@@ -284,13 +283,19 @@ class EditGroupInfoLogic extends GetxController {
   showHelperView(String key){
     switch(key){
       case "群简介":
-        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(){print("更改群简介");}));
+        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(controller){handleCustomContent(key, controller.text);}));
         break;
       case "群昵称":
-        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(){print("更改群昵称！");}));
-
+        GroupUserInfo target = state.userInfoList.firstWhere((element) => element.gid == state.group.value.id);
+        state.userInfoList.forEach((element) {
+          print('element: ${element.toJson()}');
+        });
+        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群昵称",target.nickName!,(controller){handleCustomContent(key, controller.text);}));
         break;
       case "群公告":
+        break;
+      case "群名称":
+        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.name!,(controller){handleCustomContent(key, controller.text);}));
         break;
     }
   }
@@ -300,11 +305,28 @@ class EditGroupInfoLogic extends GetxController {
    * @date 2023/10/9 14:35
    * @description 处理自定义内容
    */
-  handleCustomContent(String key,String text){
+  handleCustomContent(String key,String text) async{
+    Group group = state.group.value;
+    int uid = userState.uid.value;
+    int result = 0;
     switch(key){
       case "群简介":
-        Group group = state.group.value;
         group.description = text;
+        result = await GroupAPI.updateGroupInfo(group);
+        BotToast.showText(text: "${result >0 ? "更改成功！":  "更改失败！"}");
+        break;
+      case "群昵称":
+        GroupUserInfo groupUserInfo = state.userInfoList.first;
+        groupUserInfo.nickName = text;
+        result = await GroupInfoAPI.update(groupUserInfo);
+        BotToast.showText(text: "${result >0 ? "更改成功！": "更改失败！"}");
+        break;
+      case "群公告":
+        break;
+      case "群名称":
+        group.name = text;
+        result = await GroupAPI.updateGroupInfo(group);
+        BotToast.showText(text: "${result >0 ? "更改成功！":  "更改失败！"}");
         break;
     }
   }
