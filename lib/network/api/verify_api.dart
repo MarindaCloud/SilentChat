@@ -25,7 +25,7 @@ class VerifyAPI {
       Map<String,dynamic>  args = {
         "id": id
       };
-      var response = await Request.sendPost("friendsVerify/selectByUidOrTidList", data: args, header: Request.header);
+      var response = await Request.sendPost("friendsVerify/selectByUidOrTidList", data: args, header: Request.getHeader());
       APIResult apiResult =  Request.toAPIResult(response);
       var data =  apiResult.data;
       if(data is List){
@@ -43,7 +43,7 @@ class VerifyAPI {
    */
   static updateFriendsVerify(FriendsVerify friendsVerify) async{
     Log.i("修改朋友验证信息状态,目标id: ${friendsVerify.id}");
-    var response = await Request.sendPost("friendsVerify/updateFriendsVerify", data: json.encode(friendsVerify.toJson()), header: Request.getHeader(type: "json"));
+    var response = await Request.sendPost("friendsVerify/updateFriendsVerify", data: json.encode(friendsVerify.toJson()), header: Request.getHeader("json"));
     Log.i("response数据: ${response}");
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data is int){
@@ -62,7 +62,7 @@ class VerifyAPI {
    */
   static insertFriendsVerify(FriendsVerify friendsVerify) async{
     Log.i("插入朋友验证消息");
-    var response = await Request.sendPost("friendsVerify/add", data: json.encode(friendsVerify.toJson()), header: Request.getHeader(type: "json"));
+    var response = await Request.sendPost("friendsVerify/add", data: json.encode(friendsVerify.toJson()), header: Request.getHeader( "json"));
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return -1;

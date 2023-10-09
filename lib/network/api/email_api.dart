@@ -21,7 +21,7 @@ class EmailAPI{
     var data = {
       "to": to
     };
-    var response = await BaseProvider.sendRequest("mail/sendVerify", HttpMethods.POST.value,data,header: Request.header);
+    var response = await BaseProvider.sendRequest("mail/sendVerify", HttpMethods.POST.value,data,header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     String verifyCode = apiResult.data;
     Log.i("注册验证码为：${verifyCode}");

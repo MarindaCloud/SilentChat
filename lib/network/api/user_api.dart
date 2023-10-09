@@ -25,7 +25,7 @@ class UserAPI {
       "username": username,
       "password": password
     };
-    var response = await Request.sendPost("user/login", data: data, header: Request.header);
+    var response = await Request.sendPost("user/login", data: data, header: Request.getHeader());
     Log.i("response: ${response}");
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data != null){
@@ -49,7 +49,7 @@ class UserAPI {
       "password": user.password,
       "email": user.email
     };
-    var response = await Request.sendPost("user/register", data: data, header: Request.header);
+    var response = await Request.sendPost("user/register", data: data, header: Request.getHeader());
     return Request.toAPIResult(response);
   }
 
@@ -63,7 +63,7 @@ class UserAPI {
     Map<String,dynamic> data = {
       "id": id,
     };
-    var response = await Request.sendPost("user/selectById", data: data, header: Request.header);
+    var response = await Request.sendPost("user/selectById", data: data, header: Request.getHeader());
     APIResult apiResult =  Request.toAPIResult(response);
     if(apiResult.data == null){
       return APIResult.fail("失败");
@@ -82,7 +82,7 @@ class UserAPI {
     var data = {
       "number": number
     };
-    var response = await Request.sendPost("user/selectByNumber", data: data, header: Request.header);
+    var response = await Request.sendPost("user/selectByNumber", data: data, header: Request.getHeader());
     APIResult apiResult =  Request.toAPIResult(response);
     if(apiResult.data == null) return null;
     User user = User.fromJson(apiResult.data);
@@ -117,7 +117,7 @@ class UserAPI {
    */
   static updateUser(User user) async{
     Log.i("修改${user.id}用户的信息");
-    var response = await Request.sendPost("user/update", data: json.encode(user.toJson()), header: Request.getHeader(type: "json"));
+    var response = await Request.sendPost("user/update", data: json.encode(user.toJson()), header: Request.getHeader("json"));
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == 0 || apiResult.data == -1){
       return false;

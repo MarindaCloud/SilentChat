@@ -28,7 +28,7 @@ class GroupInfoAPI {
   static insertGroupInfo(GroupUserInfo groupUserInfo) async{
     Log.i("插入群组详情数据");
     dynamic data = json.encode(groupUserInfo.toJson());
-    var response = await BaseProvider.sendRequest("groupUserInfo/add", HttpMethods.POST.value, data,header: Request.getHeader(type: "json"));
+    var response = await BaseProvider.sendRequest("groupUserInfo/add", HttpMethods.POST.value, data,header: Request.getHeader("json"));
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -46,7 +46,7 @@ class GroupInfoAPI {
       "id": id
     };
     Log.i("查询id: ${id}的群组详情数据");
-    return BaseProvider.sendRequest("groupUserInfo/selectById", HttpMethods.POST.value, data,header: Request.header);
+    return BaseProvider.sendRequest("groupUserInfo/selectById", HttpMethods.POST.value, data,header: Request.getHeader());
   }
 
 
@@ -60,7 +60,7 @@ class GroupInfoAPI {
       "uid": uid
     };
     Log.i("查询id: ${uid}的群组详情数据");
-    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.header);
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -81,7 +81,7 @@ class GroupInfoAPI {
 
   static selectByGid(int gid) async{
     Log.i("查询id: ${gid}的群组用户详情数据");
-    var response = await BaseProvider.sendRequest("groupUserInfo/selectByGid", HttpMethods.POST.value, {"gid": gid},header: Request.header);
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByGid", HttpMethods.POST.value, {"gid": gid},header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;

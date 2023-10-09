@@ -12,9 +12,32 @@ class Request{
   static final dioOption = BaseOptions();
   static final Dio _dio = Dio(dioOption);
   static bool expireToken = false;
-  static Map<String,dynamic> header = {
-    "Content-Type": "application/x-www-form-urlencoded"
-  };
+
+
+  /*
+   * @author Marinda
+   * @date 2023/10/9 15:43
+   * @description 获取标头
+   */
+  static Map<String,dynamic> getHeader([String type = "normal"]){
+    String value = "";
+    switch(type.toUpperCase()){
+      case "JSON":
+        value = HttpContentType.JSON.type;
+        break;
+      case "NORMAL":
+        value = HttpContentType.FORMDATA.type;
+        break;
+      case "MULTIPART":
+        value = HttpContentType.MULTIPART.type;
+        break;
+    }
+    Map<String,dynamic> header = {
+      "Content-Type": value
+    };
+    return header;
+  }
+
 
   /*
    * @author Marinda
@@ -103,25 +126,5 @@ class Request{
     return apiResult;
   }
 
-  /*
-   * @author Marinda
-   * @date 2023/7/4 17:25
-   * @description 根据类型获取header数据
-   */
-  static Map<String,dynamic> getHeader({String type = "basic"}){
-    String value = "";
-    switch(type){
-      case "basic":
-        value = HttpContentType.FORMDATA.type;
-        break;
-      case "json":
-        value = HttpContentType.JSON.type;
-        break;
-    }
-    Map<String,dynamic> header = {
-      "Content-Type": value
-    };
-    return header;
-  }
 
 }

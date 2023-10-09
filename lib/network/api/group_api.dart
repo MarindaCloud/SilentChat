@@ -30,7 +30,7 @@ class GroupAPI {
   static insertGroup(Group group) async{
     Log.i("插入群组数据：${group.name}");
     dynamic data = json.encode(group.toJson());
-    var response = await BaseProvider.sendRequest("group/insert", HttpMethods.POST.value, data,header: Request.getHeader(type: "json"));
+    var response = await BaseProvider.sendRequest("group/insert", HttpMethods.POST.value, data,header: Request.getHeader("json"));
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -48,7 +48,7 @@ class GroupAPI {
       "id": id
     };
     Log.i("查询id: ${id}的群组Id");
-    var response = await BaseProvider.sendRequest("group/selectById", HttpMethods.POST.value, data,header: Request.header);
+    var response = await BaseProvider.sendRequest("group/selectById", HttpMethods.POST.value, data,header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -68,7 +68,7 @@ class GroupAPI {
       "uid": id
     };
     Log.i("查询uid: ${id}加入的群组列表");
-    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.header);
+    var response = await BaseProvider.sendRequest("groupUserInfo/selectByUid", HttpMethods.POST.value, data,header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -76,5 +76,21 @@ class GroupAPI {
     List list = apiResult.data;
     List<GroupUserInfo> groupUserInfoList = list.map((e) => GroupUserInfo.fromJson(e)).toList();
     return groupUserInfoList;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/10/9 14:38
+   * @description 修改群组信息
+   */
+  static updateGroupInfo(Group element) async{
+    Log.i("修改群组信息: ${element.id}");
+    var data = json.encode(element.toJson());
+    var response = await BaseProvider.sendRequest("group/update", HttpMethods.POST.value, data,header: Request.getHeader("json"));
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == null){
+      return -1;
+    }
+    return apiResult.data;
   }
 }

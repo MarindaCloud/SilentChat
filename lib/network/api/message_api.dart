@@ -28,10 +28,7 @@ class MessageAPI {
   static insertMessage(Message message) async{
     Log.i("发起添加消息请求！");
     dynamic data = json.encode(message.toJson());
-    Map<String,dynamic> header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    return BaseProvider.sendRequest("message/insertReturning", HttpMethods.POST.value, data,header: header);
+    return BaseProvider.sendRequest("message/insertReturning", HttpMethods.POST.value, data,header: Request.getHeader("json"));
   }
 
 
@@ -45,7 +42,7 @@ class MessageAPI {
       "id": id
     };
     Log.i("查询id: ${id}的消息信息");
-    return BaseProvider.sendRequest("user/selectById", HttpMethods.POST.value, data,header: Request.header);
+    return BaseProvider.sendRequest("user/selectById", HttpMethods.POST.value, data,header: Request.getHeader());
   }
 
   /*
@@ -57,7 +54,7 @@ class MessageAPI {
     var data = {
       "id": id
     };
-    APIResult result = await BaseProvider.sendRequest("message/selectById", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/selectById", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return APIResult.fail("没有这条消息信息！");
     }
@@ -76,7 +73,7 @@ class MessageAPI {
     var data = {
       "uid" : uid
     };
-    APIResult result = await BaseProvider.sendRequest("chatInfo/selectUserChatInfo", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/selectUserChatInfo", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return null;
     }
@@ -113,7 +110,7 @@ class MessageAPI {
       "groupId" : groupId
     };
     Log.i("查询id: ${groupId}的消息信息");
-    APIResult result = await BaseProvider.sendRequest("chatInfo/selectGroupChatInfo", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/selectGroupChatInfo", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return null;
     }
@@ -129,10 +126,7 @@ class MessageAPI {
    */
   static insertChatInfo(ChatInfo chatInfo) async{
     Log.i("插入聊天详情数据！");
-    dynamic header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult result = await BaseProvider.sendRequest("chatInfo/add", HttpMethods.POST.value, chatInfo.toJson(),header: header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/add", HttpMethods.POST.value, chatInfo.toJson(),header: Request.getHeader("json"));
     if(result.data == null){return false;}
     return true;
   }
@@ -150,7 +144,7 @@ class MessageAPI {
       "receiverId": receiverId,
       "type": type
     };
-    APIResult result = await BaseProvider.sendRequest("message/getNewMessage", HttpMethods.POST.value,data ,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/getNewMessage", HttpMethods.POST.value,data ,header: Request.getHeader());
     if(result.data == null){return false;}
     Message message = Message.fromJson(result.data);
     return message;
@@ -168,7 +162,7 @@ class MessageAPI {
       "sendId": sendId,
       "receiverId": receiverId
     };
-    APIResult result = await BaseProvider.sendRequest("message/selectUserMessageList", HttpMethods.POST.value,data ,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/selectUserMessageList", HttpMethods.POST.value,data ,header: Request.getHeader());
     if(result.data == null){return [];}
     if(result.data is List){
       List list = result.data;
@@ -188,7 +182,7 @@ class MessageAPI {
     var data = {
       "groupId": groupId
     };
-    APIResult result = await BaseProvider.sendRequest("message/selectGroupMessageList", HttpMethods.POST.value,data ,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/selectGroupMessageList", HttpMethods.POST.value,data ,header: Request.getHeader());
     if(result.data == null){return false;}
     if(result.data is List){
       List list = result.data;
@@ -209,7 +203,7 @@ class MessageAPI {
       "receiverId": receiverId
     };
     Log.i("获取: ${sendId},${receiverId}聊天的详情列表");
-    APIResult result = await BaseProvider.sendRequest("chatInfo/selectChatInfoByInUser", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/selectChatInfoByInUser", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return null;
     }
@@ -229,7 +223,7 @@ class MessageAPI {
       "id": id
     };
     Log.i("删除${id}的聊天详情");
-    APIResult result = await BaseProvider.sendRequest("chatInfo/remove", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("chatInfo/remove", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return null;
     }
@@ -246,7 +240,7 @@ class MessageAPI {
       "id": id
     };
     Log.i("删除${id}的消息记录");
-    APIResult result = await BaseProvider.sendRequest("message/remove", HttpMethods.POST.value, data,header: Request.header);
+    APIResult result = await BaseProvider.sendRequest("message/remove", HttpMethods.POST.value, data,header: Request.getHeader());
     if(result.data == null){
       return null;
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/entity/group.dart';
+import 'package:silentchat/entity/group_announcement.dart';
 import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/user.dart';
 class EditGroupInfoState {
@@ -9,6 +10,7 @@ class EditGroupInfoState {
   final userInfoList = <GroupUserInfo>[].obs;
   //用户列表
   final userList = <User>[].obs;
+  final groupAnnouncementList = <GroupAnnouncement>[].obs;
   EditGroupInfoState() {
     ///Initialize variables
   }

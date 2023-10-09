@@ -17,7 +17,7 @@ class BaseProvider{
    */
   static Future<APIResult> sendRequest(String url,String method,dynamic data,{dynamic header}) async{
     dynamic response;
-    var headers = header ?? Request.header;
+    var headers = header ?? Request.getHeader();
     switch(method){
       case "post":
         response = await Request.sendPost(url,data: data,header: headers);

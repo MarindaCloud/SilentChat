@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/components/input_box.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:silentchat/entity/group.dart';
+import 'package:silentchat/entity/group_announcement.dart';
 import 'package:silentchat/entity/group_user_info.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/group_announcement_api.dart';
+import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/network/api/group_info_api.dart';
 import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:flukit/flukit.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/util/overlay_manager.dart';
 import 'state.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -46,7 +51,12 @@ class EditGroupInfoLogic extends GetxController {
     }
     state.userList.value = userList;
     state.userInfoList.value = list;
-    Log.i("用户列表: ${state.userList}");
+    List<GroupAnnouncement> announcementList = await GroupAnnouncementAPI.selectByGid(state.group.value.id!);
+    announcementList.sort((a,b)=>b.time!.compareTo(a.time!));
+    state.groupAnnouncementList.value = announcementList;
+
+    Log.i("群员总计: ${state.userList.length}");
+    Log.i("群公告总计: ${state.groupAnnouncementList.length}");
   }
 
   close(){
@@ -212,7 +222,7 @@ class EditGroupInfoLogic extends GetxController {
                     Container(
                       margin: EdgeInsets.only(right: 10.rpx),
                       child: Text(
-                        state.group.value.description ?? "",
+                        "${getGroupBasicInfoText(key)}",
                         style: TextStyle(
                             color: Color.fromRGBO(153, 153, 153, 1)
                         ),
@@ -232,9 +242,7 @@ class EditGroupInfoLogic extends GetxController {
             ],
           ),
         ),
-        onTap: (){
-          print("${key}");
-        },
+        onTap: ()=>showHelperView(key),
       );
       widgetList.add(widget);
     });
@@ -258,9 +266,46 @@ class EditGroupInfoLogic extends GetxController {
           text = target.nickName ?? "";
           break;
         case "群公告":
-          text = "";
+          if(state.groupAnnouncementList.isEmpty){
+            text = "";
+          }
+          GroupAnnouncement announcement = state.groupAnnouncementList.first;
+          text = announcement.content ?? "";
           break;
       }
       return text;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/10/9 14:29
+   * @description 根据群聊基础Key显示相关帮助组件视图
+   */
+  showHelperView(String key){
+    switch(key){
+      case "群简介":
+        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(){print("更改群简介");}));
+        break;
+      case "群昵称":
+        OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(){print("更改群昵称！");}));
+
+        break;
+      case "群公告":
+        break;
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/10/9 14:35
+   * @description 处理自定义内容
+   */
+  handleCustomContent(String key,String text){
+    switch(key){
+      case "群简介":
+        Group group = state.group.value;
+        group.description = text;
+        break;
+    }
   }
 }

@@ -33,7 +33,7 @@ class SpaceAPI {
     var data = {
       "uid": targetId
     };
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectByUid",HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectByUid",HttpMethods.POST.value, data,header: Request.getHeader());
     var value = apiResult.data;
     if(value is List){
       List valueList = value.map((e) => SpaceDynamic.fromJson(e)).toList();
@@ -51,10 +51,7 @@ class SpaceAPI {
   static insertDynamic(Space space) async{
     Log.i("插入空间信息");
     var data = json.encode(space.toJson());
-    var header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: header);
+    APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
     var value = apiResult.data;
     if(value == null){
       return null;
@@ -91,10 +88,7 @@ class SpaceAPI {
   static insertDynamicLike(SpaceDynamicLike spaceDynamicLike) async{
     Log.i("插入空间动态点赞详情");
     var data = json.encode(spaceDynamicLike.toJson());
-    var header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/insertReturning", HttpMethods.POST.value,data,header: header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/insertReturning", HttpMethods.POST.value,data,header: Request.getHeader("json"));
     return apiResult.data;
   }
 
@@ -108,7 +102,7 @@ class SpaceAPI {
     var data = {
       "uid": uid
     };
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectContactDynamicListByUid", HttpMethods.POST.value,data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectContactDynamicListByUid", HttpMethods.POST.value,data,header: Request.getHeader());
     if(apiResult.data == null){
       return null;
     }
@@ -130,7 +124,7 @@ class SpaceAPI {
     var data = {
       "dynamic_id": dynamicId
     };
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/selectDynamicLikeByDid", HttpMethods.POST.value,data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/selectDynamicLikeByDid", HttpMethods.POST.value,data,header: Request.getHeader());
     if(apiResult.data == null){
       return null;
     }
@@ -155,7 +149,7 @@ class SpaceAPI {
       "dynamicId": spaceDynamicLike.dynamicId ?? -1,
       "uid": spaceDynamicLike.uid ?? -1
     };
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/delete", HttpMethods.POST.value,data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/delete", HttpMethods.POST.value,data,header: Request.getHeader());
     return apiResult.data;
   }
 }

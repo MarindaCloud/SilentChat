@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/group_announcement.dart';
@@ -27,10 +25,7 @@ class GroupAnnouncementAPI{
   static insert(GroupAnnouncement groupAnnouncement) async{
     Log.i("组：${groupAnnouncement.gid},添加群组公告：${groupAnnouncement.content}");
     var data = json.encode(groupAnnouncement.toJson());
-    Map<String,dynamic> header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/insertReturnId", HttpMethods.POST.value, data,header: header);
+    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/insertReturnId", HttpMethods.POST.value, data,header: Request.getHeader("json"));
     if(apiResult.data == null){
       return null;
     }
@@ -47,7 +42,7 @@ class GroupAnnouncementAPI{
     var data = {
       "gid": groupId
     };
-    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/selectByGid", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/selectByGid", HttpMethods.POST.value, data,header: Request.getHeader());
     List list = apiResult.data;
     if(list.isEmpty){
       return [];
@@ -65,7 +60,7 @@ class GroupAnnouncementAPI{
     var data = {
       "id": id
     };
-    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/remove", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/remove", HttpMethods.POST.value, data,header: Request.getHeader());
     if(apiResult.data == null){
       return null;
     }
@@ -80,10 +75,7 @@ class GroupAnnouncementAPI{
   static update(GroupAnnouncement element) async{
     Log.i("修改群id为：${element.gid}的公告");
     var data = json.encode(element.toJson());
-    Map<String,dynamic> header = {
-      "Content-Type": HttpContentType.JSON.type
-    };
-    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/update", HttpMethods.POST.value, data,header: header);
+    APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/update", HttpMethods.POST.value, data,header: Request.getHeader("json"));
     if(apiResult.data == null){
       return null;
     }

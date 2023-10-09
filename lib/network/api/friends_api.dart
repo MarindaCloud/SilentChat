@@ -28,7 +28,7 @@ class FriendsAPI {
   static insertFriends(Friend friend) async{
     Log.i("发起添加消息请求！${friend.uid}");
     dynamic data = json.encode(friend.toJson());
-    var response = await BaseProvider.sendRequest("friends/add", HttpMethods.POST.value, data,header: Request.getHeader(type: "json"));
+    var response = await BaseProvider.sendRequest("friends/add", HttpMethods.POST.value, data,header: Request.getHeader("json"));
     APIResult apiResult = Request.toAPIResult(response);
     if(apiResult.data == null){
       return false;
@@ -46,7 +46,7 @@ class FriendsAPI {
       "id": id
     };
     Log.i("查询id: ${id}的消息信息");
-    return BaseProvider.sendRequest("friends/selectById", HttpMethods.POST.value, data,header: Request.header);
+    return BaseProvider.sendRequest("friends/selectById", HttpMethods.POST.value, data,header: Request.getHeader());
   }
 
   /*
@@ -60,7 +60,7 @@ class FriendsAPI {
       "uid": uid
     };
     Log.i("查询id: ${uid}的朋友信息列表");
-    APIResult apiResult = await BaseProvider.sendRequest("friends/selectByUid", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("friends/selectByUid", HttpMethods.POST.value, data,header: Request.getHeader());
     List list = apiResult.data;
     List<Friend> friendList = list.map((e){return Friend.fromJson(e);}).toList();
     return friendList;
@@ -76,7 +76,7 @@ class FriendsAPI {
       "id": id
     };
     Log.i("删除用户：${id}的好友");
-    APIResult apiResult = await BaseProvider.sendRequest("friends/remove", HttpMethods.POST.value, data,header: Request.header);
+    APIResult apiResult = await BaseProvider.sendRequest("friends/remove", HttpMethods.POST.value, data,header: Request.getHeader());
     int result = apiResult.data;
     return result;
   }
