@@ -85,7 +85,7 @@ class GroupAnnouncementPage extends StatelessWidget {
                           ),
                         ),
                         onTap: (){
-                          print("发布新公告!");
+                          logic.toAppendAnnouncement();
                         },
                       )
                     ],

@@ -188,7 +188,7 @@ class EditGroupInfoLogic extends GetxController {
           margin: EdgeInsets.only(top: 50.rpx,bottom: 50.rpx),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 child: Row(
@@ -207,7 +207,7 @@ class EditGroupInfoLogic extends GetxController {
                         "${key}",
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 16
                         ),
                       ),
                     )
@@ -217,16 +217,22 @@ class EditGroupInfoLogic extends GetxController {
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(right: 10.rpx),
-                      child: Text(
-                        "${getGroupBasicInfoText(key)}",
-                        style: TextStyle(
-                            color: Color.fromRGBO(153, 153, 153, 1)
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 1000.rpx
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(right: 10.rpx),
+                        child: Text(
+                          "${getGroupBasicInfoText(key)}",
+                          style: TextStyle(
+                              color: Color.fromRGBO(153, 153, 153, 1),
+                            fontSize: 14
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: null,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Container(
