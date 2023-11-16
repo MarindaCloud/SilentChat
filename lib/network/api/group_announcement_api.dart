@@ -44,7 +44,7 @@ class GroupAnnouncementAPI{
     APIResult apiResult =  await BaseProvider.sendRequest("groupAnnouncement/selectByGid", HttpMethods.POST.value, data,header: Request.getHeader());
     List list = apiResult.data;
     if(list.isEmpty){
-      return [];
+      return <GroupAnnouncement>[];
     }
     return list.map((e) => GroupAnnouncement.fromJson(e)).toList();
   }

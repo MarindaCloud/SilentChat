@@ -94,7 +94,7 @@ class GroupAnnouncementPage extends StatelessWidget {
                 Expanded(
                     child: Container(
                       margin: EdgeInsets.only(left: 100.rpx,right: 100.rpx,top: 100.rpx),
-                      child: SingleChildScrollView(
+                      child: state.announcementViewList.isEmpty ? Center(child: Text("暂无群公告",style: TextStyle(color: Colors.grey,fontSize: 20))) : SingleChildScrollView(
                         child: Column(
                           children: logic.buildGroupAnnouncement(),
                         ),
