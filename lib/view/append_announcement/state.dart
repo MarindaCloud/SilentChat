@@ -1,3 +1,4 @@
+import 'package:silentchat/entity/announcement_view.dart';
 import 'package:silentchat/entity/group.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class AppendAnnouncementState {
   TextEditingController contentController = TextEditingController(text: "");
   final imgPath = "".obs;
   ImagePicker imagePicker = ImagePicker();
+  final viewAnnouncement = AnnouncementView().obs;
   AppendAnnouncementState() {
     ///Initialize variables
   }

@@ -32,22 +32,33 @@ class GroupAnnouncementLogic extends GetxController {
     state.group = args["group"];
     List<GroupAnnouncement> list = args["list"];
     List<AnnouncementView> viewList = [];
-    Map<int,bool> openMap = {};
     for(var element in list){
       int ownerId = element.owner ?? 0;
       User user = await userLogic.selectByUid(ownerId);
       String userName = user.username ?? "";
       AnnouncementView announcementView = AnnouncementView(userName: userName,groupAnnouncement: element);
-      int id = element.id ?? -1;
-      openMap[id] = false;
       viewList.add(announcementView);
     }
-    state.announcementOpenMap.value = openMap;
     state.announcementViewList.value = viewList;
+    loadToggleOpenOption();
     //页面渲染完毕之后进行排序
     WidgetsBinding.instance.addPostFrameCallback((_) {
       viewSort();
     });
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/16 16:05
+   * @description 加载toggle 显示map
+   */
+  loadToggleOpenOption(){
+    Map<int,bool> openMap = {};
+    state.announcementViewList.forEach((element) {
+      int id = element.groupAnnouncement?.id ?? 0;
+      openMap[id] = false;
+    });
+    state.announcementOpenMap.value = openMap;
   }
 
   /*
@@ -148,6 +159,7 @@ class GroupAnnouncementLogic extends GetxController {
     var announcement = await Get.toNamed(AppPage.appendAnnouncement,arguments: state.group);
     if(announcement != null){
       state.announcementViewList.add(announcement);
+      loadToggleOpenOption();
       state.announcementViewList.refresh();
     }
   }
@@ -162,6 +174,7 @@ class GroupAnnouncementLogic extends GetxController {
     int id = announcement.groupAnnouncement?.id ?? 0;
     int index = findViewIndexByAnnouncement(id);
     state.announcementViewList[index] = announcement;
+    loadToggleOpenOption();
     state.announcementViewList.refresh();
   }
 
@@ -301,7 +314,7 @@ class GroupAnnouncementLogic extends GetxController {
                                     Container(
                                       margin: EdgeInsets.only(left: 15.rpx),
                                       child: Transform.rotate(
-                                        angle: state.announcementOpenMap[announcement.id] ? 0 : pi / 2,
+                                        angle: state.announcementOpenMap[announcement?.id] ? 0 : pi / 2,
                                         child: SizedBox(
                                           width: 70.rpx,
                                           height: 70.rpx,

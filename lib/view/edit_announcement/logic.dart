@@ -53,4 +53,8 @@ class EditAnnouncementLogic extends GetxController {
     state.announcementView = newView;
   }
 
+  clearImage(){
+    state.imgSrc.value = "";
+  }
+
 }

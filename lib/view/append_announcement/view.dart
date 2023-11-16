@@ -36,7 +36,7 @@ class AppendAnnouncementPage extends StatelessWidget {
                           offset: Offset(130.rpx, 0),
                           child: IconButtonComponent.build("back",
                             color: Colors.black, onClick: () {
-                              Get.back();
+                              Get.back(result: state.viewAnnouncement.value);
                             },)
                       ),
                       Container(
@@ -96,16 +96,22 @@ class AppendAnnouncementPage extends StatelessWidget {
                       height: 600.rpx,
                       child: Stack(
                         children: [
-                          Positioned(
-                              right: 15.rpx,
-                              top: 15.rpx,
-                              child: InkWell(
-                                child: Center(child: Image.asset("shanchu.png".icon,fit: BoxFit.fill,)),
-                              )
-                          ),
                           SizedBox.expand(
                             child: Image.file(File(state.imgPath.value), fit: BoxFit
                               .fill)),
+                          Positioned(
+                              right: 0.rpx,
+                              top: 0.rpx,
+                              child: InkWell(
+                                child: SizedBox(
+                                  width: 100.rpx,
+                                  height: 100.rpx,
+                                  child: Image.asset(
+                                    "shanchu2.png".icon, fit: BoxFit.fill,color: Colors.white,),
+                                ),
+                                onTap: ()=>logic.clearImage(),
+                              )
+                          ),
                         ],
                       ),
                     ) : SizedBox(

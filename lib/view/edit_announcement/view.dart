@@ -101,20 +101,26 @@ class EditAnnouncementPage extends StatelessWidget {
                       height: 600.rpx,
                       child: Stack(
                         children: [
-                          Positioned(
-                              right: 15.rpx,
-                              top: 15.rpx,
-                              child: InkWell(
-                                child: Center(child: Image.asset(
-                                  "shanchu.png".icon, fit: BoxFit.fill,)),
-                              )
-                          ),
                           SizedBox.expand(
                               child: state.imgSrc.value.startsWith("http") ? Image
                                   .network(state.imgSrc.value, fit: BoxFit
                                   .fill) : Image.file(
                                   File(state.imgSrc.value), fit: BoxFit
                                   .fill)),
+                          Positioned(
+                              right: 0.rpx,
+                              top: 0.rpx,
+                              child: InkWell(
+                                child: SizedBox(
+                                  width: 100.rpx,
+                                  height: 100.rpx,
+                                  child: Image.asset(
+                                    "shanchu2.png".icon, fit: BoxFit.fill,color: Colors.white,),
+                                ),
+                                onTap: ()=>logic.clearImage(),
+                              )
+                          ),
+
                         ],
                       ),
                     ) : SizedBox(

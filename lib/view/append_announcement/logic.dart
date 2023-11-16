@@ -54,7 +54,7 @@ class AppendAnnouncementLogic extends GetxController {
     announcement.id = resultId;
     if(resultId >= 1){
       BotToast.showText(text: "发布成功！");
-      Get.back(result: view);
+      state.viewAnnouncement.value = view;
     }else{
       BotToast.showText(text: "发布失败！");
     }
@@ -64,5 +64,9 @@ class AppendAnnouncementLogic extends GetxController {
     XFile? imgElement = await state.imagePicker.pickImage(source: ImageSource.gallery);
     print('图像地址: ${imgElement!.path}');
     state.imgPath.value = imgElement.path;
+  }
+
+  clearImage(){
+    state.imgPath.value = "";
   }
 }
