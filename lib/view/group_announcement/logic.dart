@@ -1,6 +1,5 @@
+import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/expansion/image_path.dart';
@@ -10,12 +9,11 @@ import 'package:silentchat/entity/announcement_view.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group_announcement.dart';
 import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/common_api.dart';
 import 'package:silentchat/network/api/group_announcement_api.dart';
-import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:silentchat/view/append_announcement/binding.dart';
 import 'state.dart';
 
 class GroupAnnouncementLogic extends GetxController {
@@ -48,13 +46,30 @@ class GroupAnnouncementLogic extends GetxController {
     state.announcementViewList.value = viewList;
     //页面渲染完毕之后进行排序
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      state.announcementViewList.sort((a,b){
-        int aIsTop = a.groupAnnouncement!.isTop ?? 0;
-        int bIsTop = b.groupAnnouncement!.isTop ?? 0;
-        return bIsTop.compareTo(aIsTop);
-      });
-      state.announcementViewList.refresh();
+      viewSort();
     });
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/16 13:43
+   * @description 视图排序
+   */
+
+  viewSort(){
+    //先排序日期
+    state.announcementViewList.sort((a,b){
+      DateTime aDt = DateTime.parse(a.groupAnnouncement!.time!);
+      DateTime bDt = DateTime.parse(b.groupAnnouncement!.time!);
+      return bDt.compareTo(aDt);
+    });
+    //再排
+    state.announcementViewList.sort((a,b){
+      int aIsTop = a.groupAnnouncement!.isTop ?? 0;
+      int bIsTop = b.groupAnnouncement!.isTop ?? 0;
+      return bIsTop.compareTo(aIsTop);
+    });
+    state.announcementViewList.refresh();
   }
 
   /*
@@ -64,38 +79,40 @@ class GroupAnnouncementLogic extends GetxController {
    */
   updateAnnouncement(GroupAnnouncement announcement,int type,{String? text,String? imageSrc,bool? isTop}) async{
       GroupAnnouncement updateElement = GroupAnnouncement.fromJson(announcement.toJson());
-      switch(type){
-        //type == 1 视为置顶
-        case 1:
-          updateElement.isTop = isTop == true ? 1 : 2;
-          break;
-        case 2:
-          updateElement.isTop = isTop == true ? 1 : 2;
-          updateElement.content = text;
-          updateElement.image = imageSrc;
-          break;
-      }
       int announcementId = announcement.id ?? 0;
       //设置其他显示为0
       int index = findViewIndexByAnnouncement(announcementId);
-      List<AnnouncementView> viewList = [];
-      //过滤筛选
-      for(var i = 0;i< state.announcementViewList.value.length;i++){
-        var element = state.announcementViewList[i];
-        GroupAnnouncement announcement = element.groupAnnouncement ?? GroupAnnouncement();
-        if(i == index){
-          announcement.isTop = 1;
-        }else{
-          announcement.isTop = 0;
-          GroupAnnouncementAPI.update(announcement);
-        }
-        AnnouncementView view = AnnouncementView(userName: element.userName,groupAnnouncement: announcement);
-        viewList.add(view);
+      switch(type){
+        //type == 1 视为置顶
+        case 1:
+          updateElement.isTop = isTop == true ? 1 : 0;
+          List<AnnouncementView> viewList = [];
+          //过滤筛选
+          for(var i = 0;i< state.announcementViewList.value.length;i++){
+            var element = state.announcementViewList[i];
+            GroupAnnouncement announcement = element.groupAnnouncement ?? GroupAnnouncement();
+            if(i == index){
+              announcement.isTop = 1;
+            }else{
+              announcement.isTop = 0;
+              GroupAnnouncementAPI.update(announcement);
+            }
+            AnnouncementView view = AnnouncementView(userName: element.userName,groupAnnouncement: announcement);
+            viewList.add(view);
+          }
+          //互换位置
+          dynamic temp = state.announcementViewList[index];
+          state.announcementViewList.removeAt(index);
+          state.announcementViewList.insert(0, temp);
+          break;
+        case 2:
+          updateElement.isTop = 0;
+          updateElement.content = text;
+          updateElement.image = imageSrc ?? "";
+          updateElement.time = DateTime.now().toString();
+          break;
       }
-      //互换位置
-      dynamic temp = state.announcementViewList[index];
-      state.announcementViewList.removeAt(index);
-      state.announcementViewList.insert(0, temp);
+      viewSort();
       var result = await GroupAnnouncementAPI.update(updateElement);
       if(result == 1){
         BotToast.showText(text: "修改成功！");
@@ -133,6 +150,19 @@ class GroupAnnouncementLogic extends GetxController {
       state.announcementViewList.add(announcement);
       state.announcementViewList.refresh();
     }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/16 15:02
+   * @description 跳转至编辑页
+   */
+  toEditAnnouncement(AnnouncementView view) async{
+    AnnouncementView announcement =  await Get.toNamed(AppPage.editAnnouncement,arguments: {"element": view});
+    int id = announcement.groupAnnouncement?.id ?? 0;
+    int index = findViewIndexByAnnouncement(id);
+    state.announcementViewList[index] = announcement;
+    state.announcementViewList.refresh();
   }
 
   /*
@@ -223,14 +253,15 @@ class GroupAnnouncementLogic extends GetxController {
                           ),
                         ),
                         SizedBox(width: 100.rpx,),
+
                         Container(
                           width: 500.rpx,
                           height: 300.rpx,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
+                          decoration: announcement.image == null ||  announcement.image == "" ? BoxDecoration() : BoxDecoration(
+                            // color: Colors.pink,
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
-                              image: Image.asset("assets/user/portait.png").image,
+                              image: Image.network("${announcement.image}").image,
                               fit: BoxFit.fill
                             )
                           ),
@@ -238,39 +269,88 @@ class GroupAnnouncementLogic extends GetxController {
                       ],
                     ),
                   ),
-                  if(announcement.content!.length! >= 25)
-                  InkWell(
-                    child: Container(
-                      margin: EdgeInsets.only(top: 50.rpx),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: Text(
-                              "展开",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14
+                  Container(
+                    margin: EdgeInsets.only(top: 50.rpx),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        //展开
+                        Visibility(
+                          visible: announcement.content!.length >= 25,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 50.rpx),
+                              child:  InkWell(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              "${state.announcementOpenMap[announcement.id] ? "收起" : "展开"}",
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontSize: 14
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 15.rpx),
+                                      child: Transform.rotate(
+                                        angle: state.announcementOpenMap[announcement.id] ? 0 : pi / 2,
+                                        child: SizedBox(
+                                          width: 70.rpx,
+                                          height: 70.rpx,
+                                          child: Image.asset("zhankai.png".icon,fit: BoxFit.fill,color: Colors.blue,),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                onTap: (){
+                                  state.announcementOpenMap[announcement.id] = !state.announcementOpenMap[announcement.id];
+                                },
                               ),
+                        )),
+                        Container(
+                          child:  InkWell(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          "编辑",
+                                          style: TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 14
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 15.rpx),
+                                  child: SizedBox(
+                                    width: 70.rpx,
+                                    height: 70.rpx,
+                                    child: Image.asset("bianji.png".icon,fit: BoxFit.fill,color: Colors.blue,),
+                                  ),
+                                )
+                              ],
                             ),
+                            onTap: ()=>toEditAnnouncement(view),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(left: 15.rpx),
-                            child: Transform.rotate(
-                              angle: state.announcementOpenMap[announcement.id] ? 0 : pi / 2,
-                              child: SizedBox(
-                                width: 70.rpx,
-                                height: 70.rpx,
-                                child: Image.asset("zhankai.png".icon,fit: BoxFit.fill,color: Colors.blue,),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                    onTap: (){
-                      state.announcementOpenMap[announcement.id] = !state.announcementOpenMap[announcement.id];
-                    },
                   )
                 ],
               ),
