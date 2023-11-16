@@ -7,6 +7,7 @@ class GroupAnnouncementState {
   Group group = Group();
   //用来储存公告的展开记录
   RxMap announcementOpenMap = RxMap<int,bool>();
+  final validAdminIdentity = false.obs;
   GroupAnnouncementState() {
     ///Initialize variables
   }

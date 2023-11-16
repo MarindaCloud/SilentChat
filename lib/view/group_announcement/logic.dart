@@ -27,10 +27,13 @@ class GroupAnnouncementLogic extends GetxController {
     super.onInit();
   }
 
+
   init() async{
     Map<String,dynamic> args = Get.arguments;
     state.group = args["group"];
     List<GroupAnnouncement> list = args["list"];
+    bool validIdentityFlag = args["isAdmin"];
+    state.validAdminIdentity.value = validIdentityFlag;
     List<AnnouncementView> viewList = [];
     for(var element in list){
       int ownerId = element.owner ?? 0;
@@ -329,37 +332,40 @@ class GroupAnnouncementLogic extends GetxController {
                                 },
                               ),
                         )),
-                        Container(
-                          child:  InkWell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          "编辑",
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontSize: 14
+                        Visibility(
+                          visible: state.validAdminIdentity.value,
+                          child: Container(
+                            child:  InkWell(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            "编辑",
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 14
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 15.rpx),
-                                  child: SizedBox(
-                                    width: 70.rpx,
-                                    height: 70.rpx,
-                                    child: Image.asset("bianji.png".icon,fit: BoxFit.fill,color: Colors.blue,),
-                                  ),
-                                )
-                              ],
+                                  Container(
+                                    margin: EdgeInsets.only(left: 15.rpx),
+                                    child: SizedBox(
+                                      width: 70.rpx,
+                                      height: 70.rpx,
+                                      child: Image.asset("bianji.png".icon,fit: BoxFit.fill,color: Colors.blue,),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              onTap: ()=>toEditAnnouncement(view),
                             ),
-                            onTap: ()=>toEditAnnouncement(view),
                           ),
                         )
                       ],

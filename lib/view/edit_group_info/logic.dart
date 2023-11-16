@@ -54,7 +54,14 @@ class EditGroupInfoLogic extends GetxController {
     List<GroupAnnouncement> announcementList = await GroupAnnouncementAPI.selectByGid(state.group.value.id!);
     announcementList.sort((a,b)=>b.time!.compareTo(a.time!));
     state.groupAnnouncementList.value = announcementList;
-
+    GroupAnnouncement announcement = state.groupAnnouncementList.firstWhereOrNull((element) => element.isTop == 1) ?? GroupAnnouncement(content: "暂无");
+    state.newAnnounment.value = announcement.content ?? "";
+    int uid = userState.uid.value;
+    GroupUserInfo target = state.userInfoList.firstWhereOrNull((element) => element.gid == state.group.value!.id && element.uid == uid) ?? GroupUserInfo();
+    state.nickName.value = target.nickName ?? "";
+    bool flag = await validGroupAdminIdentity();
+    state.validAdminIdentity.value = flag;
+    Log.i("是否是管理员：${flag}");
     Log.i("群员总计: ${state.userList.length}");
     Log.i("群公告总计: ${state.groupAnnouncementList.length}");
   }
@@ -268,18 +275,26 @@ class EditGroupInfoLogic extends GetxController {
           text = group.description ?? "";
           break;
         case "群昵称":
-          GroupUserInfo target = state.userInfoList.firstWhere((element) => element.gid == group.id);
-          text = target.nickName ?? "";
+          text = state.nickName.value;
           break;
         case "群公告":
-          if(state.groupAnnouncementList.isEmpty){
-            text = "";
-          }
-          GroupAnnouncement announcement = state.groupAnnouncementList.first;
-          text = announcement.content ?? "";
+          text = state.newAnnounment.value;
           break;
       }
       return text;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/16 16:49
+   * @description 校验当前用户是否是群聊管理员
+   */
+  Future<bool> validGroupAdminIdentity() async{
+    int gid = state.group.value.id ?? 0;
+    int uid = userState.uid.value;
+    List<GroupUserInfo> list = await GroupInfoAPI.selectByGid(gid);
+    var element = list.firstWhereOrNull((element) => element.uid == uid && element.isAdmin == 1);
+    return element!=null;
   }
 
   /*
@@ -316,7 +331,8 @@ class EditGroupInfoLogic extends GetxController {
   toGroupAnnouncement() async{
     Map<String,dynamic> args = {
       "group": state.group.value,
-      "list": state.groupAnnouncementList.value
+      "list": state.groupAnnouncementList.value,
+      "isAdmin": state.validAdminIdentity.value
     };
     await Get.toNamed(AppPage.groupAnnouncement,arguments: args);
     initGroupUserInfo();

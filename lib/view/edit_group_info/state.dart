@@ -11,6 +11,12 @@ class EditGroupInfoState {
   //用户列表
   final userList = <User>[].obs;
   final groupAnnouncementList = <GroupAnnouncement>[].obs;
+  //校验是否是群管理
+  final validAdminIdentity = false.obs;
+  //群昵称
+  final nickName = "".obs;
+  //群公告
+  final newAnnounment= "".obs;
   EditGroupInfoState() {
     ///Initialize variables
   }
