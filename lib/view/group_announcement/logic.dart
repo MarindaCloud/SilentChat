@@ -129,10 +129,10 @@ class GroupAnnouncementLogic extends GetxController {
    */
   toAppendAnnouncement() async{
     var announcement = await Get.toNamed(AppPage.appendAnnouncement,arguments: state.group);
-    // if(announcement != null){
-    //   state.groupAnnouncementList.add(announcement);
-    //   state.groupAnnouncementList.refresh();
-    // }
+    if(announcement != null){
+      state.announcementViewList.add(announcement);
+      state.announcementViewList.refresh();
+    }
   }
 
   /*

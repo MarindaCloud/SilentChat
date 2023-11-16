@@ -287,7 +287,7 @@ class EditGroupInfoLogic extends GetxController {
    * @date 2023/10/9 14:29
    * @description 根据群聊基础Key显示相关帮助组件视图
    */
-  showHelperView(String key){
+  showHelperView(String key) {
     switch(key){
       case "群简介":
         OverlayManager().createOverlay("inputBox",InputBoxComponent("更改群简介",state.group.value.description!,(controller){handleCustomContent(key, controller.text);}));
@@ -313,12 +313,13 @@ class EditGroupInfoLogic extends GetxController {
    * @date 2023/10/9 17:49
    * @description 跳转至群公告
    */
-  toGroupAnnouncement(){
+  toGroupAnnouncement() async{
     Map<String,dynamic> args = {
       "group": state.group.value,
       "list": state.groupAnnouncementList.value
     };
-    Get.toNamed(AppPage.groupAnnouncement,arguments: args);
+    await Get.toNamed(AppPage.groupAnnouncement,arguments: args);
+    initGroupUserInfo();
   }
 
   /*

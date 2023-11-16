@@ -2,7 +2,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/announcement_view.dart';
 import 'package:silentchat/entity/group_announcement.dart';
+import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/group_announcement_api.dart';
 import 'state.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -38,11 +40,13 @@ class AppendAnnouncementLogic extends GetxController {
     int gid = state.group.id ?? 0;
     int ownerId = userState.uid.value;
     GroupAnnouncement announcement = GroupAnnouncement(gid:gid,content: content,time: DateTime.now().toString(),image: imgSrc,owner: ownerId,isTop: 0);
+    User user = await userLogic.selectByUid(ownerId);
+    AnnouncementView view = AnnouncementView(userName: user.username ?? "",groupAnnouncement: announcement);
     var resultId = await GroupAnnouncementAPI.insert(announcement);
     announcement.id = resultId;
     if(resultId >= 1){
       BotToast.showText (text: "发布成功！");
-      Get.back(result: announcement);
+      Get.back(result: view);
     }else{
       BotToast.showText(text: "发布失败！");
     }
