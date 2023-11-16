@@ -16,7 +16,6 @@ import 'package:get/get.dart';
 class GroupAnnouncementAPI{
   static final userLogic = Get.find<UserLogic>();
   static final userState = Get.find<UserLogic>().state;
-
   /*
    * @author Marinda
    * @date 2023/10/8 18:06

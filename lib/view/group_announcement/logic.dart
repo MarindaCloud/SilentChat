@@ -1,20 +1,27 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/expansion/image_path.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/announcement_view.dart';
 import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/group_announcement.dart';
+import 'package:silentchat/entity/user.dart';
 import 'package:silentchat/network/api/group_announcement_api.dart';
 import 'package:silentchat/network/api/group_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:silentchat/view/append_announcement/binding.dart';
 import 'state.dart';
 
 class GroupAnnouncementLogic extends GetxController {
   final GroupAnnouncementState state = GroupAnnouncementState();
-
+  final UserLogic userLogic = Get.find<UserLogic>();
+  final UserState userState = Get.find<UserLogic>().state;
   @override
   void onInit() {
     init();
@@ -22,25 +29,31 @@ class GroupAnnouncementLogic extends GetxController {
     super.onInit();
   }
 
-  init(){
+  init() async{
     Map<String,dynamic> args = Get.arguments;
     state.group = args["group"];
-    state.groupAnnouncementList.value = args["list"];
-
+    List<GroupAnnouncement> list = args["list"];
+    List<AnnouncementView> viewList = [];
     Map<int,bool> openMap = {};
-    for(var element in state.groupAnnouncementList){
+    for(var element in list){
+      int ownerId = element.owner ?? 0;
+      User user = await userLogic.selectByUid(ownerId);
+      String userName = user.username ?? "";
+      AnnouncementView announcementView = AnnouncementView(userName: userName,groupAnnouncement: element);
       int id = element.id ?? -1;
       openMap[id] = false;
+      viewList.add(announcementView);
     }
     state.announcementOpenMap.value = openMap;
+    state.announcementViewList.value = viewList;
     //页面渲染完毕之后进行排序
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      state.groupAnnouncementList.sort((a,b){
-        int aIsTop = a.isTop ?? 0;
-        int bIsTop = b.isTop ?? 0;
+      state.announcementViewList.sort((a,b){
+        int aIsTop = a.groupAnnouncement!.isTop ?? 0;
+        int bIsTop = b.groupAnnouncement!.isTop ?? 0;
         return bIsTop.compareTo(aIsTop);
       });
-      state.groupAnnouncementList.refresh();
+      state.announcementViewList.refresh();
     });
   }
 
@@ -62,37 +75,51 @@ class GroupAnnouncementLogic extends GetxController {
           updateElement.image = imageSrc;
           break;
       }
+      int announcementId = announcement.id ?? 0;
       //设置其他显示为0
-      int index = state.groupAnnouncementList.indexOf(announcement);
-      for(var i = 0;i<state.groupAnnouncementList.length;i++){
+      int index = findViewIndexByAnnouncement(announcementId);
+      List<AnnouncementView> viewList = [];
+      //过滤筛选
+      for(var i = 0;i< state.announcementViewList.value.length;i++){
+        var element = state.announcementViewList[i];
+        GroupAnnouncement announcement = element.groupAnnouncement ?? GroupAnnouncement();
         if(i == index){
-          continue;
+          announcement.isTop = 1;
+        }else{
+          announcement.isTop = 0;
+          GroupAnnouncementAPI.update(announcement);
         }
-        state.groupAnnouncementList[i].isTop = 0;
+        AnnouncementView view = AnnouncementView(userName: element.userName,groupAnnouncement: announcement);
+        viewList.add(view);
       }
       //互换位置
-      dynamic temp = state.groupAnnouncementList[index];
-      state.groupAnnouncementList[0] = updateElement;
-      state.groupAnnouncementList[index] = temp;
-      for(var element in state.groupAnnouncementList.value){
-        if(element.id == updateElement.id){
-          continue;
-        }
-        GroupAnnouncementAPI.update(element);
-      }
+      dynamic temp = state.announcementViewList[index];
+      state.announcementViewList.removeAt(index);
+      state.announcementViewList.insert(0, temp);
       var result = await GroupAnnouncementAPI.update(updateElement);
       if(result == 1){
         BotToast.showText(text: "修改成功！");
       }else{
         BotToast.showText(text: "修改失败");
       }
-      //这里是排序逻辑，暂时未定
-      // state.groupAnnouncementList.sort((a,b){
-      //   DateTime aDt = DateTime.parse(a.time!);
-      //   DateTime bDt = DateTime.parse(b.time!);
-      //   return aDt.compareTo(bDt);
-      // });
-      state.groupAnnouncementList.refresh();
+      state.announcementViewList.refresh();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/16 11:09
+   * @description 查找视图索引
+   */
+  findViewIndexByAnnouncement(int id){
+    int index = 0;
+    for(int i = 0;i<state.announcementViewList.length;i++){
+      AnnouncementView view = state.announcementViewList[i];
+      int announcementId = view.groupAnnouncement?.id ?? 0;
+      if(announcementId == id){
+        index = i;
+      }
+    }
+    return index;
   }
 
   /*
@@ -100,8 +127,12 @@ class GroupAnnouncementLogic extends GetxController {
    * @date 2023/10/10 10:52
    * @description 跳转至添加公告
    */
-  toAppendAnnouncement(){
-    Get.toNamed(AppPage.appendAnnouncement,arguments: state.group);
+  toAppendAnnouncement() async{
+    var announcement = await Get.toNamed(AppPage.appendAnnouncement,arguments: state.group);
+    // if(announcement != null){
+    //   state.groupAnnouncementList.add(announcement);
+    //   state.groupAnnouncementList.refresh();
+    // }
   }
 
   /*
@@ -111,8 +142,9 @@ class GroupAnnouncementLogic extends GetxController {
    */
   buildGroupAnnouncement() {
     List<Widget> childrenList = [];
-    var list = state.groupAnnouncementList;
-    for (GroupAnnouncement announcement in list) {
+    var list = state.announcementViewList;
+    for (AnnouncementView view in list) {
+      GroupAnnouncement announcement = view.groupAnnouncement ?? GroupAnnouncement();
       Widget widget = Container(
         color: Colors.white,
         padding: EdgeInsets.only(top: 70.rpx,left: 100.rpx,right: 100.rpx,bottom: 70.rpx),
@@ -130,7 +162,7 @@ class GroupAnnouncementLogic extends GetxController {
                       children: [
                         Container(
                           child: Text(
-                            "发起者",
+                            "${view.userName}",
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14),

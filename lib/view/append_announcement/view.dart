@@ -125,35 +125,9 @@ class AppendAnnouncementPage extends StatelessWidget {
                           245, 245, 245, 1), width: 1))
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 80.rpx,
-                              height: 80.rpx,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color.fromRGBO(212, 212, 212, 1),
-                                      width: 1),
-                                  borderRadius: BorderRadius.circular(10000)
-                              ),
-                            ),
-                            SizedBox(width: 50.rpx,),
-                            Container(
-                              child: Text(
-                                "置顶公告",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
                       Container(
                         child: Row(
                           children: [
@@ -180,7 +154,7 @@ class AppendAnnouncementPage extends StatelessWidget {
                                 print("取消！");
                               },
                             ),
-                            SizedBox(width: 50.rpx),
+                            SizedBox(width: 100.rpx),
                             InkWell(
                               child: Container(
                                 width: 400.rpx,
@@ -202,6 +176,7 @@ class AppendAnnouncementPage extends StatelessWidget {
                               ),
                               onTap: () {
                                 print("发布！");
+                                logic.submit();
                               },
                             ),
                           ],

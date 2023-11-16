@@ -7,7 +7,6 @@ class AppendAnnouncementState {
   TextEditingController contentController = TextEditingController(text: "");
   final imgPath = "".obs;
   ImagePicker imagePicker = ImagePicker();
-
   AppendAnnouncementState() {
     ///Initialize variables
   }
