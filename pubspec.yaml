@@ -70,6 +70,7 @@ dev_dependencies:
   jpeg_encode: ^1.0.1
   uuid: 3.0.6
   fl_chart: 0.62.0
+  lunar: ^1.6.1
   #  调用win32 api
   #  win32: ^2.7.0
   flutter:

@@ -23,7 +23,8 @@ enum GlobalPage {
   groupAnnouncement("/groupAnnouncement"),
   editGroupsInfo("/editGroupInfo"),
   appendAnnouncement("/appendAnnouncement"),
-  editAnnouncement("/editAnnouncement");
+  editAnnouncement("/editAnnouncement"),
+  editUserInfo("/editUserInfo");
 
   final String router;
   const GlobalPage(this.router);

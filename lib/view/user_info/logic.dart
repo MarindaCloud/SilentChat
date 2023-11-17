@@ -61,4 +61,13 @@ class UserInfoLogic extends GetxController {
       Log.e(e);
     }
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/17 10:51
+   * @description 跳转到用户信息
+   */
+  toEditUserInfo() async{
+    await Get.toNamed(AppPage.editUserInfo);
+  }
 }

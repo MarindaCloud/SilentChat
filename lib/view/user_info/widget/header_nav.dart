@@ -39,9 +39,9 @@ class HeaderNavComponentState extends State<HeaderNavComponent>{
         padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10.rpx),
         child: Row(
           children: [
-            IconButtonComponent("back", Colors.white),
+            IconButtonComponent("back", Colors.grey),
             Expanded(child: SizedBox()),
-            IconButtonComponent.build("qr",onClick: showQrComponent)
+            IconButtonComponent.build("qr",onClick: showQrComponent,color: Colors.grey,)
           ],
         ),
       ),

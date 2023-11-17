@@ -22,6 +22,8 @@ import 'package:silentchat/view/edit_group_info/binding.dart';
 import 'package:silentchat/view/edit_group_info/view.dart';
 import 'package:silentchat/view/edit_image/binding.dart';
 import 'package:silentchat/view/edit_image/view.dart';
+import 'package:silentchat/view/edit_user_info/binding.dart';
+import 'package:silentchat/view/edit_user_info/view.dart';
 import 'package:silentchat/view/group_announcement/binding.dart';
 import 'package:silentchat/view/group_announcement/view.dart';
 import 'package:silentchat/view/index/binding.dart';
@@ -67,6 +69,7 @@ class AppPage{
   static String groupAnnouncement = GlobalPage.groupAnnouncement.router;
   static String appendAnnouncement = GlobalPage.appendAnnouncement.router;
   static String editAnnouncement = GlobalPage.editAnnouncement.router;
+  static String editUserInfo = GlobalPage.editUserInfo.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -89,6 +92,7 @@ class AppPage{
     GetPage(name: groupAnnouncement, page: ()=> GroupAnnouncementPage(),binding: GroupAnnouncementBinding()),
     GetPage(name: appendAnnouncement, page: ()=> AppendAnnouncementPage(),binding: AppendAnnouncementBinding()),
     GetPage(name: editAnnouncement, page: ()=> EditAnnouncementPage(),binding: EditAnnouncementBinding()),
+    GetPage(name: editUserInfo, page: ()=> EditUserInfoPage(),binding: EditUserInfoBinding()),
   ];
 
   AppPage();
