@@ -81,37 +81,38 @@ class EditUserInfoPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(right: 100.rpx),
-                          decoration: BoxDecoration(
-                            border: Border(
-                                right: BorderSide(width: 1,color: Colors.grey))
-                          ),
+                        child: InkWell(
                           child: Container(
-                            width: 100,
-                            height: 30,
+                            padding: EdgeInsets.only(right: 100.rpx),
                             decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(5)
+                              border: Border(
+                                  right: BorderSide(width: 1,color: Colors.grey))
                             ),
-                            child: Center(
-                              child: Text(
-                                "修改信息",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(5)
+                              ),
+                              child: Center(
+                                child: Text(
+                                  "修改信息",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14
+                                  ),
                                 ),
                               ),
                             ),
                           ),
+                          onTap: ()=>logic.updateUserInfo(),
                         ),
                       ),
                       Expanded(
                         child: Container(
                           padding: EdgeInsets.only(left: 100.rpx),
-                          child: SizedBox (
+                          child: InkWell(
                             child: Container(
-                              width: 100,
                               height: 30,
                               decoration: BoxDecoration(
                                 color: Colors.grey,
@@ -127,6 +128,7 @@ class EditUserInfoPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            onTap: ()=>logic.reset(),
                           ),
                         ),
                       ),

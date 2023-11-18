@@ -69,5 +69,7 @@ class UserInfoLogic extends GetxController {
    */
   toEditUserInfo() async{
     await Get.toNamed(AppPage.editUserInfo);
+    state.user.value = await UserAPI.selectByUid(state.user.value.id??0);
+    userState.user.value = state.user.value;
   }
 }

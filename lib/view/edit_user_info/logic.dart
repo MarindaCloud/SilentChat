@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/controller/user/state.dart';
+import 'package:silentchat/entity/user.dart';
+import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:lunar/lunar.dart';
 import 'state.dart';
 
+import 'package:bot_toast/bot_toast.dart';
 /**
  * @author Marinda
  * @date 2023/11/16 17:27
@@ -11,12 +16,34 @@ import 'state.dart';
  */
 class EditUserInfoLogic extends GetxController {
   final EditUserInfoState state = EditUserInfoState();
+  final UserLogic userLogic = Get.find<UserLogic>();
+  final UserState userState = Get.find<UserLogic>().state;
+
 
   @override
   void onInit() {
     initBirthBasicInfo();
+    loadUserInfo();
     // TODO: implement onInit
     super.onInit();
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/18 15:43
+   * @description 加载用户信息
+   */
+  loadUserInfo() {
+    User user = userState.user.value;
+    state.userNameController.text = user.username!;
+    state.signatureController.text = user.signature ?? "";
+    state.emailController.text = user.email ?? "";
+    state.locationController.text = user.location ?? "";
+    state.sex.value = user.sex == 1 ? "男" : "女";
+    DateTime birthDay = user.birthday ?? DateTime.now();
+    state.year.value = birthDay.year.toString();
+    state.month.value = birthDay.month.toString();
+    state.day.value = birthDay.day.toString();
   }
 
   initBirthBasicInfo() {
@@ -326,5 +353,41 @@ class EditUserInfoLogic extends GetxController {
     }).toList();
 
     // int max = DateT
+  }
+
+  reset(){
+    loadUserInfo();
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/18 15:52
+   * @description 修改用户信息
+   */
+  updateUserInfo() async{
+    String userName = state.userNameController.text;
+    String email = state.emailController.text;
+    String signature = state.signatureController.text;
+    String location = state.locationController.text;
+    int sex = state.sex.value == "男" ? 1 : 2;
+    int year = int.parse(state.year.value);
+    int month = int.parse(state.month.value);
+    int day = int.parse(state.day.value);
+    DateTime birthDay = DateTime(year,month,day);
+    User cacheUser = userState.user.value;
+    User user = User.fromJson(cacheUser.toJson());
+    user.signature = signature;
+    user.location = location;
+    user.email = email;
+    user.username = userName;
+    user.sex = sex;
+    user.birthday = birthDay;
+    bool result = await UserAPI.updateUser(user);
+    if(!result){
+      BotToast.showText(text: "修改失败！");
+    } else{
+      BotToast.showText(text: "修改成功!");
+    }
   }
 }
