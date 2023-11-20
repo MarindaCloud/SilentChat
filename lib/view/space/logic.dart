@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
 import 'package:silentchat/entity/space_dynamic_info_view.dart';
@@ -48,6 +49,9 @@ class SpaceLogic extends GetxController {
         for(var element in spaceDynamicLikeList){
           int likeUid  = element.uid ?? -1;
           User likeUser = await UserAPI.selectByUid(likeUid);
+          String portrait = likeUser.portrait ?? "";
+          //添加用户头像至本地缓存
+          await CacheImageHandle.addImageCache(portrait);
           likeUserList.add(likeUser);
         }
       }
@@ -58,6 +62,30 @@ class SpaceLogic extends GetxController {
       index++;
     }
     state.dynamicViewInfoList.value = dynamicViewList;
+    downloadContentImageInfo();
+
+
+  }
+
+  //提前预下载内容图片信息
+  void downloadContentImageInfo(){
+    var list = state.dynamicViewInfoList.value;
+    for(var element in list){
+      var dynamicElement =  element.viewInfo?.element!;
+      String content = dynamicElement?.content ?? "";
+      int type = dynamicElement?.type ?? -1;
+      if(type == 2){
+        var jsonList = json.decode(content);
+        if(jsonList is List){
+          for(var i = 0;i<jsonList.length;i++){
+            var img = jsonList[i];
+            //后台下载
+            CacheImageHandle.addImageCache(img);
+          }
+        }
+      }
+
+    }
   }
 
 
@@ -253,6 +281,8 @@ class SpaceLogic extends GetxController {
                   ),
                 ),
               ),
+
+              //评论列表
               Container(
                 margin: EdgeInsets.only(top: 30.rpx,left: 10.rpx),
                 child: Row(
@@ -289,6 +319,26 @@ class SpaceLogic extends GetxController {
                             style: TextStyle(color: Colors.grey,fontSize: 14),
                           ),
                         )
+                    ),
+                    InkWell(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 50.rpx,right: 50.rpx),
+                        padding: EdgeInsets.only(top: 30.rpx,bottom: 30.rpx,left: 50.rpx,right: 50.rpx),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(5.rpx)
+                        ),
+                        child: Center(
+                          child: Text(
+                            "发送",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14
+                            ),
+                          ),
+                        ),
+                      ),
+                      onTap: ()=>print("发送消息"),
                     )
                   ],
                 ),
@@ -409,7 +459,7 @@ class SpaceLogic extends GetxController {
               child: Container(
                 margin: EdgeInsets.only(right: i == 0 ? 10.rpx : 0),
                 height: 700.rpx,
-                child: userLogic.buildPortraitWidget(1,
+                child: CacheImageHandle.containsImageCache(imgElement) == false ? Image.network(imgElement,fit: BoxFit.cover) :userLogic.buildPortraitWidget(1,
                   "${imgElement}",
                 ),
               ),
