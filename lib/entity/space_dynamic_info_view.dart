@@ -1,4 +1,6 @@
+import 'package:silentchat/entity/space_comment_view.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
+import 'package:silentchat/entity/space_dynamic_comment.dart';
 import 'package:silentchat/entity/user.dart';
 
 /**
@@ -9,7 +11,8 @@ import 'package:silentchat/entity/user.dart';
 class SpaceDynamicInfoView{
   SpaceDynamic? _element;
   List<User>? _commentLikeUserList;
-  SpaceDynamicInfoView(this._element,this._commentLikeUserList);
+  List<SpaceCommentView>? _commentViewList;
+  SpaceDynamicInfoView(this._element,this._commentLikeUserList,this._commentViewList);
 
   List<User>? get commentLikeUserList => _commentLikeUserList;
 
@@ -23,4 +26,9 @@ class SpaceDynamicInfoView{
     _element = value;
   }
 
+  List<SpaceCommentView>? get commentViewList => _commentViewList;
+
+  set commentViewList(List<SpaceCommentView>? value) {
+    _commentViewList = value;
+  }
 }

@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:bot_toast/bot_toast.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/space_comment_view.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
+import 'package:silentchat/entity/space_dynamic_comment.dart';
 import 'package:silentchat/entity/space_dynamic_info_view.dart';
 import 'package:silentchat/entity/space_dynamic_like.dart';
 import 'package:silentchat/entity/space_dynamic_view.dart';
@@ -45,6 +48,7 @@ class SpaceLogic extends GetxController {
       User dynamicUser = await UserAPI.selectByUid(dynamicUid);
       var spaceDynamicLikeList = await SpaceAPI.selectDynamicLikeByDid(dynamicId);
       List<User> likeUserList = [];
+      //点赞列表
       if(spaceDynamicLikeList != null){
         for(var element in spaceDynamicLikeList){
           int likeUid  = element.uid ?? -1;
@@ -55,16 +59,22 @@ class SpaceLogic extends GetxController {
           likeUserList.add(likeUser);
         }
       }
+      //评论列表
+      List<SpaceDynamicComment> commentList = await SpaceAPI.selectDynamicCommentListByDynamicId(dynamicId);
+      List<SpaceCommentView> spaceCommentViewList = [];
+      for(var element in commentList){
+        User user = await UserAPI.selectByUid(element.uid!);
+        SpaceCommentView view = SpaceCommentView(user, element);
+        spaceCommentViewList.add(view);
+      }
       String tag = "dynamic_${index}";
-      SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamicElement,likeUserList);
+      SpaceDynamicInfoView infoView = SpaceDynamicInfoView(spaceDynamicElement,likeUserList,spaceCommentViewList);
       SpaceDynamicView dynamicView = SpaceDynamicView(user: dynamicUser,viewInfo: infoView,tag: tag);
       dynamicViewList.add(dynamicView);
       index++;
     }
     state.dynamicViewInfoList.value = dynamicViewList;
     downloadContentImageInfo();
-
-
   }
 
   //提前预下载内容图片信息
@@ -88,6 +98,72 @@ class SpaceLogic extends GetxController {
     }
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/11/20 14:22
+   * @description 插入评论数据
+   */
+  insertComment(SpaceDynamic element,String text) async{
+    Log.i("插入评论数据");
+    SpaceDynamicComment comment = SpaceDynamicComment(dynamicId: element.id,uid: userState.uid.value,comment: text);
+    var result = await SpaceAPI.insertSpaceDynamicComment(comment);
+    if(result >= 1){
+      BotToast.showText(text: "评论成功！");
+      int index = state.dynamicViewInfoList.value.indexWhere((ele){
+        var dynamicId = ele.viewInfo?.element?.id ?? -1;
+        return dynamicId == element.id;
+      });
+      var commentList = state.dynamicViewInfoList[index].viewInfo?.commentViewList ?? [];
+      var newCommentList = <SpaceCommentView>[];
+      newCommentList.addAll(commentList);
+      SpaceCommentView commentView = SpaceCommentView(userState.user.value, comment);
+      newCommentList.add(commentView);
+      state.dynamicViewInfoList[index].viewInfo?.commentViewList = newCommentList;
+      state.dynamicViewInfoList.refresh();
+    }else{
+      BotToast.showText(text: "评论失败！");
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/20 14:49
+   * @description 构建CommentList
+   */
+  buildCommentList(List<SpaceCommentView> list){
+    return list.map((e){
+      User user = e.user!;
+      return Container(
+        margin: EdgeInsets.only(bottom: 10.rpx),
+        child: Row(
+          children: [
+            InkWell(
+              child: Container(
+                child: Text("${user.username}：",style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 14
+                ),),
+              ),
+              onTap: ()=>print("进入${user.username}空间"),
+            ),
+            Expanded(
+                child: Container(
+                  child: Text(
+                    "${e.comment?.comment}",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis
+                    ),
+                  ),
+                )
+            )
+          ],
+        ),
+      );
+    }).toList();
+  }
+
 
   /*
    * @author Marinda
@@ -100,6 +176,7 @@ class SpaceLogic extends GetxController {
       SpaceDynamicInfoView dynamicInfoView = element.viewInfo!;
       int dynamicType = dynamicInfoView.element?.type ?? 0;
       List<User> dynamicUserList = dynamicInfoView.commentLikeUserList ?? [];
+      TextEditingController controller = TextEditingController(text: "");
       //动态
       return Container(
           width: Get.width,
@@ -281,8 +358,15 @@ class SpaceLogic extends GetxController {
                   ),
                 ),
               ),
-
-              //评论列表
+              //评论信息
+              Container(
+                margin: EdgeInsets.only(top: 30.rpx,left: 10.rpx),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: buildCommentList(dynamicInfoView.commentViewList!),
+                ),
+              ),
+              //评论栏
               Container(
                 margin: EdgeInsets.only(top: 30.rpx,left: 10.rpx),
                 child: Row(
@@ -304,6 +388,7 @@ class SpaceLogic extends GetxController {
                         child: SizedBox(
                           height: 150.rpx,
                           child: TextField(
+                            controller: controller,
                             decoration: InputDecoration(
                                 fillColor: Color.fromRGBO(246,246,246,1),
                                 filled: true,
@@ -338,7 +423,10 @@ class SpaceLogic extends GetxController {
                           ),
                         ),
                       ),
-                      onTap: ()=>print("发送消息"),
+                      onTap: (){
+                        insertComment(dynamicInfoView.element!, controller.text);
+                        controller.text = "";
+                      },
                     )
                   ],
                 ),
@@ -348,6 +436,8 @@ class SpaceLogic extends GetxController {
         );
     }).toList();
   }
+
+
 
   /*
    * @author Marinda
@@ -397,7 +487,7 @@ class SpaceLogic extends GetxController {
       User user = userState.user.value;
       newUserList.add(user);
       //替换一个新的目标对象
-      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList);
+      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList,dynamicInfoView.commentViewList);
       SpaceDynamicView newSpaceDynamicView = SpaceDynamicView(user: dynamicView.user,viewInfo: spaceDynamicInfoView,tag: dynamicView.tag);
       state.dynamicViewInfoList[index] = newSpaceDynamicView;
       Log.i("${uid}点赞${dynamicId}成功");
@@ -410,7 +500,7 @@ class SpaceLogic extends GetxController {
       Log.i("移除目标索引：${targetIndex}");
       newUserList.removeAt(targetIndex);
       //替换一个新的目标对象
-      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList);
+      SpaceDynamicInfoView spaceDynamicInfoView = SpaceDynamicInfoView(targetDynamic, newUserList,dynamicInfoView.commentViewList);
       SpaceDynamicView newSpaceDynamicView = SpaceDynamicView(user: dynamicView.user,viewInfo: spaceDynamicInfoView,tag: dynamicView.tag);
       state.dynamicViewInfoList[index] = newSpaceDynamicView;
       SpaceAPI.deleteDynamicLike(spaceDynamicLike);

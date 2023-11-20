@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/entity/api_result.dart';
 import 'package:silentchat/entity/space.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
+import 'package:silentchat/entity/space_dynamic_comment.dart';
 import 'package:silentchat/entity/space_dynamic_info.dart';
 import 'package:silentchat/entity/space_dynamic_like.dart';
 import 'package:silentchat/enum/HttpContetType.dart';
@@ -151,5 +151,48 @@ class SpaceAPI {
     };
     APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/delete", HttpMethods.POST.value,data,header: Request.getHeader());
     return apiResult.data;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/20 11:36
+   * @description 插入空间动态评论
+   */
+   static insertSpaceDynamicComment(SpaceDynamicComment entity) async{
+     Log.i("插入空间动态评论！");
+    var response = await BaseProvider.sendRequest("spaceDynamicComment/insertReturning", HttpMethods.POST.value, entity.toJson(),header: Request.getHeader("json"));
+    if(response.data == null) return null;
+    return response.data;
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/20 14:14
+   * @description 根据动态id获取相关评论信息列表
+   */
+  static selectDynamicCommentListByDynamicId(int dynamicId) async{
+    Log.i("根据动态id获取相关评论信息列表");
+    var response = await BaseProvider.sendRequest("spaceDynamicComment/selectListByDynamicId", HttpMethods.POST.value, {"dynamic_id": dynamicId},header: Request.getHeader());
+    var data = response.data;
+    if(data == null) return <SpaceDynamicComment>[];
+    if(data is List){
+      return data.map((e) => SpaceDynamicComment.fromJson(e)).toList();
+    }
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/20 14:17
+   * @description 修改空间动态评论信息
+   */
+  static updateDynamicComment(SpaceDynamicComment element) async{
+    Log.i("修改空间动态评论信息");
+    var response = await BaseProvider.sendRequest("spaceDynamicComment/update", HttpMethods.POST.value, element.toJson(),header: Request.getHeader());
+    var data = response.data;
+    if(data == null) return -1;
+    return data;
   }
 }
