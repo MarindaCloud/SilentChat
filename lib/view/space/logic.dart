@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/space_comment_view.dart';
@@ -98,6 +99,33 @@ class SpaceLogic extends GetxController {
     }
   }
 
+  removeComment(SpaceDynamic element,SpaceDynamicComment comment) async{
+    int id = element.id!;
+    Log.i("删除id动态为: ${id}的评论");
+
+      int index = state.dynamicViewInfoList.value.indexWhere((ele){
+        var dynamicId = ele.viewInfo?.element?.id ?? -1;
+        return dynamicId == element.id;
+      });
+      var commentList = state.dynamicViewInfoList[index].viewInfo?.commentViewList ?? [];
+      var newCommentList = <SpaceCommentView>[];
+      newCommentList.addAll(commentList);
+      int cid = commentList.indexWhere((element)=> element.comment?.id! == comment.id!);
+      newCommentList.removeAt(cid);
+      state.dynamicViewInfoList[index].viewInfo?.commentViewList = newCommentList;
+      state.dynamicViewInfoList.refresh();
+      int result = await SpaceAPI.deleteDynamicCommentById(comment.id!);
+      if(result >= 1){
+        BotToast.showText(text: "删除成功！");
+      }else{
+        BotToast.showText(text: "删除失败！");
+      }
+      Future.delayed(Duration(seconds: 1),(){
+        BotToast.cleanAll();
+      });
+
+  }
+
   /*
    * @author Marinda
    * @date 2023/11/20 14:22
@@ -108,7 +136,7 @@ class SpaceLogic extends GetxController {
     SpaceDynamicComment comment = SpaceDynamicComment(dynamicId: element.id,uid: userState.uid.value,comment: text);
     var result = await SpaceAPI.insertSpaceDynamicComment(comment);
     if(result >= 1){
-      BotToast.showText(text: "评论成功！");
+
       int index = state.dynamicViewInfoList.value.indexWhere((ele){
         var dynamicId = ele.viewInfo?.element?.id ?? -1;
         return dynamicId == element.id;
@@ -116,10 +144,12 @@ class SpaceLogic extends GetxController {
       var commentList = state.dynamicViewInfoList[index].viewInfo?.commentViewList ?? [];
       var newCommentList = <SpaceCommentView>[];
       newCommentList.addAll(commentList);
+      comment.id = result;
       SpaceCommentView commentView = SpaceCommentView(userState.user.value, comment);
       newCommentList.add(commentView);
       state.dynamicViewInfoList[index].viewInfo?.commentViewList = newCommentList;
       state.dynamicViewInfoList.refresh();
+      BotToast.showText(text: "评论成功！");
     }else{
       BotToast.showText(text: "评论失败！");
     }
@@ -130,38 +160,177 @@ class SpaceLogic extends GetxController {
    * @date 2023/11/20 14:49
    * @description 构建CommentList
    */
-  buildCommentList(List<SpaceCommentView> list){
-    return list.map((e){
+  buildCommentList(SpaceDynamicInfoView view){
+    List<Widget> widgetList = [];
+    var list = view.commentViewList ?? [];
+    for(var i = 0;i<list.length;i++){
+      var e = list[i];
+      var spaceDynamic = view.element!;
       User user = e.user!;
-      return Container(
+      var widget = Container(
         margin: EdgeInsets.only(bottom: 10.rpx),
         child: Row(
           children: [
             InkWell(
               child: Container(
                 child: Text("${user.username}：",style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 14
+                    color: Colors.blue,
+                    fontSize: 14
                 ),),
               ),
               onTap: ()=>print("进入${user.username}空间"),
             ),
             Expanded(
-                child: Container(
-                  child: Text(
-                    "${e.comment?.comment}",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      overflow: TextOverflow.ellipsis
+                child: InkWell(
+                  child: Container(
+                    child: Text(
+                      "${e.comment?.comment}",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          overflow: TextOverflow.ellipsis
+                      ),
                     ),
                   ),
+                  onLongPress: (){
+                    // BotToast.cleanAll();
+                    BotToast.showAnimationWidget(toastBuilder: (val){
+                      return Scaffold(
+                        backgroundColor: Colors.black.withOpacity(.3),
+                        body: Container(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              InkWell(
+                                child: SizedBox.expand(),
+                                onTap: ()=>BotToast.cleanAll(),
+                              ),
+                              Align(
+                                child: FractionallySizedBox(
+                                  widthFactor: .8,
+                                  child: Container(
+                                    color: Colors.white,
+                                    height: 1200.rpx,
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        //头部
+                                        Container(
+                                          color: Colors.blue,
+                                          height: 130.rpx,
+                                          padding: EdgeInsets.only(top: 10.rpx,left: 50.rpx,right: 50.rpx,bottom: 10.rpx),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Container(),
+                                              Container(
+                                                child: Text(
+                                                  "温馨提示",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16
+                                                  ),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: ()=>BotToast.cleanAll(),
+                                                child: Container(
+                                                  child: SizedBox(
+                                                      width: 70.rpx,
+                                                      height: 70.rpx,
+                                                      child: Image.asset(
+                                                        "shanchu2.png".icon,
+                                                        fit: BoxFit.cover,
+                                                        color: Colors.white,
+                                                      )
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //  内容
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: 50.rpx,right: 50.rpx,bottom: 30.rpx),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  child: Center(
+                                                    child: Text("是否删除该条评论",
+                                                        style: TextStyle(color: Colors.black,fontSize: 16)
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(bottom: 20.rpx),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      InkWell(
+                                                        child: Container(
+                                                          width: 300.rpx,
+                                                          color: Colors.blue,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "提交",
+                                                              style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 14
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        onTap: ()=>removeComment(spaceDynamic,e.comment!),
+                                                      ),
+                                                      Container(width: 100.rpx),
+                                                      InkWell(
+                                                        child: Container(
+                                                          width: 300.rpx,
+                                                          color: Colors.grey,
+                                                          child: Center(
+                                                            child: Text(
+                                                              "取消",
+                                                              style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontSize: 14
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        onTap: ()=>BotToast.cleanAll(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    }, animationDuration: Duration(seconds: 1));
+                  },
                 )
             )
           ],
         ),
       );
-    }).toList();
+      widgetList.add(widget);
+    }
+    return widgetList;
   }
 
 
@@ -363,7 +532,7 @@ class SpaceLogic extends GetxController {
                 margin: EdgeInsets.only(top: 30.rpx,left: 10.rpx),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: buildCommentList(dynamicInfoView.commentViewList!),
+                  children: buildCommentList(dynamicInfoView),
                 ),
               ),
               //评论栏

@@ -195,4 +195,18 @@ class SpaceAPI {
     if(data == null) return -1;
     return data;
   }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/20 16:13
+   * @description 删除空间动态评论信息
+   */
+  static deleteDynamicCommentById(int id) async{
+    Log.i("删除空间动态评论信息");
+    var response = await BaseProvider.sendRequest("spaceDynamicComment/remove", HttpMethods.POST.value,{"id": id},header: Request.getHeader());
+    var data = response.data;
+    if(data == null) return -1;
+    return data;
+  }
 }
