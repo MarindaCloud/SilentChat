@@ -317,11 +317,14 @@ class LoginPage extends StatelessWidget {
                                           color: Color.fromRGBO(
                                               230, 230, 230, 1), width: 2))
                                   ),
-                                  child: Container(
-                                    child: Text("忘记密码", style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13)),
+                                  child: InkWell(
+                                    child: Container(
+                                      child: Text("忘记密码", style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13)),
+                                    ),
+                                    onTap: ()=>logic.toForgotPassword(),
                                   ),
                                 )
                             ),

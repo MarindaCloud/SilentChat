@@ -109,7 +109,7 @@ class RegisterLogic extends GetxController {
     String emailValue = state.email.text;
     if(state.validEmailVis.value || emailValue == "")return;
     // 发送验证码
-    String verifyCode = await EmailAPI.sendVerifyCode(emailValue);
+    String verifyCode = await EmailAPI.sendVerifyCode("默讯注册验证码",emailValue);
     print('验证码：${verifyCode}');
     state.verifyCode.value = verifyCode;
     addVerifyCodeTimer();

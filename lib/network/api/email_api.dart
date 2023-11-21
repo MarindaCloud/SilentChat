@@ -16,15 +16,16 @@ class EmailAPI{
    * @date 2023/9/5 14:11
    * @description 发送验证码
    */
-  static sendVerifyCode(String to) async{
-    Log.i("发送邮件注册验证码");
+  static sendVerifyCode(String prefix,String to) async{
+    Log.i("发送验证码");
     var data = {
-      "to": to
+      "to": to,
+      "prefix": prefix
     };
     var response = await BaseProvider.sendRequest("mail/sendVerify", HttpMethods.POST.value,data,header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     String verifyCode = apiResult.data;
-    Log.i("注册验证码为：${verifyCode}");
+    Log.i("验证码为：${verifyCode}");
     return verifyCode;
   }
 

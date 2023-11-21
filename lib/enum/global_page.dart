@@ -24,7 +24,9 @@ enum GlobalPage {
   editGroupsInfo("/editGroupInfo"),
   appendAnnouncement("/appendAnnouncement"),
   editAnnouncement("/editAnnouncement"),
-  editUserInfo("/editUserInfo");
+  editUserInfo("/editUserInfo"),
+  forgotPwd("/forgotPassword");
+
 
   final String router;
   const GlobalPage(this.router);

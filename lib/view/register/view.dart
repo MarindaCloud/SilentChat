@@ -202,7 +202,7 @@ class RegisterPage extends StatelessWidget {
                                           ),
                                           child: InkWell(
                                             child: Center(
-                                              child: Text("${state.verifyText.value}",style: TextStyle(color: Colors.white,fontSize: 16,letterSpacing: 5),),
+                                              child: Text("${state.verifyText.value}",style: TextStyle(color: Colors.white,fontSize: 16,letterSpacing: 2),),
                                             ),
                                             onTap: logic.sendVerifyCode,
                                           ),
