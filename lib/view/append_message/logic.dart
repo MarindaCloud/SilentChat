@@ -51,6 +51,7 @@ class AppendMessageLogic extends GetxController {
       }
       sendFriendsVerifyPacket(uid, tid, text);
       BotToast.showText(text: "成功发送好友验证消息！");
+      state.controller.text = "";
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:silentchat/common/components/back_button.dart';
 import 'package:silentchat/common/expansion/image_path.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
@@ -51,9 +52,7 @@ class AppendMessagePage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(
                                           10000),
                                       image: DecorationImage(
-                                          image: Image
-                                              .asset(getPortrait())
-                                              .image,
+                                          image: logic.userLogic.buildPortraitWidget(1,state.element.portrait).image,
                                           fit: BoxFit.fill
                                       )
                                   ),

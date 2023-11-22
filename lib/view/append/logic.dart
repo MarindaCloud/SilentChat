@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/system/logic.dart';
 import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/entity/app_page.dart';
@@ -113,8 +114,7 @@ class AppendLogic extends GetxController with GetTickerProviderStateMixin{
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(1000),
                         image: DecorationImage(
-                            image: Image.asset(
-                                state.type == 2 ? element.portrait : "assets/user/portait.png").image,
+                            image: userLogic.buildPortraitWidget(1,element.portrait).image,
                             fit: BoxFit.fill
                         )
                     )

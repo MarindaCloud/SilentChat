@@ -770,14 +770,17 @@ class SpaceLogic extends GetxController {
         );
         textSpanList.add(textSpan);
       }
-      //追加结尾
-      textSpanList.add(TextSpan(
-        text: "等${(len - 3)}个人觉得很赞",
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 16
-        ),
-      ),);
+      //这里是避免出现0个人觉得很赞这种情况！
+      if(len - 3 >=1){
+        //追加结尾
+        textSpanList.add(TextSpan(
+          text: "等${(len - 3)}个人觉得很赞",
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 16
+          ),
+        ),);
+      }
     }else{
       for(var i = 0;i<commentLikeUserList.length;i++){
         var user = commentLikeUserList[i];
