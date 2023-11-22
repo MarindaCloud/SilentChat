@@ -19,6 +19,7 @@ import 'package:silentchat/network/api/user_api.dart';
 import 'package:silentchat/util/date_time_util.dart';
 import 'package:silentchat/util/font_rpx.dart';
 import 'package:silentchat/util/log.dart';
+import 'package:silentchat/util/overlay_manager.dart';
 
 import 'state.dart';
 
@@ -122,6 +123,146 @@ class SpaceLogic extends GetxController {
       Future.delayed(Duration(seconds: 1),(){
         BotToast.cleanAll();
       });
+
+  }
+  
+  
+  /*
+   * @author Marinda
+   * @date 2023/11/22 16:31
+   * @description 构建朋友聊天控件
+   */
+  showFriendsLikesWidget() {
+    var widget = Scaffold(
+      backgroundColor: Colors.black.withOpacity(.3),
+      body: Container(
+        width: Get.width,
+        height: Get.height,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            InkWell(
+                child: SizedBox.expand(),
+                onTap: ()=> OverlayManager().removeOverlay("moreLike"),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: FractionallySizedBox(
+                widthFactor: .8,
+                heightFactor: .4,
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(right: 50.rpx,left: 50.rpx),
+                        color: Colors.grey.withOpacity(.3),
+                        height: 200.rpx,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(),
+                            Container(
+                              child: Text(
+                                "点赞列表",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: InkWell(
+                                child: SizedBox(
+                                  width: 80.rpx,
+                                  height: 80.rpx,
+                                  child: Image.asset("shanchu2.png".icon,fit: BoxFit.fill),
+                                ),
+                                onTap: ()=>OverlayManager().removeOverlay("moreLike"),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      //构建列表
+                      Container(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: buildLikeUserWidget()
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+    OverlayManager().createOverlay("moreLike", widget);
+  }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/22 16:49
+   * @description 构建更多点赞用户的widget
+   */
+  buildLikeUserWidget(){
+    return state.moreLikesList.value.map((e){
+      return Container(
+        margin: EdgeInsets.only(top: 50.rpx),
+        padding: EdgeInsets.only(left: 50.rpx,right: 50.rpx),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                child: SizedBox(
+                  width: 100.rpx,
+                  height: 100.rpx,
+                  child: Image.asset("good.png".icon,fit: BoxFit.fill,color: Colors.blue,),
+                ),
+                margin: EdgeInsets.only(right: 50.rpx),
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 20.rpx),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100000),
+                        image: DecorationImage(
+                          image: userLogic.buildPortraitWidget(1,e.portrait!).image,
+                          fit: BoxFit.fill
+                        )
+                      ),
+                    ),
+                    Container(
+                      child: Text(
+                        "${e.username}",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16
+                        ),
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    }).toList();
 
   }
 
@@ -526,6 +667,7 @@ class SpaceLogic extends GetxController {
                           ),
                           onTap: (){
                             print("打开点赞列表");
+                            showFriendsLikesWidget();
                           },
                         ),
                       ),
@@ -772,6 +914,7 @@ class SpaceLogic extends GetxController {
       }
       //这里是避免出现0个人觉得很赞这种情况！
       if(len - 3 >=1){
+        int count = len-3>=1 ? len-1 : -1;
         //追加结尾
         textSpanList.add(TextSpan(
           text: "等${(len - 3)}个人觉得很赞",
@@ -780,6 +923,12 @@ class SpaceLogic extends GetxController {
               fontSize: 16
           ),
         ),);
+        var likeList = <User>[];
+        for(var i = count;i<len;i++){
+          var element = commentLikeUserList[i];
+          likeList.add(element);
+        }
+        state.moreLikesList.value = likeList;
       }
     }else{
       for(var i = 0;i<commentLikeUserList.length;i++){
