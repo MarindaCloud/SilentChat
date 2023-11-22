@@ -45,6 +45,14 @@ class UserInfoLogic extends GetxController {
     Get.toNamed(AppPage.editImage,arguments: userState.user.value.portrait);
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/11/21 15:14
+   * @description 跳转至我的空间
+   */
+  toMySpace() async{
+    await Get.toNamed(AppPage.mySpace);
+  }
 
   /*
    * @author Marinda

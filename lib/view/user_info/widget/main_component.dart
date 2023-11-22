@@ -228,7 +228,7 @@ class MainComponentState extends State<MainComponent> {
                               SizedBox(width: 30.rpx),
                               Expanded(child: Text(
                                 "${widget.userInfoState.user.value
-                                    .username}的世界", style: TextStyle(
+                                    .username}的空间", style: TextStyle(
                                   color: Colors.grey, fontSize: 16),)),
                             ],
                           ),
@@ -237,10 +237,7 @@ class MainComponentState extends State<MainComponent> {
                       ],
                     )
                 ),
-                onPressed: () {
-                  Log.i(
-                      "进入${widget.userInfoState.user.value.username}的世界");
-                },
+                onPressed: ()=>widget.userInfoLogic.toMySpace(),
               )
             ],
           ),

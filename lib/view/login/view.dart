@@ -332,10 +332,6 @@ class LoginPage extends StatelessWidget {
                                 child: InkWell(
                                   child: Container(
                                     alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        border: Border(right: BorderSide(
-                                            color: Color.fromRGBO(
-                                                230, 230, 230, 1), width: 2))),
                                     child: Container(
                                       child: Text("新用户注册",
                                           style: TextStyle(color: Colors.black,
@@ -345,16 +341,6 @@ class LoginPage extends StatelessWidget {
                                   onTap: () {
                                     Get.toNamed(AppPage.register);
                                   },
-                                )
-                            ),
-                            Expanded(
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    child: Text("帮助", style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold)),
-                                  ),
                                 )
                             ),
                           ],

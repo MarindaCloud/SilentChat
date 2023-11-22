@@ -83,10 +83,9 @@ class SpaceLogic extends GetxController {
     var list = state.dynamicViewInfoList.value;
     for(var element in list){
       var dynamicElement =  element.viewInfo?.element!;
-      String content = dynamicElement?.content ?? "";
-      int type = dynamicElement?.type ?? -1;
-      if(type == 2){
-        var jsonList = json.decode(content);
+      String image = dynamicElement?.image ?? "";
+      if(image != "" && image != null){
+        var jsonList = json.decode(image);
         if(jsonList is List){
           for(var i = 0;i<jsonList.length;i++){
             var img = jsonList[i];
@@ -136,7 +135,6 @@ class SpaceLogic extends GetxController {
     SpaceDynamicComment comment = SpaceDynamicComment(dynamicId: element.id,uid: userState.uid.value,comment: text);
     var result = await SpaceAPI.insertSpaceDynamicComment(comment);
     if(result >= 1){
-
       int index = state.dynamicViewInfoList.value.indexWhere((ele){
         var dynamicId = ele.viewInfo?.element?.id ?? -1;
         return dynamicId == element.id;
@@ -343,7 +341,7 @@ class SpaceLogic extends GetxController {
     return state.dynamicViewInfoList.map((element){
       User user = element.user ?? User();
       SpaceDynamicInfoView dynamicInfoView = element.viewInfo!;
-      int dynamicType = dynamicInfoView.element?.type ?? 0;
+      // int dynamicType = dynamicInfoView.element?.type ?? 0;
       List<User> dynamicUserList = dynamicInfoView.commentLikeUserList ?? [];
       TextEditingController controller = TextEditingController(text: "");
       //动态
@@ -442,21 +440,33 @@ class SpaceLogic extends GetxController {
                   ],
                 ),
               ),
-              //内容
+              //构建内容
               Container(
-                margin: EdgeInsets.only(top: 50.rpx),
+                margin: EdgeInsets.only(top: 50.rpx,bottom: 30.rpx),
                 padding: EdgeInsets.only(left: 10,right: 10),
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: buildContentWidget(dynamicInfoView.element!) is List ? buildContentWidget(dynamicInfoView.element!) : [
-                    buildContentWidget(dynamicInfoView.element!)
+                  children: [
+                    buildContentWidget(dynamicInfoView.element!),
+                    //构建图像
+                    Container(
+                      margin: EdgeInsets.only(top: 50.rpx),
+                      padding: EdgeInsets.only(left: 0,right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...buildImageWidget(dynamicInfoView.element!)
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
               //  图标组
               Container(
-                margin: EdgeInsets.only(right: 50.rpx,top: dynamicType == 1 ? 0 : 30.rpx,bottom: 30.rpx),
+                // margin: EdgeInsets.only(right: 50.rpx,top: dynamicType == 1 ? 0 : 30.rpx,bottom: 30.rpx),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -677,6 +687,37 @@ class SpaceLogic extends GetxController {
     state.dynamicViewInfoList.refresh();
   }
 
+  /*
+   * @author Marinda
+   * @date 2023/11/22 10:47
+   * @description 构建图像控件
+   */
+  buildImageWidget(SpaceDynamic spaceDynamic){
+    List<Widget> widgetList = [];
+    String content = spaceDynamic.image ?? "";
+    if(content=="" || content == null){
+      return <Widget>[];
+    }else{
+      var jsonList = json.decode(content);
+      if(jsonList is List){
+        for(var i = 0 ;i<jsonList.length;i++){
+          var imgElement = jsonList[i];
+          var imgWidget = Expanded(
+            child: Container(
+              margin: EdgeInsets.only(right: i == 0 ? 50.rpx : 0),
+              height: 700.rpx,
+              child: CacheImageHandle.containsImageCache(imgElement) == false ? Image.network(imgElement,fit: BoxFit.cover) :userLogic.buildPortraitWidget(1,
+                "${imgElement}",
+              ),
+            ),
+          );
+          widgetList.add(imgWidget);
+        }
+      }
+    }
+
+    return widgetList;
+  }
 
   /*
    * @author Marinda
@@ -684,53 +725,26 @@ class SpaceLogic extends GetxController {
    * @description 构建内容控件
    */
   buildContentWidget(SpaceDynamic spaceDynamic){
-    int type = spaceDynamic.type ?? 0;
+    // int type = spaceDynamic.type ?? 0;
     String content = spaceDynamic.content ?? "";
-    dynamic widgetElement;
-    switch(type){
-      case 1:
-        widgetElement = Expanded(
-          child: Wrap(
-            children: [
-              Container(
-                child: Text(
-                  "${content}",
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18
-                  ),
-                  overflow: TextOverflow.visible,
-                )
+    return Container(
+      alignment: Alignment.topLeft,
+      child: Wrap(
+        children: [
+          Container(
+            child: Text(
+              "${content}",
+              maxLines: 1,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18
               ),
-            ],
+              overflow: TextOverflow.visible,
+            )
           ),
-        );
-        //文本
-        break;
-      case 2:
-        var jsonList = json.decode(content);
-        List<Widget> widgetList = [];
-        if(jsonList is List){
-          for(var i = 0 ;i<jsonList.length;i++){
-            var imgElement = jsonList[i];
-            var imgWidget = Expanded(
-              child: Container(
-                margin: EdgeInsets.only(right: i == 0 ? 10.rpx : 0),
-                height: 700.rpx,
-                child: CacheImageHandle.containsImageCache(imgElement) == false ? Image.network(imgElement,fit: BoxFit.cover) :userLogic.buildPortraitWidget(1,
-                  "${imgElement}",
-                ),
-              ),
-            );
-            widgetList.add(imgWidget);
-          }
-        }
-        widgetElement = widgetList;
-        //图片
-        break;
-    }
-    return widgetElement;
+        ],
+      ),
+    );
   }
 
   /*

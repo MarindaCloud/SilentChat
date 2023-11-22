@@ -33,10 +33,14 @@ import 'package:silentchat/view/index/view.dart';
 import 'package:silentchat/view/login/binding.dart';
 import 'package:silentchat/view/login/view.dart';
 import 'package:silentchat/view/message/view.dart';
+import 'package:silentchat/view/my_space/binding.dart';
+import 'package:silentchat/view/my_space/view.dart';
 import 'package:silentchat/view/qr/binding.dart';
 import 'package:silentchat/view/qr/view.dart';
 import 'package:silentchat/view/register/binding.dart';
 import 'package:silentchat/view/register/view.dart';
+import 'package:silentchat/view/release_space_dynamic/binding.dart';
+import 'package:silentchat/view/release_space_dynamic/view.dart';
 import 'package:silentchat/view/space/binding.dart';
 import 'package:silentchat/view/space/view.dart';
 import 'package:silentchat/view/user_info/binding.dart';
@@ -73,6 +77,8 @@ class AppPage{
   static String editAnnouncement = GlobalPage.editAnnouncement.router;
   static String editUserInfo = GlobalPage.editUserInfo.router;
   static String forgotPwd = GlobalPage.forgotPwd.router;
+  static String mySpace = GlobalPage.mySpace.router;
+  static String releaseSpaceDynamic = GlobalPage.releaseSpaceDynamic.router;
 
   static List<GetPage> pages = [
     GetPage(name: message, page: ()=>MessagePage(),binding: MessageBinding()),
@@ -97,6 +103,8 @@ class AppPage{
     GetPage(name: editAnnouncement, page: ()=> EditAnnouncementPage(),binding: EditAnnouncementBinding()),
     GetPage(name: editUserInfo, page: ()=> EditUserInfoPage(),binding: EditUserInfoBinding()),
     GetPage(name: forgotPwd, page: ()=> ForgotPasswordPage(),binding: ForgotPasswordBinding()),
+    GetPage(name: mySpace, page: ()=> MySpacePage(),binding: MySpaceBinding()),
+    GetPage(name: releaseSpaceDynamic, page: ()=> ReleaseSpaceDynamicPage(),binding: ReleaseSpaceDynamicBinding()),
   ];
 
   AppPage();

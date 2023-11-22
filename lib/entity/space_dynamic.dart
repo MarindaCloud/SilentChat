@@ -9,15 +9,14 @@ class SpaceDynamic {
   String? _content;
   String? _device;
   String? _time;
-  int? _type;
-
+  String? _image;
   SpaceDynamic(
       {int? id,
         int? uid,
         String? content,
         String? device,
         String? time,
-        int? type}) {
+        String? image}) {
     if (id != null) {
       this._id = id;
     }
@@ -33,8 +32,8 @@ class SpaceDynamic {
     if (time != null) {
       this._time = time;
     }
-    if (type != null) {
-      this._type = type;
+    if(image != null){
+      this._image = image;
     }
   }
 
@@ -48,8 +47,8 @@ class SpaceDynamic {
   set device(String? device) => _device = device;
   String? get time => _time;
   set time(String? time) => _time = time;
-  int? get type => _type;
-  set type(int? type) => _type = type;
+  String? get image => _image;
+  set image(String? image) => _image = image;
 
   SpaceDynamic.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -57,7 +56,7 @@ class SpaceDynamic {
     _content = json['content'];
     _device = json['device'];
     _time = json['time'];
-    _type = json['type'];
+    _image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,7 +66,7 @@ class SpaceDynamic {
     data['content'] = this._content;
     data['device'] = this._device;
     data['time'] = this._time;
-    data['type'] = this._type;
+    data['image'] = this._image;
     return data;
   }
 }

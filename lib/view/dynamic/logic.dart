@@ -81,8 +81,8 @@ class DynamicLogic extends GetxController {
       if(spaceDynamicList.length >= 0 && spaceDynamicList.length <=2){
         dynamicUserMap[dynamicId] = user;
       }
-      if(element.type == 2){
-        var result = json.decode(element.content ?? "");
+      if(element.image!="" && element.image != null){
+        var result = json.decode(element.image ?? "");
         if(result is List){
           for(var src in result){
             await systemLogic.loadGlobalImageCache(user,src);

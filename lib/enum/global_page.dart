@@ -25,7 +25,9 @@ enum GlobalPage {
   appendAnnouncement("/appendAnnouncement"),
   editAnnouncement("/editAnnouncement"),
   editUserInfo("/editUserInfo"),
-  forgotPwd("/forgotPassword");
+  forgotPwd("/forgotPassword"),
+  mySpace("/mySpace"),
+  releaseSpaceDynamic("/releaseSpaceDynamic");
 
 
   final String router;
