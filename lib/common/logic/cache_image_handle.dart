@@ -185,7 +185,7 @@ class CacheImageHandle{
     Widget? widget;
     switch(type){
       case 1:
-        widget = Image.file(getImageValue(url,1),fit: BoxFit.fill);
+        widget = Image.file(getImageValue(url,1),fit: BoxFit.cover);
         break;
       case 2:
         widget = Image.memory(getImageValue(url,2),fit: BoxFit.fill);

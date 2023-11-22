@@ -48,7 +48,7 @@ class SpaceAPI {
    * @date 2023/8/21 14:31
    * @description 插入Space
    */
-  static insertDynamic(Space space) async{
+  static insertSpace(Space space) async{
     Log.i("插入空间信息");
     var data = json.encode(space.toJson());
     APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
@@ -65,8 +65,8 @@ class SpaceAPI {
    * @date 2023/8/21 14:45
    * @description 插入空间详情
    */
-  static insertDynamicInfo(SpaceInfo spaceInfo) async{
-    Log.i("插入空间动态详情");
+  static insertSpaceInfo(SpaceInfo spaceInfo) async{
+    Log.i("插入空间详情");
     var data = json.encode(spaceInfo.toJson());
     var header = {
       "Content-Type": HttpContentType.JSON.type
@@ -89,6 +89,18 @@ class SpaceAPI {
     Log.i("插入空间动态点赞详情");
     var data = json.encode(spaceDynamicLike.toJson());
     APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicLike/insertReturning", HttpMethods.POST.value,data,header: Request.getHeader("json"));
+    return apiResult.data;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/22 11:25
+   * @description 插入空间动态
+   */
+  static insertSpaceDynamic(SpaceDynamic spaceDynamic) async{
+    Log.i("插入空间动态详情");
+    var data = json.encode(spaceDynamic.toJson());
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
     return apiResult.data;
   }
 

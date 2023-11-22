@@ -106,46 +106,23 @@ class ReleaseSpaceDynamicPage extends StatelessWidget {
                             ),
                           ),
                           //图像选择
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
+                          Align(
+                            alignment: Alignment.bottomLeft,
                             child: Container(
                               margin: EdgeInsets.only(bottom: 50.rpx, left: 50.rpx,top: 0.rpx),
-                              alignment: Alignment.topLeft,
-                              child: InkWell(
-                                child: state.imgPath.value != "" ? SizedBox(
-                                  width: 600.rpx,
-                                  height: 600.rpx,
-                                  child: Stack(
-                                    children: [
-                                      SizedBox.expand(
-                                          child: Image.file(
-                                              File(state.imgPath.value), fit: BoxFit
-                                              .fill)),
-                                      Positioned(
-                                          right: 0.rpx,
-                                          top: 0.rpx,
-                                          child: InkWell(
-                                            child: SizedBox(
-                                              width: 100.rpx,
-                                              height: 100.rpx,
-                                              child: Image.asset(
-                                                "shanchu2.png".icon, fit: BoxFit.fill,
-                                                color: Colors.white,),
-                                            ),
-                                            onTap: () => logic.clearImage(),
-                                          )
-                                      ),
-                                    ],
+                              child: Wrap(
+                                children:  state.imgPath.isNotEmpty ? logic.buildPickImageList() : [
+                                  InkWell(
+                                    child: SizedBox(
+                                      width: 150.rpx,
+                                      height: 150.rpx,
+                                      child: Image.asset(
+                                          "tuxiang.png".icon, fit: BoxFit.fill),
+                                    ),
+                                    onTap: () => logic.pickImage(),
                                   ),
-                                ) : SizedBox(
-                                  width: 150.rpx,
-                                  height: 150.rpx,
-                                  child: Image.asset(
-                                      "tuxiang.png".icon, fit: BoxFit.fill),
-                                ),
-                                onTap: () => logic.pickImage(),
-                              ),
+                                ]
+                              )
                             ),
                           ),
                         ],
@@ -157,36 +134,42 @@ class ReleaseSpaceDynamicPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Container(
-                              width: 200.rpx,
-                              height: 150.rpx,
-                              color: Colors.grey,
-                              child: Center(
-                                child: Text(
-                                  "清空",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14
+                            child: InkWell(
+                              child: Container(
+                                width: 200.rpx,
+                                height: 150.rpx,
+                                color: Colors.grey,
+                                child: Center(
+                                  child: Text(
+                                    "清空",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14
+                                    ),
                                   ),
                                 ),
                               ),
+                              onTap: ()=>logic.resetContent(),
                             ),
                           ),
                           SizedBox(width: 200.rpx),
                           Expanded(
-                            child: Container(
-                              width: 200.rpx,
-                              height: 150.rpx,
-                              color: Colors.blue,
-                              child: Center(
-                                child: Text(
-                                  "发布",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14
+                            child: InkWell(
+                              child: Container(
+                                width: 200.rpx,
+                                height: 150.rpx,
+                                color: Colors.blue,
+                                child: Center(
+                                  child: Text(
+                                    "发布",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14
+                                    ),
                                   ),
                                 ),
                               ),
+                              onTap: ()=>logic.submit(),
                             ),
                           ),
                         ],

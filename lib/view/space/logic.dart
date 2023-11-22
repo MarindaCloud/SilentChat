@@ -453,9 +453,8 @@ class SpaceLogic extends GetxController {
                     Container(
                       margin: EdgeInsets.only(top: 50.rpx),
                       padding: EdgeInsets.only(left: 0,right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Wrap(
+                        direction: Axis.horizontal,
                         children: [
                           ...buildImageWidget(dynamicInfoView.element!)
                         ],
@@ -702,13 +701,12 @@ class SpaceLogic extends GetxController {
       if(jsonList is List){
         for(var i = 0 ;i<jsonList.length;i++){
           var imgElement = jsonList[i];
-          var imgWidget = Expanded(
-            child: Container(
-              margin: EdgeInsets.only(right: i == 0 ? 50.rpx : 0),
-              height: 700.rpx,
-              child: CacheImageHandle.containsImageCache(imgElement) == false ? Image.network(imgElement,fit: BoxFit.cover) :userLogic.buildPortraitWidget(1,
-                "${imgElement}",
-              ),
+          var imgWidget = Container(
+            width: 800.rpx,
+            margin: EdgeInsets.only(right: 40.rpx,bottom: 50.rpx,),
+            height: 600.rpx,
+            child: CacheImageHandle.containsImageCache(imgElement) == false ? Image.network(imgElement,fit: BoxFit.cover) :userLogic.buildPortraitWidget(1,
+              "${imgElement}",
             ),
           );
           widgetList.add(imgWidget);
