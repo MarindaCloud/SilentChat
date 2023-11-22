@@ -124,4 +124,24 @@ class UserAPI {
     }
     return true;
   }
+
+
+  /*
+   * @author Marinda
+   * @date 2023/11/22 16:08
+   * @description 修改密码
+   */
+  static forgotPwd(User user,String pwd) async{
+    Log.i("修改${user.username}用户的密码");
+    Map<String,dynamic> data = {
+      "number": user.number.toString(),
+      "password": pwd
+    };
+    var response = await Request.sendPost("user/forgotPwd", data: data, header: Request.getHeader());
+    APIResult apiResult = Request.toAPIResult(response);
+    if(apiResult.data == 0 || apiResult.data == -1){
+      return false;
+    }
+    return true;
+  }
 }

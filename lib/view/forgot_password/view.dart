@@ -453,46 +453,13 @@ class ForgotPasswordPage extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            onTap: ()=>logic.toStep(4),
+                                            onTap: ()=>logic.updateUserPwd(),
                                           ),
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 100.rpx),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        child: FractionallySizedBox(
-                                          widthFactor: 1,
-                                          child: InkWell(
-                                            child: Container(
-                                              height: 150.rpx,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.blue,
-                                                  borderRadius:
-                                                  BorderRadius.circular(5)),
-                                              child: Center(
-                                                child: Text(
-                                                  "下一步",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16),
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: ()=>logic.toStep(4),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
                               ],
                             ),
                           ),

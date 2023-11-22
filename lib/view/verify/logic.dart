@@ -99,10 +99,10 @@ class VerifyLogic extends GetxController {
       FriendsVerify friendsVerify = verifyViewInfo.verify as FriendsVerify;
       //朋友验证对象
       Widget widget = Container(
-           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-           height: 300.rpx,
+           color: Colors.grey.withOpacity(.3),
+           margin: EdgeInsets.only(bottom: 50.rpx),
+           padding: EdgeInsets.only(bottom: 50.rpx,left: 50.rpx,right: 50.rpx,top: 50.rpx),
            child: Row(
-             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
                //头像
                Container(
@@ -126,7 +126,7 @@ class VerifyLogic extends GetxController {
                    children: [
                      Text("${verifyViewInfo.user?.username}",
                          style: TextStyle(
-                             color: Colors.black, fontSize: 16)),
+                             color: Colors.blue, fontSize: 16)),
                      SizedBox(height: 50.rpx),
                      Container(
                          child: Text("${verifyViewInfo.user?.signature ?? "无"}",

@@ -39,6 +39,7 @@ class ForgotPasswordLogic extends GetxController {
         var verifyCode = await EmailAPI.sendVerifyCode(
             "你正在进行找回密码操作", email);
         state.verifyCode.value = verifyCode;
+        state.user = user;
         toStep(2);
       }
     }catch(e){
@@ -46,6 +47,29 @@ class ForgotPasswordLogic extends GetxController {
         BotToast.showText(text: "请输入正确的默讯号！");
         return;
       }
+    }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/22 16:04
+   * @description 更新用户密码！
+   */
+  updateUserPwd() async{
+    var pwd = state.passwordController.text;
+    var repeatPwd = state.passwordController.text;
+    if(pwd == "" || repeatPwd == "") {
+      BotToast.showText(text: "密码不能为空！");
+      return;
+    }else if(repeatPwd != pwd){
+      BotToast.showText(text: "两次密码不一致！");
+      return;
+    }
+    var flag = await UserAPI.forgotPwd(state.user!, pwd);
+    if(flag){
+      toStep(4);
+    }else{
+      BotToast.showText(text: "修改密码失败！");
     }
   }
 

@@ -17,14 +17,15 @@ class VerifyPage extends StatelessWidget {
     return Scaffold(
       body: Obx(() {
         return Container(
-          color: Color.fromRGBO(84, 176, 247, 1),
           child: SafeArea(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //  头部
                   Container(
-                    height: 120.rpx,
+                    color: Color.fromRGBO(84, 176, 247, 1),
+                    height: 200.rpx,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     width: Get.width,
                     child: Row(
@@ -56,9 +57,7 @@ class VerifyPage extends StatelessWidget {
                   // SizedBox(height: 30),
                   //详细验证消息
                   Container(
-                    // height: 1000,
-                    margin: EdgeInsets.only(top: 20),
-                    color: Color.fromRGBO(247, 247, 247, 1),
+                    margin: EdgeInsets.only(top: 50.rpx),
                     child: Column(
                       children: logic.buildFriendsVerifyList()
                     ),

@@ -264,11 +264,12 @@ class LoginLogic extends GetxController {
     String userName = state.userName.text;
     String passWord = state.passWord.text;
     APIResult apiResult = await UserAPI.login(userName, passWord);
-    User user = User.fromJson(apiResult.data["user"]);
+
     if(apiResult.code == 400){
-      BotToast.showText(text: "登录失败，账号或密码错误！");
+      BotToast.showText(text: "登录失败，账号或密码错误");
       return;
     }
+    User user = User.fromJson(apiResult.data["user"]);
     userState.uid.value = user?.id ?? -1;
     userState.user.value = user;
     List<AccountHistory> accountList = [];
