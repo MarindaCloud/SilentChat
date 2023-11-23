@@ -25,14 +25,14 @@ class SpaceUserInfo {
   SpaceUserInfo.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _uid = json['uid'];
-    _spaceId = json['space_id'];
+    _spaceId = json['spaceId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
     data['uid'] = this._uid;
-    data['space_id'] = this._spaceId;
+    data['spaceId'] = this._spaceId;
     return data;
   }
 }

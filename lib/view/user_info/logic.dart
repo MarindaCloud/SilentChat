@@ -51,7 +51,9 @@ class UserInfoLogic extends GetxController {
    * @description 跳转至我的空间
    */
   toMySpace() async{
-    await Get.toNamed(AppPage.mySpace);
+    await Get.toNamed(AppPage.mySpace,arguments: {
+      "user": state.user.value
+    });
   }
 
   /*

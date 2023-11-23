@@ -95,196 +95,102 @@ class MySpacePage extends StatelessWidget {
                           ],
                         ),
                       ),
+                      //空间信息
                       Container(
                         padding: EdgeInsets.only(
-                            left: 100.rpx,
-                            right: 180.rpx,
                             top: 80.rpx,
                             bottom: 50.rpx),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
                                 bottom: BorderSide(
-                                    color: Color.fromRGBO(235, 235, 235, 1)))),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    color: Color.fromRGBO(235, 235, 235, 1)))
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            //相册
-                            InkWell(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 30.rpx),
-                                      child: SizedBox(
-                                        width: 120.rpx,
-                                        height: 120.rpx,
-                                        child: Image.asset(
-                                          "tuxiang.png".icon,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "相册",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 50.rpx ),
+                              padding: EdgeInsets.only(bottom: 50.rpx),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Color.fromRGBO(235, 235, 235, 1),
+                                    width: 1
+                                  )
+                                )
                               ),
-                              onTap: () {
-                                print("相册");
-                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 50.rpx),
+                                    child: Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: "空间等级：",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14
+                                            )
+                                          ),
+                                          TextSpan(
+                                            text: "1级",
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 14
+                                            )
+                                          )
+                                        ]
+                                      )
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                            //说说
-                            InkWell(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 30.rpx),
-                                      child: SizedBox(
-                                        width: 130.rpx,
-                                        height: 130.rpx,
-                                        child: Image.asset(
-                                          "xiaoxiqipao.png".icon,
-                                          fit: BoxFit.fill,
-                                          color: Colors.black,
-                                        ),
-                                      ),
+                            Container(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 50.rpx),
+                                    child: Text.rich(
+                                        TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                  text: "当前进度：",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14
+                                                  )
+                                              ),
+                                              TextSpan(
+                                                  text: "小试牛刀",
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 14
+                                                  )
+                                              )
+                                            ]
+                                        )
                                     ),
-                                    Container(
-                                      child: Text(
-                                        "说说",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
-                              onTap: () {
-                                print("说说");
-                              },
                             ),
-                            //相册
-                            InkWell(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 30.rpx),
-                                      child: SizedBox(
-                                        width: 130.rpx,
-                                        height: 130.rpx,
-                                        child: Image.asset(
-                                          "pifu.png".icon,
-                                          fit: BoxFit.fill,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "个性化",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                print("个性化");
-                              },
-                            ),
-                            //相册
-                            InkWell(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 30.rpx),
-                                      child: SizedBox(
-                                        width: 130.rpx,
-                                        height: 130.rpx,
-                                        child: Image.asset(
-                                          "tuxiang.png".icon,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "相册",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                print("相册");
-                              },
-                            ),
-                            //相册
-                            InkWell(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(bottom: 30.rpx),
-                                      child: SizedBox(
-                                        width: 130.rpx,
-                                        height: 130.rpx,
-                                        child: Image.asset(
-                                          "tuxiang.png".icon,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        "相册",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                print("相册");
-                              },
-                            )
                           ],
                         ),
                       ),
-                      //内容
-                      // Container(
-                      //   margin: EdgeInsets.only(top: 80.rpx),
-                      //   // color: Colors.white,
-                      //   child: state.dynamicViewInfoList.isEmpty ? Container(color: Colors.white,height: Get.height.rpx ,child: Center(child: Text("暂无好友动态",style: TextStyle(color: Colors.black,fontSize: 16),))) :SingleChildScrollView(
-                      //     child: Column(
-                      //       children: logic.buildSpaceDynamicList(),
-                      //     ),
-                      //   ),
-                      // )
+                      //空间动态详情
+                      Container(
+                        margin: EdgeInsets.only(top: 80.rpx),
+                        // color: Colors.white,
+                        child: state.dynamicViewInfoList.isEmpty ? Container(color: Colors.white,height: Get.height.rpx ,child: Center(child: Text("暂无好友动态",style: TextStyle(color: Colors.black,fontSize: 16),))) :SingleChildScrollView(
+                          child: Column(
+                            children: logic.buildSpaceDynamicList(),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),

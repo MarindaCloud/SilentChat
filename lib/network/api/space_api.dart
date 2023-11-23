@@ -7,7 +7,9 @@ import 'package:silentchat/entity/space.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
 import 'package:silentchat/entity/space_dynamic_comment.dart';
 import 'package:silentchat/entity/space_dynamic_info.dart';
+import 'package:silentchat/entity/space_dynamic_info_view.dart';
 import 'package:silentchat/entity/space_dynamic_like.dart';
+import 'package:silentchat/entity/space_user_info.dart';
 import 'package:silentchat/enum/HttpContetType.dart';
 import 'package:silentchat/enum/http_method.dart';
 import 'package:silentchat/network/api/base_provider.dart';
@@ -43,6 +45,65 @@ class SpaceAPI {
   }
 
 
+
+  /*
+   * @author Marinda
+   * @date 2023/11/23 15:06
+   * @description 通过动态id获取动态信息
+   */
+  static selectDynamicById(int dynamicId) async{
+    var data = {
+      "id": dynamicId
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectById",HttpMethods.POST.value, data,header: Request.getHeader());
+    var value = apiResult.data;
+    if(value == null){
+      return null;
+    }
+    SpaceDynamic spaceDynamic = SpaceDynamic.fromJson(value);
+    return spaceDynamic;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/23 14:56
+   * @description 通过空间id获取动态列表详情
+   */
+  static selectDynamicInfoBySid(int sid) async{
+    var data = {
+      "space_id": sid
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicInfo/selectBySid",HttpMethods.POST.value, data,header: Request.getHeader());
+    var value = apiResult.data;
+    if(value == null){
+      return <SpaceDynamicInfo>[];
+    }
+    List<SpaceDynamicInfo> dynamicInfoList = [];
+    if(value is List){
+      dynamicInfoList = value.map((e) => SpaceDynamicInfo.fromJson(e)).toList();
+    }
+    return dynamicInfoList;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/23 14:44
+   * @description 通过用户id获取控件动态详情
+   */
+  static selectUserSpaceByUid([int uid = -1]) async{
+    int targetId = uid != -1 ? uid : userState.uid.value;
+    var data = {
+      "uid": targetId
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceUserInfo/selectByUid",HttpMethods.POST.value, data,header: Request.getHeader());
+    var value = apiResult.data;
+    if(value == null){
+      return null;
+    }
+    var element = SpaceUserInfo.fromJson(value);
+    return element;
+  }
+
   /*
    * @author Marinda
    * @date 2023/8/21 14:31
@@ -51,33 +112,28 @@ class SpaceAPI {
   static insertSpace(Space space) async{
     Log.i("插入空间信息");
     var data = json.encode(space.toJson());
-    APIResult apiResult = await BaseProvider.sendRequest("dynamic/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
+    APIResult apiResult = await BaseProvider.sendRequest("space/insertReturning", HttpMethods.POST.value,data,header: Request.getHeader("json"));
     var value = apiResult.data;
     if(value == null){
       return null;
     }
-    Space spaceResult = Space.fromJson(apiResult.data);
-    return spaceResult;
+    return apiResult.data;
   }
 
   /*
    * @author Marinda
    * @date 2023/8/21 14:45
-   * @description 插入空间详情
+   * @description 插入空间动态详情
    */
-  static insertSpaceInfo(SpaceInfo spaceInfo) async{
-    Log.i("插入空间详情");
+  static insertSpaceDynamicInfo(SpaceDynamicInfo spaceInfo) async{
+    Log.i("插入空间动态详情");
     var data = json.encode(spaceInfo.toJson());
     var header = {
       "Content-Type": HttpContentType.JSON.type
     };
-    APIResult apiResult = await BaseProvider.sendRequest("dynamicInfo/add", HttpMethods.POST.value,data,header: header);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamicInfo/add", HttpMethods.POST.value,data,header: header);
     var value = apiResult.data;
-    if(value == null){
-      return null;
-    }
-    SpaceInfo spaceInfoResult = SpaceInfo.fromJson(apiResult.data);
-    return spaceInfoResult;
+    return value;
   }
 
   /*
@@ -100,8 +156,42 @@ class SpaceAPI {
   static insertSpaceDynamic(SpaceDynamic spaceDynamic) async{
     Log.i("插入空间动态详情");
     var data = json.encode(spaceDynamic.toJson());
-    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/insertReturning", HttpMethods.POST.value,data,header: Request.getHeader("json"));
     return apiResult.data;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/23 14:39
+   * @description 插入空间用户详情
+   */
+  static insertSpaceUserInfoDynamic(SpaceUserInfo spaceUserInfo) async{
+    Log.i("插入空间用户详情");
+    var data = json.encode(spaceUserInfo.toJson());
+    APIResult apiResult = await BaseProvider.sendRequest("spaceUserInfo/add", HttpMethods.POST.value,data,header: Request.getHeader("json"));
+    return apiResult.data;
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/23 15:02
+   * @description 查询当前空间动态用户
+   */
+  static selectDynamicListByUid() async{
+    int uid = userState.uid.value;
+    var data = {
+      "uid": uid
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/selectByUid", HttpMethods.POST.value,data,header: Request.getHeader());
+    if(apiResult.data == null){
+      return null;
+    }
+    //api结果为list
+    if(apiResult.data is List){
+      var list = apiResult.data as List;
+      List<SpaceDynamic> spaceDynamic = list.map((e) => SpaceDynamic.fromJson(e)).toList();
+      return spaceDynamic;
+    }
   }
 
   /*

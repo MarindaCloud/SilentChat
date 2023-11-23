@@ -1,9 +1,9 @@
-class SpaceInfo {
+class SpaceDynamicInfo {
   int? _id;
   int? _spaceId;
   int? _dynamicId;
 
-  SpaceInfo({int? id, int? spaceId, int? dynamicId}) {
+  SpaceDynamicInfo({int? id, int? spaceId, int? dynamicId}) {
     if (id != null) {
       this._id = id;
     }
@@ -22,17 +22,17 @@ class SpaceInfo {
   int? get dynamicId => _dynamicId;
   set dynamicId(int? dynamicId) => _dynamicId = dynamicId;
 
-  SpaceInfo.fromJson(Map<String, dynamic> json) {
+  SpaceDynamicInfo.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
-    _spaceId = json['space_id'];
-    _dynamicId = json['dynamic_id'];
+    _spaceId = json['spaceId'];
+    _dynamicId = json['dynamicId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
-    data['space_id'] = this._spaceId;
-    data['dynamic_id'] = this._dynamicId;
+    data['spaceId'] = this._spaceId;
+    data['dynamicId'] = this._dynamicId;
     return data;
   }
 }

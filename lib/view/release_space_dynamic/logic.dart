@@ -11,6 +11,8 @@ import 'package:silentchat/controller/user/logic.dart';
 import 'package:silentchat/controller/user/state.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
+import 'package:silentchat/entity/space_dynamic_info.dart';
+import 'package:silentchat/entity/space_user_info.dart';
 import 'package:silentchat/network/api/common_api.dart';
 import 'package:silentchat/network/api/space_api.dart';
 import 'package:silentchat/util/font_rpx.dart';
@@ -134,18 +136,31 @@ class ReleaseSpaceDynamicLogic extends GetxController {
    * @date 2023/11/22 10:33
    * @description 发布动态
    */
-  submit() async{
+  submit() async {
     Log.i("提交！");
     String content = state.contentController.text;
     String deviceName = userState.deviceName;
-    var uploadImageList = await compute(uploadPickImage,state.imgPath.value);
+    var uploadImageList = await compute(uploadPickImage, state.imgPath.value);
     String imgInfo = json.encode(uploadImageList);
-    SpaceDynamic spaceDynamic = SpaceDynamic(uid: userState.uid.value,device: deviceName,content: content,time: DateTime.now().toString(),image: imgInfo);
-    int result = await SpaceAPI.insertSpaceDynamic(spaceDynamic);
-    if(result >=1){
+    SpaceDynamic spaceDynamic = SpaceDynamic(uid: userState.uid.value,
+        device: deviceName,
+        content: content,
+        time: DateTime.now().toString(),
+        image: imgInfo);
+    SpaceUserInfo? spaceUserInfo = await SpaceAPI.selectUserSpaceByUid();
+    if (spaceUserInfo == null) {
+      BotToast.showText(text: "发布出现异常,空间不存在！");
+      return;
+    }
+    int spaceId = spaceUserInfo.spaceId ?? -1;
+    int dynamicId = await SpaceAPI.insertSpaceDynamic(spaceDynamic);
+    SpaceDynamicInfo spaceDynamicInfo = SpaceDynamicInfo(
+        spaceId: spaceId, dynamicId: dynamicId);
+    int result = await SpaceAPI.insertSpaceDynamicInfo(spaceDynamicInfo);
+    if (result >= 1) {
       BotToast.showText(text: "发布成功！");
       resetContent();
-    }else{
+    } else {
       BotToast.showText(text: "发布失败！");
     }
   }
