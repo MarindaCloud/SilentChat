@@ -190,7 +190,6 @@ class ReleaseSpaceDynamicLogic extends GetxController {
           device: state.spaceDynamic!.device,
           content: content,
           time: DateTime.now().toString());
-
       //没选择图像
       if(state.imgPath.isEmpty){
         spaceDynamic.image = state.spaceDynamic!.image;

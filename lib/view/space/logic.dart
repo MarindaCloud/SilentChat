@@ -568,35 +568,38 @@ class SpaceLogic extends GetxController {
                         ],
                       ),
                     ),
-                    PopupMenuButton(
-                      itemBuilder: (context) {
-                        return <PopupMenuEntry<String>>[
-                          PopupMenuItem(
-                            child: Text("编辑",
-                                style: TextStyle(fontSize: 14)),
-                            value: "编辑",
-                            onTap: () {
-                              print("编辑");
-                              Get.toNamed(AppPage.releaseSpaceDynamic,arguments: dynamicInfoView.element!);
-                            },
+                    Visibility(
+                      visible: dynamicInfoView.element?.uid == userState.uid.value,
+                      child: PopupMenuButton(
+                        itemBuilder: (context) {
+                          return <PopupMenuEntry<String>>[
+                            PopupMenuItem(
+                              child: Text("编辑",
+                                  style: TextStyle(fontSize: 14)),
+                              value: "编辑",
+                              onTap: () {
+                                print("编辑");
+                                Get.toNamed(AppPage.releaseSpaceDynamic,arguments: dynamicInfoView.element!);
+                              },
+                            ),
+                            PopupMenuItem(
+                              child: Text("删除",
+                                  style: TextStyle(fontSize: 14)),
+                              value: "编辑",
+                              onTap: () {
+                                print("编辑");
+                              },
+                            ),
+                          ];
+                        },
+                        icon: SizedBox(
+                          width: 150.rpx,
+                          height: 150.rpx,
+                          child: Image.asset(
+                            "assets/icon/gengduo.png",
+                            fit: BoxFit.fill,
+                            color: Colors.grey,
                           ),
-                          PopupMenuItem(
-                            child: Text("删除",
-                                style: TextStyle(fontSize: 14)),
-                            value: "编辑",
-                            onTap: () {
-                              print("编辑");
-                            },
-                          ),
-                        ];
-                      },
-                      icon: SizedBox(
-                        width: 150.rpx,
-                        height: 150.rpx,
-                        child: Image.asset(
-                          "assets/icon/gengduo.png",
-                          fit: BoxFit.fill,
-                          color: Colors.grey,
                         ),
                       ),
                     )
