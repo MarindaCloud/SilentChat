@@ -103,6 +103,23 @@ class SpaceAPI {
     var element = SpaceUserInfo.fromJson(value);
     return element;
   }
+  
+  
+  /*
+   * @author Marinda
+   * @date 2023/11/28 14:37
+   * @description 修改用户动态信息
+   */
+  static updateSpaceDynamic(SpaceDynamic spaceDynamic) async{
+    Log.i("修改动态信息: ${spaceDynamic.id}");
+    String data = json.encode(spaceDynamic);
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/updateSpaceDynamic", HttpMethods.POST.value,data,header: Request.getHeader("json"));
+    var value = apiResult.data;
+    if(value == null){
+      return -1;
+    }
+    return value;
+  }
 
   /*
    * @author Marinda

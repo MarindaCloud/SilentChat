@@ -32,9 +32,31 @@ class ReleaseSpaceDynamicLogic extends GetxController {
 
   @override
   void onInit() {
+    var args = Get.arguments;
+    if(args != null){
+      state.spaceDynamic = Get.arguments;
+      loadDynamicContentInfo();
+    }
     // TODO: implement onInit
     super.onInit();
   }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/28 13:51
+   * @description 加载动态内容详情
+   */
+  loadDynamicContentInfo(){
+    state.contentController.text = state.spaceDynamic?.content ?? "";
+    if(state.spaceDynamic?.image != null && state.spaceDynamic?.image!=""){
+      var decodeImageList = json.decode(state.spaceDynamic?.image ?? "");
+      if(decodeImageList is List){
+        state.imgPath.value = decodeImageList.map((e) => e.toString()).toList();
+      }
+    }
+
+  }
+
 
   /*
    * @author Marinda
@@ -55,7 +77,9 @@ class ReleaseSpaceDynamicLogic extends GetxController {
           child: Stack(
             children: [
               SizedBox.expand(
-                child: Image.file(
+                child: element.startsWith("http") ? Image.network(
+                    element,
+                    fit: BoxFit.fill) : Image.file(
                     File(element),
                     fit: BoxFit.fill),
               ),
@@ -68,7 +92,7 @@ class ReleaseSpaceDynamicLogic extends GetxController {
                       height: 100.rpx,
                       child: Image.asset(
                         "shanchu2.png".icon, fit: BoxFit.fill,
-                        color: Colors.white,),
+                        color: Colors.red,),
                     ),
                     onTap: () => removeImage(i),
                   )
@@ -118,6 +142,19 @@ class ReleaseSpaceDynamicLogic extends GetxController {
     state.imgPath.value = [];
     state.contentController.text = "";
   }
+  /*
+   * @author Marinda
+   * @date 2023/11/28 14:57
+   * @description 返回处理
+   */
+
+  back(){
+    if(state.spaceDynamic!= null){
+      Get.back(result: state.spaceDynamic);
+    }else{
+      Get.back();
+    }
+  }
 
   static uploadPickImage(List<String> imgList) async{
     List<String> uploadImageList = [];
@@ -140,6 +177,36 @@ class ReleaseSpaceDynamicLogic extends GetxController {
     Log.i("提交！");
     String content = state.contentController.text;
     String deviceName = userState.deviceName;
+    //校验是否是空间编辑页面进来的
+    if(state.spaceDynamic != null){
+      SpaceDynamic spaceDynamic = SpaceDynamic(
+          id: state.spaceDynamic!.id,
+          uid: state.spaceDynamic!.uid,
+          device: state.spaceDynamic!.device,
+          content: content,
+          time: DateTime.now().toString());
+
+      //没选择图像
+      if(state.imgPath.isEmpty){
+        spaceDynamic.image = state.spaceDynamic!.image;
+      }else{
+        String imgInfo = json.encode(state.imgPath.value);
+        var element = state.imgPath.firstWhereOrNull((element) => element.startsWith("http"));
+        if(element == null){
+          var uploadImageList = await compute(uploadPickImage, state.imgPath.value);
+          imgInfo = json.encode(uploadImageList);
+        }
+        spaceDynamic.image = imgInfo;
+      }
+      int dynamicId = await SpaceAPI.updateSpaceDynamic(spaceDynamic);
+      if (dynamicId >= 1) {
+        BotToast.showText(text: "修改成功！");
+        state.spaceDynamic = spaceDynamic;
+      } else {
+        BotToast.showText(text: "修改失败！");
+      }
+      return;
+    }
     var uploadImageList = await compute(uploadPickImage, state.imgPath.value);
     String imgInfo = json.encode(uploadImageList);
     SpaceDynamic spaceDynamic = SpaceDynamic(uid: userState.uid.value,

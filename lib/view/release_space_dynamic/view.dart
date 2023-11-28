@@ -45,8 +45,8 @@ class ReleaseSpaceDynamicPage extends StatelessWidget {
                             Transform.translate(
                               offset: Offset(20, 0),
                               child: Container(
-                                  child: IconButtonComponent(
-                                      "back", Colors.grey.withOpacity(.7))),
+                                  child: IconButtonComponent.build(
+                                      "back",color: Colors.grey.withOpacity(.7),onClick: logic.back,)),
                             ),
                             Center(
                                 child: Container(

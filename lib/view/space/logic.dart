@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:silentchat/common/expansion/image_path.dart';
 import 'package:silentchat/common/logic/cache_image_handle.dart';
 import 'package:silentchat/controller/user/logic.dart';
+import 'package:silentchat/entity/app_page.dart';
 import 'package:silentchat/entity/space_comment_view.dart';
 import 'package:silentchat/entity/space_dynamic.dart';
 import 'package:silentchat/entity/space_dynamic_comment.dart';
@@ -75,6 +76,7 @@ class SpaceLogic extends GetxController {
       dynamicViewList.add(dynamicView);
       index++;
     }
+    sortDynamics(dynamicViewList);
     state.dynamicViewInfoList.value = dynamicViewList;
     downloadContentImageInfo();
   }
@@ -97,6 +99,25 @@ class SpaceLogic extends GetxController {
       }
 
     }
+  }
+
+  /*
+   * @author Marinda
+   * @date 2023/11/28 11:24
+   * @description 排序动态列表
+   */
+  sortDynamics(List<SpaceDynamicView> list){
+    list.sort((a,b){
+      int flag = 0;
+      SpaceDynamic? aSpaceDynamic = a.viewInfo?.element;
+      SpaceDynamic? bSpaceDynamic = b.viewInfo?.element;
+      if(aSpaceDynamic != null || bSpaceDynamic != null){
+        DateTime aDt = DateTime.parse(aSpaceDynamic?.time ?? "");
+        DateTime bDt = DateTime.parse(bSpaceDynamic?.time ?? "");
+        flag = bDt.compareTo(aDt);
+      }
+      return flag;
+    });
   }
 
   removeComment(SpaceDynamic element,SpaceDynamicComment comment) async{
@@ -556,6 +577,7 @@ class SpaceLogic extends GetxController {
                             value: "编辑",
                             onTap: () {
                               print("编辑");
+                              Get.toNamed(AppPage.releaseSpaceDynamic,arguments: dynamicInfoView.element!);
                             },
                           ),
                           PopupMenuItem(

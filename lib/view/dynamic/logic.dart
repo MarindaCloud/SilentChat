@@ -89,8 +89,6 @@ class DynamicLogic extends GetxController {
           }
           Log.i("动态图片预加载开始缓存，长度为：${result.length}");
         }
-
-
       }
     }
     //长度>=2
@@ -98,7 +96,6 @@ class DynamicLogic extends GetxController {
       for(var element in spaceDynamicList){
         int uid = element.uid ?? -1;
         int dynamicId = element.id ?? -1;
-
       }
     }
     state.dynamicList.value = spaceDynamicList;

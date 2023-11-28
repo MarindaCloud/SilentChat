@@ -107,8 +107,29 @@ class MySpaceLogic extends GetxController {
       dynamicViewList.add(dynamicView);
       index++;
     }
+    //排序
+    sortDynamics(dynamicViewList);
     state.dynamicViewInfoList.value = dynamicViewList;
     downloadContentImageInfo();
+  }
+  
+  /*
+   * @author Marinda
+   * @date 2023/11/28 11:24
+   * @description 排序动态列表
+   */
+  sortDynamics(List<SpaceDynamicView> list){
+    list.sort((a,b){
+      int flag = 0;
+      SpaceDynamic? aSpaceDynamic = a.viewInfo?.element;
+      SpaceDynamic? bSpaceDynamic = b.viewInfo?.element;
+      if(aSpaceDynamic != null || bSpaceDynamic != null){
+        DateTime aDt = DateTime.parse(aSpaceDynamic?.time ?? "");
+        DateTime bDt = DateTime.parse(bSpaceDynamic?.time ?? "");
+        flag = bDt.compareTo(aDt);
+      }
+      return flag;
+    });
   }
 
   //提前预下载内容图片信息
