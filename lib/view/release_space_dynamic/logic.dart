@@ -179,6 +179,11 @@ class ReleaseSpaceDynamicLogic extends GetxController {
     String deviceName = userState.deviceName;
     //校验是否是空间编辑页面进来的
     if(state.spaceDynamic != null){
+      //如果都为空则不做任何处理
+      if(state.imgPath.isEmpty && content == ""){
+        BotToast.showText(text: "修改信息为空！");
+        return;
+      }
       SpaceDynamic spaceDynamic = SpaceDynamic(
           id: state.spaceDynamic!.id,
           uid: state.spaceDynamic!.uid,
