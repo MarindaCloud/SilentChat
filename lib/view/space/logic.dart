@@ -585,9 +585,9 @@ class SpaceLogic extends GetxController {
                             PopupMenuItem(
                               child: Text("删除",
                                   style: TextStyle(fontSize: 14)),
-                              value: "编辑",
+                              value: "删除",
                               onTap: () {
-                                print("编辑");
+                                print("删除");
                               },
                             ),
                           ];

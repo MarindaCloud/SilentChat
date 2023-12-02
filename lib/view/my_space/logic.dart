@@ -154,6 +154,25 @@ class MySpaceLogic extends GetxController {
 
   /*
    * @author Marinda
+   * @date 2023/11/28 15:45
+   * @description
+   */
+  removeDynamic(SpaceDynamicView view) async{
+    int dynamicId = view.viewInfo?.element?.id ?? -1;
+    Log.i("删除动态ID: ${dynamicId}");
+    int index = state.dynamicViewInfoList.indexOf(view);
+
+    return;
+    int result = await SpaceAPI.deleteSpaceDynamicById(dynamicId);
+    if(result >=1){
+      BotToast.showText(text: "删除成功！");
+    }else{
+      BotToast.showText(text: "删除失败！");
+    }
+  }
+
+  /*
+   * @author Marinda
    * @date 2023/11/21 15:48
    * @description 跳转至发布动态页
    */
@@ -243,15 +262,15 @@ class MySpaceLogic extends GetxController {
                               style: TextStyle(fontSize: 14)),
                           value: "编辑",
                           onTap: () {
-                            print("编辑");
+                            Get.toNamed(AppPage.releaseSpaceDynamic,arguments: dynamicInfoView.element!);
                           },
                         ),
                         PopupMenuItem(
                           child: Text("删除",
                               style: TextStyle(fontSize: 14)),
-                          value: "编辑",
+                          value: "删除",
                           onTap: () {
-                            print("编辑");
+                            removeDynamic(element);
                           },
                         ),
                       ];
@@ -263,7 +282,7 @@ class MySpaceLogic extends GetxController {
                         "assets/icon/gengduo.png",
                         fit: BoxFit.fill,
                         color: Colors.grey,
-                      ),
+                      ) ,
                     ),
                   )
                 ],

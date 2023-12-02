@@ -103,8 +103,25 @@ class SpaceAPI {
     var element = SpaceUserInfo.fromJson(value);
     return element;
   }
-  
-  
+
+  /*
+   * @author Marinda
+   * @date 2023/11/28 15:36
+   * @description 通过空间动态id 删除空间动态id
+   */
+  static deleteSpaceDynamicById(int dynamicId) async{
+    Log.i("删除空间动态: ${dynamicId}");
+    var data = {
+      "id": dynamicId,
+    };
+    APIResult apiResult = await BaseProvider.sendRequest("spaceDynamic/remove", HttpMethods.POST.value, data,header: Request.getHeader());
+    var value = apiResult.data;
+    if(value == null){
+      return -1;
+    }
+    return value;
+  }
+
   /*
    * @author Marinda
    * @date 2023/11/28 14:37
