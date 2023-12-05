@@ -1,4 +1,6 @@
-class GroupVerify {
+import 'package:silentchat/entity/verify.dart';
+
+class GroupVerify extends Verify{
   int? _id;
   int? _uid;
   int? _gid;

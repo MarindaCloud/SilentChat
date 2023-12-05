@@ -44,12 +44,12 @@ class ContactLogic extends GetxController {
    * @date 2023/7/4 15:16
    * @description 跳转至朋友验证消息
    */
-  toFriendsVerify() async{
+  toVerify(int type) async{
     Map<String,dynamic> args = {
-      "type": 1
+      "type": type
     };
     var result = await Get.toNamed(AppPage.verify,arguments: args);
-    if(result == "accept"){
+    if(result == "accept" && type == 1){
       await userLogic.initFriendsList();
       initFriendsInfo();
       Log.i("通过好友请求，重载好友列表！");

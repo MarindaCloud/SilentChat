@@ -88,7 +88,7 @@ class VerifyAPI {
    */
   static selectListByGid(int gid) async{
     Log.i("查询${gid}的所有群聊验证消息");
-    var response = await Request.sendPost("groupVerify/selectByGid", data: {"gid": gid}, header: Request.getHeader());
+    var response = await Request.sendPost("groupVerify/selectListByGid", data: {"gid": gid}, header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     List<GroupVerify> groupVerifyList = [];
     var data = apiResult.data;
@@ -105,7 +105,7 @@ class VerifyAPI {
    */
   static selectListByUserId(int uid) async{
     Log.i("查询${uid}的所有群聊验证消息");
-    var response = await Request.sendPost("groupVerify/selectByUid", data: {"uid": uid}, header: Request.getHeader());
+    var response = await Request.sendPost("groupVerify/selectListByUid", data: {"uid": uid}, header: Request.getHeader());
     APIResult apiResult = Request.toAPIResult(response);
     List<GroupVerify> groupVerifyList = [];
     var data = apiResult.data;

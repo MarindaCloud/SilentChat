@@ -59,7 +59,7 @@ class VerifyPage extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 50.rpx),
                     child: Column(
-                      children: logic.buildFriendsVerifyList()
+                      children: state.value == 2 ? logic.buildGroupsVerifyList() :logic.buildFriendsVerifyList()
                     ),
                   )
                 ],

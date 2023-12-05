@@ -158,7 +158,7 @@ class ContactPage extends StatelessWidget {
                                   ],
                                 ),
                                 onTap: () {
-                                  logic.toFriendsVerify();
+                                  logic.toVerify(1);
                                 },
                               ),
                             ),
@@ -189,7 +189,7 @@ class ContactPage extends StatelessWidget {
                                   ],
                                 ),
                                 onTap: () {
-                                  print("123");
+                                  logic.toVerify(2);
                                 },
                               ),
                             ),
