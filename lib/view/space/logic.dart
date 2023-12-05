@@ -630,24 +630,56 @@ class SpaceLogic extends GetxController {
                 ),
               ),
               //  图标组
+              //  图标组
               Container(
+                margin: EdgeInsets.only(bottom: 30.rpx),
+                padding: EdgeInsets.only(left: 10.rpx),
                 // margin: EdgeInsets.only(right: 50.rpx,top: dynamicType == 1 ? 0 : 30.rpx,bottom: 30.rpx),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    //设备名称
+                    Container(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 20.rpx),
+                            child: SizedBox(
+                              width: 80.rpx,
+                              height: 80.rpx,
+                              child: Image.asset(
+                                "iphone.png".icon,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              "${dynamicInfoView.element?.device}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
                     Container(
                       margin: EdgeInsets.only(right: 80.rpx),
                       child: InkWell(
                         child: SizedBox(
-                          width: 130.rpx,
-                          height: 130.rpx,
-                          child: dynamicUserList.firstWhereOrNull((element) => element.id == userState.uid.value)== null ?
-                          Image.asset("assets/icon/good.png",
-                              fit: BoxFit.fill)
-                          : Image.asset("assets/icon/good.png",
-                            fit: BoxFit.fill,
-                            color: Colors.blue)
+                            width: 130.rpx,
+                            height: 130.rpx,
+                            child: dynamicUserList.firstWhereOrNull((element) => element.id == userState.uid.value)== null ?
+                            Image.asset("assets/icon/good.png",
+                                fit: BoxFit.fill)
+                                : Image.asset("assets/icon/good.png",
+                                fit: BoxFit.fill,
+                                color: Colors.blue)
                         ),
                         onTap: () {
                           thumbLike(element);

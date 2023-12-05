@@ -410,9 +410,12 @@ class ChatLogic extends GetxController with GetTickerProviderStateMixin{
       List<ChatInfo> filterTargetChatInfoList = chatInfoList.where((element) => element.sendId == uid && element.receiverId == id && element.type == 1 || element.sendId == id && element.receiverId == uid && element.type == 1).toList();
 
       for(var message in messageList){
-          int mid = message.id ?? -1;
-          ChatInfo chatInfo = filterTargetChatInfoList.firstWhere((element) => element.mid == mid);
-          int sendId = chatInfo.sendId ?? -1;
+          int mid   = message.id ?? -1;
+          ChatInfo? chatInfo = filterTargetChatInfoList.firstWhereOrNull((element) => element.mid == mid);
+          if(chatInfo == null){
+            continue;
+          }
+          int sendId = chatInfo?.sendId ?? -1;
           User user = User();
           String portrait = "";
           var cacheUser = cacheUserList.firstWhereOrNull((element) => element.id == sendId);

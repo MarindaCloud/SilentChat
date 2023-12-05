@@ -313,11 +313,42 @@ class MySpaceLogic extends GetxController {
             ),
             //  图标组
             Container(
+              margin: EdgeInsets.only(bottom: 30.rpx),
+              padding: EdgeInsets.only(left: 10.rpx),
               // margin: EdgeInsets.only(right: 50.rpx,top: dynamicType == 1 ? 0 : 30.rpx,bottom: 30.rpx),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  //设备名称
+                  Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 20.rpx),
+                          child: SizedBox(
+                            width: 80.rpx,
+                            height: 80.rpx,
+                            child: Image.asset(
+                                "iphone.png".icon,
+                                fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: Text(
+                            "${dynamicInfoView.element?.device}",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(child: SizedBox()),
                   Container(
                     margin: EdgeInsets.only(right: 80.rpx),
                     child: InkWell(
@@ -661,10 +692,12 @@ class MySpaceLogic extends GetxController {
   buildImageWidget(SpaceDynamic spaceDynamic){
     List<Widget> widgetList = [];
     String content = spaceDynamic.image ?? "";
+    //修复后台图像单引号路径问题，导致显示图像异常
+    String filterContent = content.replaceAll("'",'"');
     if(content=="" || content == null){
       return <Widget>[];
     }else{
-      var jsonList = json.decode(content);
+      var jsonList = json.decode(filterContent);
       if(jsonList is List){
         for(var i = 0 ;i<jsonList.length;i++){
           var imgElement = jsonList[i];
