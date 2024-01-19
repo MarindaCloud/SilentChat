@@ -35,7 +35,7 @@
 
 <img src="https://s1.ax1x.com/2023/09/09/pPcp50P.png" alt="修改头像" style="width: 300px;height:auto" />
 
-<img src="https://s1.ax1x.com/2023/09/09/pPcp4mt.png" alt="个人二维码页" style="width: 300px;height:auto" />
+<img src="https://s11.ax1x.com/2024/01/19/pFEieRU.png" alt="个人二维码页" style="width: 300px;height:auto" />
 
 <img src="https://s1.ax1x.com/2023/09/09/pPcpHfg.png" alt="联系人页" style="width: 300px;height:auto" />
 
